@@ -5,9 +5,10 @@
     "**/.client/**/*",
     ".react-router/types/**/*"
   ],
+  "exclude": ["tmp"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client", "@prisma-app/client"],
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
