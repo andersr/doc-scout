@@ -19,6 +19,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-export default function Home() {
-  return <div>HOME</div>;
+export default function Dashboard() {
+  return <div>DASHBOARD</div>;
 }
