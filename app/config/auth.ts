@@ -1,0 +1,7 @@
+import { appRoutes } from "~/shared/appRoutes";
+
+export const APP_NAME = "research_tool";
+export const AUTH_SESSION_NAME = `${APP_NAME}_auth`;
+export const AUTH_SESSION_DURATION = 60 * 60 * 24 * 7 * 2; // 14 days
+export const AUTH_USER_KEY = `${AUTH_SESSION_NAME}_user`;
+export const AUTH_DEFAULT_REDIRECT = appRoutes("/dashboard");

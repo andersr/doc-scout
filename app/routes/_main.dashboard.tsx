@@ -1,5 +1,6 @@
 import { prisma } from "~/.server/db";
-import type { Route } from "./+types/_index";
+import { requireUser } from "~/.server/sessions/requireUser";
+import type { Route } from "./+types/_main.dashboard";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,6 +10,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser({ request });
   try {
     const users = await prisma.user.findMany({});
     console.log(users);
@@ -19,6 +21,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-export default function Home() {
-  return <div>HOME</div>;
+export default function Dashboard() {
+  return <div>DASHBOARD</div>;
 }

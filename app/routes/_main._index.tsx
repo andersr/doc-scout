@@ -1,5 +1,5 @@
 import { prisma } from "~/.server/db";
-import type { Route } from "./+types/_index";
+import type { Route } from "./+types/_main._index";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,6 +19,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-export default function Dashboard() {
-  return <div>DASHBOARD</div>;
+export default function Home() {
+  return <div>HOME</div>;
 }
