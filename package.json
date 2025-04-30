@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.799.0",
+    "@aws-sdk/s3-request-presigner": "^3.799.0",
     "@mendable/firecrawl-js": "^1.24.0",
     "@prisma/client": "^6.6.0",
     "@react-router/fs-routes": "^7.5.2",
@@ -22,6 +24,7 @@
     "react-dom": "^19.0.0",
     "react-router": "^7.5.2",
     "safe-routes": "^1.0.12",
+    "slugify": "^1.6.6",
     "tailwind-merge": "^3.2.0",
     "zod": "^3.24.3"
   },

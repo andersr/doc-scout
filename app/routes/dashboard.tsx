@@ -7,8 +7,11 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
+import { uploadJsonToS3 } from "~/.server/aws/uploadToS3";
+import { fcApp } from "~/.server/firecrawl/fcApp";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { getClientUser } from "~/.server/utils/getClientUser";
+import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
 import {
   INTENTIONALLY_GENERIC_ERROR_MESSAGE,
@@ -16,13 +19,6 @@ import {
 } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { Route } from "./+types/dashboard";
-
-// export function meta({}: Route.MetaArgs) {
-//   return [
-//     { title: "New React Router App" },
-//     { name: "description", content: "Welcome to React Router!" },
-//   ];
-// }
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
@@ -41,6 +37,7 @@ type ActionData = {
   errorMessage?: string;
   successMessage?: string;
   ok: boolean;
+  s3Key?: string;
 };
 
 export async function action({ request }: Route.ActionArgs) {
@@ -60,11 +57,33 @@ export async function action({ request }: Route.ActionArgs) {
       });
     }
 
-    // For now, just return success (we'll ignore Firecrawl functionality)
+    // Scrape a website
+    const scrapeResponse = await fcApp.scrapeUrl(url, {
+      formats: ["markdown", "html"],
+    });
+
+    if (!scrapeResponse.success) {
+      throw new Error(`Failed to scrape: ${scrapeResponse.error}`);
+    }
+
+    // console.log(scrapeResponse);
+
+    // Generate a unique filename for S3
+    const timestamp = new Date().toISOString();
+    // const sanitizedUrl = url.replace(/[^a-zA-Z0-9]/g, "_");
+    const s3Key = `scrapes/${slugify(url)}_${slugify(timestamp, {
+      lower: false,
+    })}.json`;
+
+    // Upload the scrape response to S3
+    await uploadJsonToS3(s3Key, scrapeResponse);
+
+    // Return success with the S3 key
     return data<ActionData>({
       url,
-      successMessage: "URL submitted successfully!",
+      successMessage: "URL submitted and saved to S3 successfully!",
       ok: true,
+      s3Key,
     });
   } catch (error) {
     console.error("URL submission error: ", error);
@@ -112,7 +131,7 @@ export default function Dashboard() {
               type="submit"
               disabled={submitDisabled}
               className={twMerge(
-                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full",
+                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
                 submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : ""
               )}
             >
@@ -129,6 +148,14 @@ export default function Dashboard() {
           {actionData?.successMessage && (
             <div className="mt-4 text-center font-semibold text-green-500">
               {actionData.successMessage}
+              {actionData.s3Key && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <p>Saved to S3 with key:</p>
+                  <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
+                    {actionData.s3Key}
+                  </code>
+                </div>
+              )}
             </div>
           )}
         </div>
