@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@mendable/firecrawl-js": "^1.24.0",
     "@prisma/client": "^6.6.0",
     "@react-router/fs-routes": "^7.5.2",
     "@react-router/node": "^7.5.2",
