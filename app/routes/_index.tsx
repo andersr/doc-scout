@@ -4,9 +4,9 @@ import { getClientUser } from "~/.server/utils/getClientUser";
 import { MainLayout } from "~/components/MainLayout";
 import type { Route } from "./+types/_index";
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: "Research App" }, { name: "description", content: "" }];
-}
+// export function meta({}: Route.MetaArgs) {
+//   return [{ title: "Research App" }, { name: "description", content: "" }];
+// }
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
