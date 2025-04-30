@@ -1,5 +1,7 @@
-import { prisma } from "~/.server/db";
+import { useLoaderData } from "react-router";
 import { requireUser } from "~/.server/sessions/requireUser";
+import { getClientUser } from "~/.server/utils/getClientUser";
+import { MainLayout } from "~/components/MainLayout";
 import type { Route } from "./+types/_main.dashboard";
 
 export function meta({}: Route.MetaArgs) {
@@ -10,17 +12,18 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  await requireUser({ request });
   try {
-    const users = await prisma.user.findMany({});
-    console.log(users);
-    return { data: null };
+    const internalUser = await requireUser({ request });
+
+    return { currentUser: getClientUser(internalUser) };
   } catch (error) {
     console.error("error: ", error);
-    return { data: null };
+    return { currentUser: null };
   }
 }
 
 export default function Dashboard() {
-  return <div>DASHBOARD</div>;
+  const { currentUser } = useLoaderData<typeof loader>();
+
+  return <MainLayout currentUser={currentUser}>DASHBOARD</MainLayout>;
 }

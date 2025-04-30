@@ -30,5 +30,5 @@ export async function requireUser({
     throw await destroySession({ request });
   }
 
-  return publicId;
+  return user;
 }
