@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { getClientUser } from "~/.server/utils/getClientUser";
 import { MainLayout } from "~/components/MainLayout";
-import type { Route } from "./+types/_main.dashboard";
+import type { Route } from "./+types/dashboard";
 
 export function meta({}: Route.MetaArgs) {
   return [
