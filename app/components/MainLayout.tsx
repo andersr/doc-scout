@@ -1,4 +1,5 @@
 import { UserNav, type UserNavProps } from "~/components/UserNav";
+import { AppNav } from "./AppNav";
 
 export function MainLayout({
   currentUser,
@@ -9,6 +10,7 @@ export function MainLayout({
   return (
     <div>
       <UserNav currentUser={currentUser} />
+      <AppNav />
       {children}
     </div>
   );

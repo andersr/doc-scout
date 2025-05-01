@@ -1,6 +1,6 @@
 import { type ActionFunction } from "react-router";
-import { destroySession } from "~/.server/sessions/destroySession";
+import { logout } from "~/.server/sessions/logout";
 
 export const action: ActionFunction = async ({ request }) => {
-  return await destroySession({ request });
+  return await logout({ request });
 };

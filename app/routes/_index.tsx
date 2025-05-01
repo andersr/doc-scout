@@ -1,18 +1,20 @@
+import console from "console";
 import { useLoaderData } from "react-router";
-import { maybeUser } from "~/.server/sessions/maybeUser";
-import { getClientUser } from "~/.server/utils/getClientUser";
+
+import { getClientUser } from "~/.server/users/getClientUser";
 import { MainLayout } from "~/components/MainLayout";
 import type { Route } from "./+types/_index";
 
 // export function meta({}: Route.MetaArgs) {
 //   return [{ title: "Research App" }, { name: "description", content: "" }];
 // }
+// required?  internal or client?
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
-    const internalUser = await maybeUser(request);
+    const currentUser = await getClientUser({ request });
 
-    return { currentUser: internalUser ? getClientUser(internalUser) : null };
+    return { currentUser };
   } catch (error) {
     console.error("error: ", error);
     return { currentUser: null };
@@ -21,5 +23,5 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Home() {
   const { currentUser } = useLoaderData<typeof loader>();
-  return <MainLayout currentUser={currentUser}>HOME</MainLayout>;
+  return <MainLayout currentUser={currentUser}>TBD</MainLayout>;
 }

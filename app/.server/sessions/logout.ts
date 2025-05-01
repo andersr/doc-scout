@@ -3,7 +3,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { authSessionStore } from "./authSessionStore";
 import { getSessionCookie } from "./getSessionCookie";
 
-export async function destroySession({ request }: { request: Request }) {
+export async function logout({ request }: { request: Request }) {
   const cookie = await getSessionCookie({
     request,
   });
