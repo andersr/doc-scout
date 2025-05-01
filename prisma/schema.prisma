@@ -9,47 +9,51 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// model Project {
-//   id        Int       @id @default(autoincrement())
-//   publicId  String    @unique
-//   createdAt DateTime?
-//   updatedAt DateTime?
+model Project {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  name      String
+  createdAt DateTime?
+  updatedAt DateTime?
 
-//   sources Source[]
-//   members ProjectUser[]
-// }
+  sources Source[]
+  members ProjectUser[]
+}
 
-// model ProjectUser {
-//   id   Int  @id @default(autoincrement())
-//   role Role @default(USER)
+model ProjectUser {
+  id   Int  @id @default(autoincrement())
+  role Role @default(USER)
 
-//   Project   Project? @relation(fields: [projectId], references: [id])
-//   projectId Int?
-//   User      User?    @relation(fields: [userId], references: [id])
-//   userId    Int?
-// }
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
 
-// enum Role {
-//   ADMIN
-//   USER
-// }
+enum Role {
+  ADMIN
+  USER
+}
 
-// model Source {
-//   id        Int       @id @default(autoincrement())
-//   publicId  String    @unique
-//   createdAt DateTime?
-//   updatedAt DateTime?
+model Source {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  createdAt DateTime?
+  updatedAt DateTime?
 
-//   url String?
+  name String?
+  url  String?
 
-//   Project   Project? @relation(fields: [projectId], references: [id])
-//   projectId Int?
-// }
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+}
 
 model User {
-  id       Int     @id @default(autoincrement())
-  publicId String  @unique
-  clerkId  String? @unique
+  id       Int    @id @default(autoincrement())
+  publicId String @unique
+
+  // TODO: remove
+  clerkId String? @unique
 
   // role      Role      @default(USER)
   email     String    @unique
@@ -57,5 +61,5 @@ model User {
   createdAt DateTime?
   lastLogin DateTime?
 
-  // projectMemberships ProjectUser[]
+  projectMemberships ProjectUser[]
 }
