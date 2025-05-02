@@ -16,6 +16,8 @@ model Project {
   createdAt DateTime?
   updatedAt DateTime?
 
+  collectionName String?
+
   sources Source[]
   members ProjectUser[]
 }
