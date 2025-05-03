@@ -159,7 +159,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     const graph = await generateGraph();
 
     let inputs = {
-      question: "What is the Aassistant Development Lifecycle?",
+      question: "What is the Assistant Development Lifecycle?",
     };
 
     const result = await graph.invoke(inputs);
