@@ -1,5 +1,5 @@
-import { Document } from "@langchain/core/documents";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import type { Document } from "@langchain/core/documents";
+import type { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Annotation, StateGraph } from "@langchain/langgraph";
 import { pull } from "langchain/hub";
 import { llm } from "./llm";
