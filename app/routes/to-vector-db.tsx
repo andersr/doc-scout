@@ -17,6 +17,7 @@ import {
   INVALID_URL_ERROR,
 } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
+import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -31,13 +32,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 // Define a consistent return type for the action
-type ActionData = {
-  url: string;
-  errorMessage?: string;
-  successMessage?: string;
-  ok: boolean;
-  s3Key?: string;
-};
+// type ActionData = {
+//   url: string;
+//   errorMessage?: string;
+//   successMessage?: string;
+//   ok: boolean;
+//   s3Key?: string;
+// };
 
 export async function action({ request }: Route.ActionArgs) {
   try {

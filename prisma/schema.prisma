@@ -43,8 +43,9 @@ model Source {
   createdAt DateTime?
   updatedAt DateTime?
 
-  name String?
-  url  String?
+  name        String?
+  url         String?
+  storagePath String?
 
   project   Project? @relation(fields: [projectId], references: [id])
   projectId Int?

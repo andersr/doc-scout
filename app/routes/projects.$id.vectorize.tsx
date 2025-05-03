@@ -1,17 +1,19 @@
-import { data, Form, Link, useActionData, useLoaderData } from "react-router";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import type { Document } from "node_modules/@langchain/core/dist/documents";
+import { data, Form, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
+import { getBucketData } from "~/.server/aws/getFromBucket";
 import { prisma } from "~/.server/db";
-import { generateGraph } from "~/.server/langchain/generateGraph";
+import { vectorStore } from "~/.server/langchain/vectorStore";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
-import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "Project Details" }, { name: "description", content: "" }];
+  return [{ title: "Vectorize" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -37,40 +39,19 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function ProjectDetails() {
-  const { currentUser, project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+
+  const { currentUser, project } = useLoaderData<typeof loader>();
 
   return (
     <MainLayout currentUser={currentUser}>
       <div className="mx-auto max-w-3xl px-4">
-        <h1 className="text-2xl font-bold mb-6">Project: {project?.name}</h1>
+        <h1 className="text-2xl font-bold mb-6">
+          Vectorize sources: {project?.name}
+        </h1>
       </div>
       <div className="mx-auto max-w-3xl px-4">
-        {project?.publicId ? (
-          <Link
-            className="underline text-blue-600"
-            to={appRoutes("/projects/:id/vectorize", {
-              id: project?.publicId,
-            })}
-          >
-            Vectorize
-          </Link>
-        ) : (
-          <span>No public id</span>
-        )}
         <h2 className="text-xl font-bold mb-6">Sources</h2>
-        {project?.publicId ? (
-          <Link
-            className="underline text-blue-600"
-            to={appRoutes("/projects/:id/sources/new", {
-              id: project?.publicId,
-            })}
-          >
-            Add sources
-          </Link>
-        ) : (
-          <span>No public id</span>
-        )}
         <ul>
           {project?.sources.map((s) => (
             <li key={s.publicId}>
@@ -78,38 +59,38 @@ export default function ProjectDetails() {
             </li>
           ))}
         </ul>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <Form method="POST" className="flex flex-col gap-4">
-          <button
-            type="submit"
-            className={twMerge(
-              "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer"
-            )}
-          >
-            generate graph
-          </button>
-        </Form>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <Form method="POST" className="flex flex-col gap-4">
+            <button
+              type="submit"
+              className={twMerge(
+                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer"
+              )}
+            >
+              Vectorize
+            </button>
+          </Form>
 
-        {actionData?.errorMessage && (
-          <div className="mt-4 text-center font-semibold text-red-400">
-            {actionData.errorMessage}
-          </div>
-        )}
+          {actionData?.errorMessage && (
+            <div className="mt-4 text-center font-semibold text-red-400">
+              {actionData.errorMessage}
+            </div>
+          )}
 
-        {actionData?.successMessage && (
-          <div className="mt-4 text-center font-semibold text-green-500">
-            {actionData.successMessage}
-            {actionData.s3Key && (
-              <div className="mt-2 text-sm text-gray-600">
-                <p>Saved to S3 with key:</p>
-                <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
-                  {actionData.s3Key}
-                </code>
-              </div>
-            )}
-          </div>
-        )}
+          {actionData?.successMessage && (
+            <div className="mt-4 text-center font-semibold text-green-500">
+              {actionData.successMessage}
+              {actionData.s3Key && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <p>Saved to S3 with key:</p>
+                  <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
+                    {actionData.s3Key}
+                  </code>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </MainLayout>
   );
@@ -156,14 +137,49 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
     });
 
-    const graph = await generateGraph();
+    const sourcePaths = project.sources
+      .map((s) => s.storagePath)
+      .filter((p) => p !== null);
+    console.log("sourcePaths: ", sourcePaths);
 
-    let inputs = {
-      question: "What is the Aassistant Development Lifecycle?",
-    };
+    if (sourcePaths.length === 0) {
+      return data<ActionData>({
+        errorMessage: "No source paths found.",
+        ok: false,
+      });
+    }
 
-    const result = await graph.invoke(inputs);
-    console.log(result.answer);
+    // const res = await getFromBucket(sourcePaths[0]);
+    // console.log("res: ", res);
+
+    // if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
+    //   throw new Error("error getting data from bucket");
+    // }
+    // const bodyString = await res?.Body?.transformToString();
+    // console.log("bodyString: ", bodyString);
+
+    // const sourceData: ScrapeData = JSON.parse(bodyString);
+    // console.log("srcData: ", sourceData);
+
+    const sourceData = await getBucketData(sourcePaths);
+
+    const docs: Document[] = sourceData.map((s) => ({
+      pageContent: s.markdown,
+      id: project.sources[0].publicId,
+      metadata: {
+        title: s.metadata.title,
+        url: project.sources[0].url,
+      },
+    }));
+
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+      chunkOverlap: 200,
+    });
+    const allSplits = await splitter.splitDocuments(docs);
+
+    // Index chunks
+    await vectorStore.addDocuments(allSplits);
 
     return data<ActionData>({
       errorMessage: "",
