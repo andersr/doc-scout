@@ -1,41 +1,33 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
-// import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { QdrantVectorStore } from "@langchain/qdrant";
-// import { qdClient } from "../qdrant/client";
-import type { Document } from "@langchain/core/documents";
+import { PineconeStore } from "@langchain/pinecone";
 
-// src: https://js.langchain.com/docs/integrations/retrievers/self_query/qdrant/
-// src: https://js.langchain.com/docs/integrations/vectorstores/qdrant/
-// https://js.langchain.com/docs/tutorials/rag/
-// https://js.langchain.com/docs/tutorials/qa_chat_history
+// import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
+import { ENV } from "../ENV";
+import { pcClient } from "../pinecone/client";
 
 const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-3-small",
+  openAIApiKey: ENV.OPENAI_API_KEY,
 });
 
-// export const vectorStore = new MemoryVectorStore(embeddings);
+// const pinecone = new PineconeClient();
+// Will automatically read the PINECONE_API_KEY and PINECONE_ENVIRONMENT env vars
+// const pineconeIndexTMP = pcClient.Index(ENV.PINECONE_INDEX_NAME);
 
-export async function vectorStoreInit({
-  docs,
-  collectionName,
-}: {
-  docs: Document[];
-  collectionName: string;
-}) {
-  // const vectorStore = await QdrantVectorStore.fromExistingCollection(
-  //   embeddings,
-  //   {
-  //     client: qdClient,
-  //     url: process.env.QDRANT_URL,
-  //     collectionName,
-  //   }
-  // );
-  const vectorStore = await QdrantVectorStore.fromDocuments(docs, embeddings, {
-    // client: qdClient,
-    url: process.env.QDRANT_URL,
-    collectionName,
+// export const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+//   pineconeIndex: pineconeIndexTMP,
+//   // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
+//   maxConcurrency: 5,
+//   // You can pass a namespace here too
+//   // namespace: "foo",
+// });
+
+export async function getVectorStore(namespace: string) {
+  return await PineconeStore.fromExistingIndex(embeddings, {
+    pineconeIndex: pcClient.Index(ENV.PINECONE_INDEX_NAME),
+    // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
+    maxConcurrency: 5,
+    // You can pass a namespace here too
+    namespace,
   });
-  // console.log("vectorStore: ", vectorStore);
-
-  return vectorStore;
 }

@@ -1,13 +1,41 @@
 import type { Document } from "@langchain/core/documents";
-import type { ChatPromptTemplate } from "@langchain/core/prompts";
+import { PromptTemplate } from "@langchain/core/prompts";
 import { Annotation, StateGraph } from "@langchain/langgraph";
 import { PineconeStore } from "@langchain/pinecone";
-import { pull } from "langchain/hub";
 import { ENV } from "../ENV";
 import { pcClient } from "../pinecone/client";
 import { oaiEmbeddings } from "./embeddings";
 import { llm } from "./llm";
 // import { vectorStore } from "./vectorStore";
+
+interface ChatInput {
+  prompt: string;
+  context: string;
+}
+
+// function setPrompt({ prompt, context }: ChatInput) {
+//   return `
+//   Question: ${prompt}
+
+//   <CONTEXT>
+//   ${context}
+//   </CONTEXT>
+
+//   Use only the information in documents within the <CONTEXT> block to answer the question. List the corresponding documents used to provide an answer in the order of relevance.  If you are unable to provide an answer based on this information, say you don't know.
+
+//   Answer:  `;
+// }
+
+const RAG_TEMPLATE = `
+  Question: {question}
+
+  <CONTEXT>
+  {context}
+  </CONTEXT>
+
+  Use only the information within the <CONTEXT> block to answer the question.  If you are unable to provide an answer based on this information, say you don't know.
+    
+  Answer:  `;
 
 export async function generateGraph({
   collectionName,
@@ -15,7 +43,8 @@ export async function generateGraph({
   collectionName: string;
 }) {
   // Define prompt for question-answering
-  const promptTemplate = await pull<ChatPromptTemplate>("rlm/rag-prompt");
+  // const promptTemplate = await pull<ChatPromptTemplate>("rlm/rag-prompt");
+  const promptTemplate = PromptTemplate.fromTemplate(RAG_TEMPLATE);
 
   // Define state for application
   const InputStateAnnotation = Annotation.Root({
@@ -33,6 +62,7 @@ export async function generateGraph({
   const vectorStore = await PineconeStore.fromExistingIndex(oaiEmbeddings, {
     pineconeIndex,
     maxConcurrency: 5,
+    namespace: collectionName,
   });
 
   // Define application steps

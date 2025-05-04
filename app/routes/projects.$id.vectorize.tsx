@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { getBucketData } from "~/.server/aws/getFromBucket";
 import { prisma } from "~/.server/prisma/client";
 // import { vectorStore } from "~/.server/langchain/vectorStore";
-import { ENV } from "~/.server/ENV";
-import { pcClient } from "~/.server/pinecone/client";
+// import { vectorStore } from "~/.server/langchain/vectorStore";
+import { getVectorStore } from "~/.server/langchain/vectorStore";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
@@ -167,26 +167,30 @@ export async function action({ request, params }: Route.ActionArgs) {
       chunkOverlap: 200,
     });
     const allSplits = await splitter.splitDocuments(docs);
-    const now = new Date();
-    let timeId = now.getTime();
 
-    const pcRecords: { _id: string; chunk_text: string }[] = [];
+    // const now = new Date();
+    // let timeId = now.getTime();
 
-    for (let index = 0; index < allSplits.length; index++) {
-      pcRecords.push({
-        _id: timeId.toString(),
-        chunk_text: allSplits[index].pageContent,
-      });
-      timeId++;
-    }
+    // const pcRecords: { _id: string; chunk_text: string }[] = [];
+
+    // for (let index = 0; index < allSplits.length; index++) {
+    //   pcRecords.push({
+    //     _id: uuidv4(),
+    //     chunk_text: allSplits[index].pageContent,
+    //   });
+
+    // }
 
     // const pcIndex = pc.index("INDEX_NAME", "INDEX_HOST").namespace("example-namespace");
 
     if (!project.collectionName) {
       throw new Error("no collection name found");
     }
+    const vectorStore = await getVectorStore(project.collectionName);
 
-    const pcIndex = pcClient.Index(project.collectionName, ENV.PINECONE_HOST);
+    await vectorStore.addDocuments(allSplits);
+
+    // const pcIndex = pcClient.Index(project.collectionName, ENV.PINECONE_HOST);
 
     // console.log("pcIndex: ", pcIndex);
     //  await pcClient.({
@@ -203,7 +207,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     // Index chunks
     // await vectorStore.addDocuments(allSplits);
 
-    pcIndex.upsertRecords(pcRecords);
+    // pcIndex.upsertRecords(pcRecords);
 
     return data<ActionData>({
       errorMessage: "",

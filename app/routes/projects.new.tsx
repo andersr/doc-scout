@@ -1,4 +1,3 @@
-import { Role } from "@prisma-app/client";
 import { useState } from "react";
 import {
   data,
@@ -9,9 +8,10 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { pcClient } from "~/.server/pinecone/client";
-import { prisma } from "~/.server/prisma/client";
 // import { qdClient } from "~/.server/qdrant/client";
+import { Role } from "@prisma-app/client";
+import { ENV } from "~/.server/ENV";
+import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireInternalUser } from "~/.server/users/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
@@ -21,6 +21,10 @@ import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { Route } from "./+types/dashboard";
+
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "New Project" }, { name: "description", content: "" }];
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
@@ -49,19 +53,30 @@ export async function action({ request }: Route.ActionArgs) {
     const name = nameData.toString().trim();
 
     const collectionName = slugify(name, { replacement: "_", lower: true });
-    // console.log("collectionName: ", collectionName);
+    console.log("collectionName: ", collectionName);
 
-    // const qdResponse = await qdClient.createCollection(collectionName, {
-    //   vectors: { size: 4, distance: "Dot" },
-    // });
-    // console.log("New collection:", qdResponse);
+    const res = await fetch(`${ENV.PINECONE_HOST}/namespaces`, {
+      headers: {
+        "Api-Key": ENV.PINECONE_API_KEY,
+        "X-Pinecone-API-Version": "2025-04",
+      },
+    });
+    console.log("res: ", res);
 
-    const existingIndexes = await pcClient.listIndexes();
-    const indexNames = existingIndexes.indexes?.map((i) => i.name) ?? [];
+    const data: {
+      namespaces: { name: string; record_count: number }[];
+      pagination?: { next: string };
+    } = await res.json();
+    console.log("data: ", data);
 
-    if (indexNames.includes(collectionName)) {
-      throw new Error("an index with this name already exists");
-    }
+    // TODO: at this point, not creating a namespaceas
+
+    // const existingIndexes = await pcClient.listIndexes();
+    // const indexNames = existingIndexes.indexes?.map((i) => i.name) ?? [];
+
+    // if (indexNames.includes(collectionName)) {
+    //   throw new Error("an index with this name already exists");
+    // }
 
     // Create a dense index with integrated embedding
     // await pcClient.createIndexForModel({
@@ -74,19 +89,19 @@ export async function action({ request }: Route.ActionArgs) {
     //   },
     //   waitUntilReady: true,
     // });
-    await pcClient.createIndex({
-      name: collectionName,
-      dimension: 1536,
-      metric: "cosine",
-      spec: {
-        pod: {
-          environment: "us-east-1-aws",
-          pods: 1,
-          podType: "p1.x1",
-        },
-      },
-      // waitUntilReady: true,
-    });
+    // await pcClient.createIndex({
+    //   name: collectionName,
+    //   dimension: 1536,
+    //   metric: "cosine",
+    //   spec: {
+    //     pod: {
+    //       environment: "us-east-1-aws",
+    //       pods: 1,
+    //       podType: "p1.x1",
+    //     },
+    //   },
+    //   // waitUntilReady: true,
+    // });
 
     const project = await prisma.project.create({
       data: {

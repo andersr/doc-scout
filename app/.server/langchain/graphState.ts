@@ -1,5 +1,5 @@
 import { Annotation } from "@langchain/langgraph";
-import { vectorStore } from "./vectorStore";
+// import { vectorStore } from "./vectorStoreOLD";
 
 export async function graphStateInit() {
   // Define state for application
@@ -14,10 +14,10 @@ export async function graphStateInit() {
   });
 
   // Define application steps
-  const retrieve = async (state: typeof InputStateAnnotation.State) => {
-    const retrievedDocs = await vectorStore.similaritySearch(state.question);
-    return { context: retrievedDocs };
-  };
+  // const retrieve = async (state: typeof InputStateAnnotation.State) => {
+  //   const retrievedDocs = await vectorStore.similaritySearch(state.question);
+  //   return { context: retrievedDocs };
+  // };
 
   //   const generate = async (state: typeof StateAnnotation.State) => {
   //     const docsContent = state.context.map((doc) => doc.pageContent).join("\n");

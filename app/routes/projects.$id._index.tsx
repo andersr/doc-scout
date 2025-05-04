@@ -165,7 +165,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     });
 
     let inputs = {
-      question: "What is the Assistant Development Lifecycle?",
+      question: "What is AI Assistant Structured Output?",
     };
 
     const result = await graph.invoke(inputs);

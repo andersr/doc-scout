@@ -13,6 +13,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
+  // const rawDocs = await loadText("/test_docs/sword_making.txt");
+  // console.log("rawDocs: ", rawDocs);
   return {};
   // try {
   //   const currentUser = await getClientUser({ request, require: true });
