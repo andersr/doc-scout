@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { data, Form, useActionData, useNavigation } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { prisma } from "~/.server/db";
+import { prisma } from "~/.server/prisma/client";
 import { createSession } from "~/.server/sessions/createSession";
 import { requireAnon } from "~/.server/sessions/requireAnon";
 import { upsertUser } from "~/.server/users/upsertUser";

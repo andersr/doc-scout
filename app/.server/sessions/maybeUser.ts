@@ -1,6 +1,6 @@
 import type { User } from "@prisma-app/client";
 import { AUTH_USER_KEY } from "~/config/auth";
-import { prisma } from "../db";
+import { prisma } from "../prisma/client";
 import { getCookieValue } from "./getCookieValue";
 
 export async function maybeUser(request: Request): Promise<null | User> {

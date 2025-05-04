@@ -9,8 +9,8 @@ import {
 } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { uploadJsonToS3 } from "~/.server/aws/uploadToS3";
-import { prisma } from "~/.server/db";
 import { fcApp } from "~/.server/firecrawl/fcApp";
+import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";

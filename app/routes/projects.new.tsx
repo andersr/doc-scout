@@ -9,8 +9,8 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { prisma } from "~/.server/db";
 import { pcClient } from "~/.server/pinecone/client";
+import { prisma } from "~/.server/prisma/client";
 // import { qdClient } from "~/.server/qdrant/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireInternalUser } from "~/.server/users/requireInternalUser";

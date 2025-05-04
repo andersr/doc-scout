@@ -1,7 +1,7 @@
 import { data, Form } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { prisma } from "~/.server/db";
 import { generateGraph } from "~/.server/langchain/generateGraph";
+import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -9,7 +9,7 @@ import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "Project Details" }, { name: "description", content: "" }];
+  return [{ title: "Oreilly" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {

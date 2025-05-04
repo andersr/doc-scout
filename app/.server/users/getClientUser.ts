@@ -1,5 +1,5 @@
 import type { DataRequest } from "~/types/dataRequest";
-import { prisma } from "../db";
+import { prisma } from "../prisma/client";
 import { logout } from "../sessions/logout";
 import { getUserPublicId } from "./getUserPublicId";
 // import type { Prisma } from "@prisma-app/client";

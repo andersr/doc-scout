@@ -1,7 +1,7 @@
 import { data, Form, Link, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { prisma } from "~/.server/db";
 import { generateGraph } from "~/.server/langchain/generateGraph";
+import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
