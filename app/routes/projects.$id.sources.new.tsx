@@ -176,7 +176,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     const scrapeResponse = await fcApp.scrapeUrl(url, {
       formats: ["markdown", "html"],
     });
-    console.log("scrapeResponse: ", scrapeResponse);
+    // console.log("scrapeResponse: ", scrapeResponse);
 
     if (!scrapeResponse.success) {
       throw new Error(`Failed to scrape: ${scrapeResponse.error}`);

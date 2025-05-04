@@ -4,7 +4,9 @@ import { data, Form, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { getBucketData } from "~/.server/aws/getFromBucket";
 import { prisma } from "~/.server/db";
-import { vectorStore } from "~/.server/langchain/vectorStore";
+// import { vectorStore } from "~/.server/langchain/vectorStore";
+import { ENV } from "~/.server/ENV";
+import { pcClient } from "~/.server/pinecone/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
@@ -149,18 +151,6 @@ export async function action({ request, params }: Route.ActionArgs) {
       });
     }
 
-    // const res = await getFromBucket(sourcePaths[0]);
-    // console.log("res: ", res);
-
-    // if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
-    //   throw new Error("error getting data from bucket");
-    // }
-    // const bodyString = await res?.Body?.transformToString();
-    // console.log("bodyString: ", bodyString);
-
-    // const sourceData: ScrapeData = JSON.parse(bodyString);
-    // console.log("srcData: ", sourceData);
-
     const sourceData = await getBucketData(sourcePaths);
 
     const docs: Document[] = sourceData.map((s) => ({
@@ -177,9 +167,43 @@ export async function action({ request, params }: Route.ActionArgs) {
       chunkOverlap: 200,
     });
     const allSplits = await splitter.splitDocuments(docs);
+    const now = new Date();
+    let timeId = now.getTime();
+
+    const pcRecords: { _id: string; chunk_text: string }[] = [];
+
+    for (let index = 0; index < allSplits.length; index++) {
+      pcRecords.push({
+        _id: timeId.toString(),
+        chunk_text: allSplits[index].pageContent,
+      });
+      timeId++;
+    }
+
+    // const pcIndex = pc.index("INDEX_NAME", "INDEX_HOST").namespace("example-namespace");
+
+    if (!project.collectionName) {
+      throw new Error("no collection name found");
+    }
+
+    const pcIndex = pcClient.Index(project.collectionName, ENV.PINECONE_HOST);
+
+    // console.log("pcIndex: ", pcIndex);
+    //  await pcClient.({
+    //    name: collectionName,
+    //    cloud: "aws",
+    //    region: "us-east-1",
+    //    embed: {
+    //      model: "multilingual-e5-large",
+    //      fieldMap: { text: "chunk_text" },
+    //    },
+    //    waitUntilReady: true,
+    //  });
 
     // Index chunks
-    await vectorStore.addDocuments(allSplits);
+    // await vectorStore.addDocuments(allSplits);
+
+    pcIndex.upsertRecords(pcRecords);
 
     return data<ActionData>({
       errorMessage: "",

@@ -156,7 +156,13 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
     });
 
-    const graph = await generateGraph();
+    if (!project.collectionName) {
+      throw new Error("missing collection name");
+    }
+
+    const graph = await generateGraph({
+      collectionName: project.collectionName,
+    });
 
     let inputs = {
       question: "What is the Assistant Development Lifecycle?",

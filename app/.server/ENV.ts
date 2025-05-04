@@ -8,8 +8,8 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(3),
   FIRECRAWL_API_KEY: z.string().min(3),
   OPENAI_API_KEY: z.string().min(3),
-  QDRANT_API_KEY: z.string().min(3),
-  QDRANT_CLUSTER_ID: z.string().min(3),
+  PINECONE_API_KEY: z.string().min(3),
+  PINECONE_HOST: z.string().min(3),
 });
 
 export const ENV = envSchema.parse(process.env);

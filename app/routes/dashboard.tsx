@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from "react-router";
+import { pcClient } from "~/.server/pinecone/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { MainLayout } from "~/components/MainLayout";
 import { appRoutes } from "~/shared/appRoutes";
@@ -7,6 +8,9 @@ import type { Route } from "./+types/dashboard";
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const currentUser = await getClientUser({ request, require: true });
+
+    const existingIndexes = await pcClient.listIndexes();
+    // console.log("existingIndexes: ", existingIndexes);
 
     // const result = await qdClient.createCollection("test_collection", {
     //   vectors: { size: 4, distance: "Dot" },

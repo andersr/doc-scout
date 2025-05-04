@@ -1,11 +1,19 @@
 import type { Document } from "@langchain/core/documents";
 import type { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Annotation, StateGraph } from "@langchain/langgraph";
+import { PineconeStore } from "@langchain/pinecone";
 import { pull } from "langchain/hub";
+import { ENV } from "../ENV";
+import { pcClient } from "../pinecone/client";
+import { oaiEmbeddings } from "./embeddings";
 import { llm } from "./llm";
-import { vectorStore } from "./vectorStore";
+// import { vectorStore } from "./vectorStore";
 
-export async function generateGraph() {
+export async function generateGraph({
+  collectionName,
+}: {
+  collectionName: string;
+}) {
   // Define prompt for question-answering
   const promptTemplate = await pull<ChatPromptTemplate>("rlm/rag-prompt");
 
@@ -18,6 +26,13 @@ export async function generateGraph() {
     question: Annotation<string>,
     context: Annotation<Document[]>,
     answer: Annotation<string>,
+  });
+
+  const pineconeIndex = pcClient.Index(collectionName, ENV.PINECONE_HOST);
+
+  const vectorStore = await PineconeStore.fromExistingIndex(oaiEmbeddings, {
+    pineconeIndex,
+    maxConcurrency: 5,
   });
 
   // Define application steps

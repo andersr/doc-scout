@@ -10,7 +10,8 @@ import {
 } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { prisma } from "~/.server/db";
-import { qdClient } from "~/.server/qdrant/client";
+import { pcClient } from "~/.server/pinecone/client";
+// import { qdClient } from "~/.server/qdrant/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireInternalUser } from "~/.server/users/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
@@ -48,12 +49,44 @@ export async function action({ request }: Route.ActionArgs) {
     const name = nameData.toString().trim();
 
     const collectionName = slugify(name, { replacement: "_", lower: true });
-    console.log("collectionName: ", collectionName);
+    // console.log("collectionName: ", collectionName);
 
-    const qdResponse = await qdClient.createCollection(collectionName, {
-      vectors: { size: 4, distance: "Dot" },
+    // const qdResponse = await qdClient.createCollection(collectionName, {
+    //   vectors: { size: 4, distance: "Dot" },
+    // });
+    // console.log("New collection:", qdResponse);
+
+    const existingIndexes = await pcClient.listIndexes();
+    const indexNames = existingIndexes.indexes?.map((i) => i.name) ?? [];
+
+    if (indexNames.includes(collectionName)) {
+      throw new Error("an index with this name already exists");
+    }
+
+    // Create a dense index with integrated embedding
+    // await pcClient.createIndexForModel({
+    //   name: collectionName,
+    //   cloud: "aws",
+    //   region: "us-east-1",
+    //   embed: {
+    //     model: "multilingual-e5-large",
+    //     fieldMap: { text: "chunk_text" },
+    //   },
+    //   waitUntilReady: true,
+    // });
+    await pcClient.createIndex({
+      name: collectionName,
+      dimension: 1536,
+      metric: "cosine",
+      spec: {
+        pod: {
+          environment: "us-east-1-aws",
+          pods: 1,
+          podType: "p1.x1",
+        },
+      },
+      // waitUntilReady: true,
     });
-    console.log("New collection:", qdResponse);
 
     const project = await prisma.project.create({
       data: {
@@ -73,13 +106,13 @@ export async function action({ request }: Route.ActionArgs) {
       },
     });
 
-    const result = await qdClient.createCollection(
-      `${slugify(name)}_collection`,
-      {
-        vectors: { size: 4, distance: "Dot" },
-      }
-    );
-    console.log("new collection:", result);
+    // const result = await qdClient.createCollection(
+    //   `${slugify(name)}_collection`,
+    //   {
+    //     vectors: { size: 4, distance: "Dot" },
+    //   }
+    // );
+    // console.log("new collection:", result);
 
     return redirect(appRoutes("/dashboard", { id: project.publicId }));
   } catch (error) {
