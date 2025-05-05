@@ -8,7 +8,7 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { uploadJsonToBucket } from "~/.server/aws/uploadToS3";
+import { uploadJsonToBucket } from "~/.server/aws/uploadJsonToBucket";
 import { fcApp } from "~/.server/firecrawl/fcApp";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { generateId } from "~/.server/utils/generateId";
