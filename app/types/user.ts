@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma-app/client";
+import type { Prisma } from "@prisma/client";
 
 // TODO: unused?
 export type UserWithRelations = Prisma.UserGetPayload<{
