@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { AUTH_USER_KEY } from "~/config/auth";
+import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
-import { prisma } from "../../lib/prisma";
 import { destroySession } from "./destroySession";
 import { getCookieValue } from "./getCookieValue";
 
