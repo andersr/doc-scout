@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
 
-// TODO: rename to requireRouteParam
 export function requireParam({
   params,
   key,

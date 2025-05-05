@@ -1,20 +1,5 @@
 import type { Prisma } from "@prisma/client";
 
-// TODO: unused?
-export type UserWithRelations = Prisma.UserGetPayload<{
-  include: {
-    projectMemberships: {
-      include: {
-        project: {
-          include: {
-            sources: true;
-          };
-        };
-      };
-    };
-  };
-}>;
-
 // TODO: same select as in getClientUser
 export type UserClient = Prisma.UserGetPayload<{
   select: {
@@ -39,6 +24,3 @@ export type UserClient = Prisma.UserGetPayload<{
     };
   };
 }>;
-
-// TODO: add client only project and source data
-// export type UserClient = Pick<UserWithRelations, "email" | "publicId">;

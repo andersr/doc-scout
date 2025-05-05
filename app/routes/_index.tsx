@@ -5,11 +5,6 @@ import { getClientUser } from "~/.server/users/getClientUser";
 import { MainLayout } from "~/components/MainLayout";
 import type { Route } from "./+types/_index";
 
-// export function meta({}: Route.MetaArgs) {
-//   return [{ title: "Research App" }, { name: "description", content: "" }];
-// }
-// required?  internal or client?
-
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const currentUser = await getClientUser({ request });

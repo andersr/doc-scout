@@ -1,4 +1,4 @@
-import slugifyPkg from "slugify";
+import slugifyModule from "slugify";
 
 export const slugify = (
   str: string,
@@ -7,7 +7,7 @@ export const slugify = (
     replacement: "-",
   }
 ) =>
-  slugifyPkg(str, {
+  slugifyModule(str, {
     lower: options.lower,
     strict: true,
     trim: true,
