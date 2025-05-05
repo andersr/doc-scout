@@ -1,5 +1,5 @@
-import { prisma } from "~/.server/db";
 import { requireUser } from "~/.server/sessions/requireUser";
+import { prisma } from "~/lib/prisma";
 import type { Route } from "./+types/_main.dashboard";
 
 export function meta({}: Route.MetaArgs) {

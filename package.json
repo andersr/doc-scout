@@ -10,7 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.7.0",
     "@react-router/fs-routes": "^7.5.2",
     "@react-router/node": "^7.5.2",
     "@react-router/serve": "^7.5.2",
@@ -30,11 +30,11 @@
     "@types/node": "^20",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
-    "prisma": "^6.6.0",
+    "prisma": "^6.7.0",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2",
-    "vite": "^5.4.11",
+    "vite": "^6.3.4",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

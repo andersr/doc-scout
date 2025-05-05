@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { data, Form, useActionData, useNavigation } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { prisma } from "~/.server/db";
 import { createSession } from "~/.server/sessions/createSession";
 import { requireAnon } from "~/.server/sessions/requireAnon";
 import { upsertUser } from "~/.server/users/upsertUser";
+import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { Route } from "./+types/login";
