@@ -1,6 +1,5 @@
-import type { User } from "@prisma-app/client";
-
-import { prisma } from "../db";
+import type { User } from "@prisma/client";
+import { prisma } from "~/lib/prisma";
 import { generateId } from "../utils/generateId";
 
 export function upsertUser({
