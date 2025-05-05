@@ -8,7 +8,7 @@ import { s3Client } from "./s3Client";
  * @param data The data to upload as JSON
  * @returns Promise resolving to the S3 response
  */
-export async function uploadJsonToS3(key: string, data: any) {
+export async function uploadJsonToBucket(key: string, data: any) {
   const command = new PutObjectCommand({
     Bucket: ENV.AWS_DATA_BUCKET_NAME,
     Key: key,

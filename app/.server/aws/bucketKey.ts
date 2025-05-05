@@ -2,16 +2,6 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from "../ENV";
 import { s3Client } from "./s3Client";
 
-const setProjectSourceKey = ({
-  projectPublicId,
-  sourcePublicId,
-  fileName,
-}: {
-  projectPublicId: string;
-  sourcePublicId: string;
-  fileName: string;
-}) => ["projects", projectPublicId, "sources", sourcePublicId, fileName];
-
 /**
  * Get data from S3 bucket
  * @param key The S3 object key (file path)

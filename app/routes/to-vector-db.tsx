@@ -7,7 +7,7 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { uploadJsonToS3 } from "~/.server/aws/uploadToS3";
+import { uploadJsonToBucket } from "~/.server/aws/uploadToS3";
 import { fcApp } from "~/.server/firecrawl/fcApp";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { slugify } from "~/.server/utils/slugify";
@@ -76,7 +76,7 @@ export async function action({ request }: Route.ActionArgs) {
     })}.json`;
 
     // Upload the scrape response to S3
-    await uploadJsonToS3(s3Key, scrapeResponse);
+    await uploadJsonToBucket(s3Key, scrapeResponse);
 
     // add to vector db: https://qdrant.tech/documentation/examples/rag-chatbot-scaleway/ https://js.langchain.com/docs/introduction/ https://www.npmjs.com/package/@qdrant/qdrant-js https://js.langchain.com/docs/tutorials/rag
     // will work for a single file, but not ideal for batches

@@ -8,7 +8,7 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { uploadJsonToS3 } from "~/.server/aws/uploadToS3";
+import { uploadJsonToBucket } from "~/.server/aws/uploadToS3";
 import { fcApp } from "~/.server/firecrawl/fcApp";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { generateId } from "~/.server/utils/generateId";
@@ -209,7 +209,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
     // console.log("s3Key: ", s3Key);
     // Upload the scrape response to S3
-    await uploadJsonToS3(storagePath, scrapeResponse);
+    await uploadJsonToBucket(storagePath, scrapeResponse);
 
     await prisma.source.create({
       data: {
