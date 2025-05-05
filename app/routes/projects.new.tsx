@@ -9,14 +9,14 @@ import {
 } from "react-router";
 import { twMerge } from "tailwind-merge";
 // import { qdClient } from "~/.server/qdrant/client";
-import { Role } from "@prisma-app/client";
+import { Role } from "@prisma/client";
 import { ENV } from "~/.server/ENV";
-import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { requireInternalUser } from "~/.server/users/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
+import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";

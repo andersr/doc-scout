@@ -10,12 +10,12 @@ import {
 import { twMerge } from "tailwind-merge";
 import { uploadJsonToS3 } from "~/.server/aws/uploadToS3";
 import { fcApp } from "~/.server/firecrawl/fcApp";
-import { prisma } from "~/.server/prisma/client";
 import { getClientUser } from "~/.server/users/getClientUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
+import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import {
   INTENTIONALLY_GENERIC_ERROR_MESSAGE,

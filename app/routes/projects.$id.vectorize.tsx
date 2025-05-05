@@ -3,7 +3,7 @@ import type { Document } from "node_modules/@langchain/core/dist/documents";
 import { data, Form, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { getBucketData } from "~/.server/aws/getFromBucket";
-import { prisma } from "~/.server/prisma/client";
+import { prisma } from "~/lib/prisma";
 // import { vectorStore } from "~/.server/langchain/vectorStore";
 // import { vectorStore } from "~/.server/langchain/vectorStore";
 import { getVectorStore } from "~/.server/langchain/vectorStore";
