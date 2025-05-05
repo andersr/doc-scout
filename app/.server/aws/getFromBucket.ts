@@ -22,13 +22,11 @@ export async function getBucketData(paths: string[]): Promise<ScrapeData[]> {
 
   for (let index = 0; index < paths.length; index++) {
     const res = await getFromBucket(paths[index]);
-    // console.log("res: ", res);
 
     if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
       throw new Error("error getting data from bucket");
     }
     const bodyString = await res?.Body?.transformToString();
-    // console.log("bodyString: ", bodyString);
 
     const sourceData: ScrapeData = JSON.parse(bodyString);
 
