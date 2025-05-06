@@ -1,6 +1,5 @@
 import { Link, useLoaderData } from "react-router";
-import { getClientUser } from "~/.server/users/getClientUser";
-import { requireUserPublicId } from "~/.server/users/getUserPublicId";
+import { requireUser } from "~/.server/users/requireUser";
 import { MainLayout } from "~/components/MainLayout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_index";
@@ -10,14 +9,13 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const publicId = await requireUserPublicId({ request });
+  const currentUser = await requireUser({ request });
   // console.log("publicId: ", publicId);
 
   // if (!publicId) {
   //   throw redirect("/login");
   // }
 
-  const currentUser = await getClientUser({ publicId });
   // const user = await requireUser({ request });
 
   // const existingIndexes = await pcClient.listIndexes();
