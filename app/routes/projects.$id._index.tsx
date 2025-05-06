@@ -8,7 +8,7 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/dashboard";
+import type { Route } from "./+types/projects.$id._index";
 
 export function meta() {
   return [{ title: "Project Details" }, { name: "description", content: "" }];

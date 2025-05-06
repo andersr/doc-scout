@@ -1,10 +1,13 @@
 import { prisma } from "~/lib/prisma";
-import type { DataRequest } from "~/types/dataRequest";
 import { logout } from "../sessions/logout";
 import { getUserPublicId } from "./getUserPublicId";
 
-export async function requireInternalUser({ request }: DataRequest) {
+export async function requireUser({ request }: { request: Request }) {
   const publicId = await getUserPublicId({ request });
+
+  if (!publicId) {
+    throw await logout({ request });
+  }
 
   const user = await prisma.user.findUnique({
     where: {

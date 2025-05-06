@@ -1,22 +1,13 @@
+import { GoSignOut } from "react-icons/go";
 import { Form } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
 
 export function Logout() {
   return (
-    <Form
-      method="POST"
-      action={appRoutes("/logout")}
-      // onSubmit={() => (onClick ? onClick() : undefined)}
-    >
-      <button
-        type="submit"
-        className={twMerge(
-          "text-dark-blue font-medium hover:bg-grey-1 p-3 rounded",
-          // HOVER_TRANSITION,
-        )}
-      >
-        Sign Out
+    <Form method="POST" action={appRoutes("/logout")} className="inline">
+      <button type="submit" className={twMerge("")} aria-label="Sign Out">
+        <GoSignOut className="text-xl" />
       </button>
     </Form>
   );

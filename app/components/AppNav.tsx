@@ -3,12 +3,9 @@ import { appRoutes } from "~/shared/appRoutes";
 
 export function AppNav() {
   return (
-    <ul>
+    <ul className="flex flex-wrap gap-2">
       <li>
         <Link to={appRoutes("/")}>Home</Link>
-      </li>
-      <li>
-        <Link to={appRoutes("/dashboard")}>Dashboard</Link>
       </li>
     </ul>
   );

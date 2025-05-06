@@ -9,8 +9,7 @@ import {
   useNavigation,
 } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { getClientUser } from "~/.server/users/getClientUser";
-import { requireInternalUser } from "~/.server/users/requireInternalUser";
+import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
@@ -18,21 +17,16 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
-import type { Route } from "./+types/dashboard";
+import type { Route } from "./+types/projects.new";
 
 export function meta() {
   return [{ title: "New Project" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  try {
-    const currentUser = await getClientUser({ request, require: true });
+  const currentUser = await requireUser({ request });
 
-    return { currentUser };
-  } catch (error) {
-    console.error("error: ", error);
-    return { currentUser: null };
-  }
+  return { currentUser };
 }
 
 // Define a consistent return type for the action
@@ -44,7 +38,7 @@ type ActionData = {
 
 export async function action({ request }: Route.ActionArgs) {
   try {
-    const internalUser = await requireInternalUser({ request, require: true });
+    const internalUser = await requireUser({ request });
 
     const formPayload = Object.fromEntries(await request.formData());
     const nameData = formPayload[PARAMS.NAME];
@@ -70,7 +64,7 @@ export async function action({ request }: Route.ActionArgs) {
       },
     });
 
-    return redirect(appRoutes("/dashboard", { id: project.publicId }));
+    return redirect(appRoutes("/", { id: project.publicId }));
   } catch (error) {
     console.error("URL submission error: ", error);
     return data<ActionData>({

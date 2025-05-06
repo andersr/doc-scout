@@ -1,16 +1,17 @@
 import { Link } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
-import type { UserClient } from "~/types/user";
+import type { UserInternal } from "~/types/user";
 import { Logout } from "./Logout";
 
 export interface UserNavProps {
-  currentUser: UserClient | null;
+  currentUser: UserInternal | null;
 }
 
 export function UserNav({ currentUser }: UserNavProps) {
   return currentUser ? (
-    <div>
-      User: {currentUser.email}, <Logout />
+    <div className="flex items-center gap-4">
+      {currentUser.email}
+      <Logout />
     </div>
   ) : (
     <div>

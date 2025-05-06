@@ -17,7 +17,7 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  await requireAnon(request);
+  // await requireAnon(request);
 
   try {
     // const users = await prisma.user.findMany({});
