@@ -12,7 +12,7 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: "Vectorize" }, { name: "description", content: "" }];
 }
 

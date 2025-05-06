@@ -25,7 +25,7 @@ import { PARAMS } from "~/shared/params";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: "Add source" }, { name: "description", content: "" }];
 }
 

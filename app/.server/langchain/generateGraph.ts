@@ -12,6 +12,7 @@ export async function generateGraph({
 }) {
   const promptTemplate = PromptTemplate.fromTemplate(RAG_TEMPLATE);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const InputStateAnnotation = Annotation.Root({
     question: Annotation<string>,
   });

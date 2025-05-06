@@ -10,7 +10,7 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: "Project Details" }, { name: "description", content: "" }];
 }
 
@@ -164,7 +164,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       collectionName: project.collectionName,
     });
 
-    let inputs = {
+    const inputs = {
       question: "What is AI Assistant Structured Output?",
     };
 
