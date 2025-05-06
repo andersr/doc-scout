@@ -2,12 +2,7 @@ import { Form } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
 
-export function Logout({}: // onClick,
-// label,
-{
-  // onClick?: () => void;
-  // label?: string;
-}) {
+export function Logout() {
   return (
     <Form
       method="POST"
@@ -17,7 +12,7 @@ export function Logout({}: // onClick,
       <button
         type="submit"
         className={twMerge(
-          "text-dark-blue font-medium hover:bg-grey-1 p-3 rounded"
+          "text-dark-blue font-medium hover:bg-grey-1 p-3 rounded",
           // HOVER_TRANSITION,
         )}
       >

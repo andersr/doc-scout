@@ -5,7 +5,7 @@ export const slugify = (
   options: { lower?: boolean; replacement?: "_" | "-" } = {
     lower: true,
     replacement: "-",
-  }
+  },
 ) =>
   slugifyModule(str, {
     lower: options.lower,

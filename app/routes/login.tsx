@@ -9,7 +9,7 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { Route } from "./+types/login";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -71,7 +71,7 @@ export default function LoginRoute() {
   const navigation = useNavigation();
 
   const [emailValue, setEmailValue] = useState("");
-  const [confirmationMessage, setConfirmationMessage] = useState("");
+  // const [confirmationMessage, setConfirmationMessage] = useState("");
 
   // useEffect(() => {
   //   if (actionData?.email) {
@@ -145,7 +145,7 @@ export default function LoginRoute() {
               disabled={submitDisbled}
               className={twMerge(
                 "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full",
-                submitDisbled ? "bg-grey-1 text-grey-3 cursor-wait" : ""
+                submitDisbled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
               )}
             >
               {submitDisbled ? "Sending..." : "Sign In"}

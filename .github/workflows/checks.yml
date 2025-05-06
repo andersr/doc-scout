@@ -1,0 +1,29 @@
+name: ✅ App checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+env:
+  NODE_VERSION: 22
+
+jobs:
+  lint:
+    name: 🔬 Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📥 Install deps
+        run: npm install
+
+      - name: 🔬 Lint
+        run: npm run lint

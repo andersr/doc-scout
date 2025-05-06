@@ -10,7 +10,7 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: "Project Details" }, { name: "description", content: "" }];
 }
 
@@ -20,12 +20,12 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     const projectId = requireParam({ params, key: "id" });
 
     const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectId
+      (pm) => pm.project?.publicId === projectId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
@@ -84,7 +84,7 @@ export default function ProjectDetails() {
           <button
             type="submit"
             className={twMerge(
-              "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer"
+              "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
             )}
           >
             generate graph
@@ -134,12 +134,12 @@ export async function action({ request, params }: Route.ActionArgs) {
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectPublicId
+      (pm) => pm.project?.publicId === projectPublicId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
@@ -164,12 +164,12 @@ export async function action({ request, params }: Route.ActionArgs) {
       collectionName: project.collectionName,
     });
 
-    let inputs = {
+    const inputs = {
       question: "What is AI Assistant Structured Output?",
     };
 
     const result = await graph.invoke(inputs);
-    console.log(result.answer);
+    console.info(result.answer);
 
     return data<ActionData>({
       errorMessage: "",

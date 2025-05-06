@@ -20,7 +20,7 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { Route } from "./+types/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [{ title: "New Project" }, { name: "description", content: "" }];
 }
 
@@ -114,7 +114,7 @@ export default function NewProject() {
               disabled={submitDisabled}
               className={twMerge(
                 "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : ""
+                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
               )}
             >
               {submitDisabled ? "Submitting..." : "Create Project"}
