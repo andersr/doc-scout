@@ -18,6 +18,7 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
+import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/projects.new";
 
 export function meta() {
@@ -30,12 +31,55 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { currentUser };
 }
 
-// Define a consistent return type for the action
-type ActionData = {
-  errorMessage?: string;
-  successMessage?: string;
-  ok: boolean;
-};
+export default function NewProject() {
+  const { currentUser } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+
+  const [inputValue, setInputValue] = useState("");
+
+  const submitDisabled =
+    inputValue.trim().length === 0 || navigation.state !== "idle";
+
+  return (
+    <MainLayout currentUser={currentUser}>
+      <div className="mx-auto max-w-3xl px-4">
+        <PageTitle>New Project</PageTitle>
+        <div className="">
+          <Form method="POST" className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor={PARAMS.NAME}>Name</label>
+              <input
+                name={PARAMS.NAME}
+                placeholder="Project name"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={submitDisabled}
+              className={twMerge(
+                "p-4 rounded w-full border border-blue-400 disabled:border-gray-300 disabled:text-gray-400 cursor-pointer ",
+                navigation.state !== "idle" ? "cursor-wait" : "",
+              )}
+            >
+              {navigation.state !== "idle" ? "Submitting..." : "Create Project"}
+            </button>
+          </Form>
+
+          {actionData?.errorMessage && (
+            <div className="mt-4 text-center font-semibold text-red-400">
+              {actionData.errorMessage}
+            </div>
+          )}
+        </div>
+      </div>
+    </MainLayout>
+  );
+}
 
 export async function action({ request }: Route.ActionArgs) {
   try {
@@ -65,7 +109,7 @@ export async function action({ request }: Route.ActionArgs) {
       },
     });
 
-    return redirect(appRoutes("/", { id: project.publicId }));
+    return redirect(appRoutes("/projects/:id", { id: project.publicId }));
   } catch (error) {
     console.error("URL submission error: ", error);
     return data<ActionData>({
@@ -73,56 +117,4 @@ export async function action({ request }: Route.ActionArgs) {
       ok: false,
     });
   }
-}
-
-export default function NewProject() {
-  const { currentUser } = useLoaderData<typeof loader>();
-  const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
-
-  const [inputValue, setInputValue] = useState("");
-
-  const submitDisabled = navigation.state === "submitting";
-
-  return (
-    <MainLayout currentUser={currentUser}>
-      <div className="mx-auto max-w-3xl px-4">
-        <PageTitle>New Project</PageTitle>
-
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <Form method="POST" className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="url">Name</label>
-              <input
-                type="text"
-                name={PARAMS.NAME}
-                placeholder="Project name"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={submitDisabled}
-              className={twMerge(
-                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
-              )}
-            >
-              {submitDisabled ? "Submitting..." : "Create Project"}
-            </button>
-          </Form>
-
-          {actionData?.errorMessage && (
-            <div className="mt-4 text-center font-semibold text-red-400">
-              {actionData.errorMessage}
-            </div>
-          )}
-        </div>
-      </div>
-    </MainLayout>
-  );
 }
