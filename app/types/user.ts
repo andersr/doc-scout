@@ -1,3 +1,26 @@
-import type { User } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-export type UserClient = Pick<User, "email" | "publicId">;
+// TODO: same select as in getClientUser
+export type UserClient = Prisma.UserGetPayload<{
+  select: {
+    email: true;
+    publicId: true;
+    projectMemberships: {
+      select: {
+        project: {
+          select: {
+            name: true;
+            publicId: true;
+            sources: {
+              select: {
+                name: true;
+                url: true;
+                publicId: true;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}>;
