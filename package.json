@@ -4,11 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "checks": "run-p lint typecheck",
     "dev": "react-router dev",
     "lint": "eslint --fix",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prepare": "husky"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.799.0",
@@ -51,6 +53,8 @@
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "npm-run-all2": "^8.0.1",
     "prettier": "3.5.3",
     "prisma": "^6.7.0",
     "react-router-devtools": "^5.0.0",
