@@ -1,22 +1,22 @@
 import { data, Form, Link, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { generateGraph } from "~/.server/langchain/generateGraph";
-import { getClientUser } from "~/.server/users/getClientUser";
+import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/dashboard";
+import type { Route } from "./+types/projects.$id._index";
 
 export function meta() {
   return [{ title: "Project Details" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
+  const currentUser = await requireUser({ request });
   try {
-    const currentUser = await getClientUser({ request, require: true });
     const projectId = requireParam({ params, key: "id" });
 
     const projectMembership = currentUser?.projectMemberships.find(
@@ -116,8 +116,8 @@ export default function ProjectDetails() {
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
+  const currentUser = await requireUser({ request });
   try {
-    const currentUser = await getClientUser({ request, require: true });
     const user = await prisma.user.findUniqueOrThrow({
       where: {
         publicId: currentUser?.publicId ?? "",

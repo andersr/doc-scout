@@ -4,38 +4,33 @@ import { data, Form, useActionData, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { getBucketData } from "~/.server/aws/getFromBucket";
 import { getVectorStore } from "~/.server/langchain/vectorStore";
-import { getClientUser } from "~/.server/users/getClientUser";
+import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
 import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/dashboard";
+import type { Route } from "./+types/projects.$id.vectorize";
 
 export function meta() {
   return [{ title: "Vectorize" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-  try {
-    const currentUser = await getClientUser({ request, require: true });
-    const projectId = requireParam({ params, key: "id" });
+  const currentUser = await requireUser({ request });
+  const projectId = requireParam({ params, key: "id" });
 
-    const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectId,
+  const projectMembership = currentUser?.projectMemberships.find(
+    (pm) => pm.project?.publicId === projectId,
+  );
+
+  if (!projectMembership) {
+    throw new Error(
+      "No matching project found or current user is not a member",
     );
-
-    if (!projectMembership) {
-      throw new Error(
-        "No matching project found or current user is not a member",
-      );
-    }
-
-    return { currentUser, project: projectMembership.project };
-  } catch (error) {
-    console.error("error: ", error);
-    return { currentUser: null, project: null };
   }
+
+  return { currentUser, project: projectMembership.project };
 }
 
 export default function ProjectDetails() {
@@ -98,7 +93,7 @@ export default function ProjectDetails() {
 
 export async function action({ request, params }: Route.ActionArgs) {
   try {
-    const currentUser = await getClientUser({ request, require: true });
+    const currentUser = await requireUser({ request });
     const user = await prisma.user.findUniqueOrThrow({
       where: {
         publicId: currentUser?.publicId ?? "",

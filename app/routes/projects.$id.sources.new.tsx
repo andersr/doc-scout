@@ -10,7 +10,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import { uploadJsonToBucket } from "~/.server/aws/uploadJsonToBucket";
 import { fcApp } from "~/.server/firecrawl/fcApp";
-import { getClientUser } from "~/.server/users/getClientUser";
+import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { slugify } from "~/.server/utils/slugify";
@@ -23,15 +23,16 @@ import {
 } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/dashboard";
+import type { Route } from "./+types/projects.$id.sources.new";
 
 export function meta() {
   return [{ title: "Add source" }, { name: "description", content: "" }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
+  const currentUser = await requireUser({ request });
+
   try {
-    const currentUser = await getClientUser({ request, require: true });
     const projectId = requireParam({ params, key: "id" });
 
     const projectMembership = currentUser?.projectMemberships.find(
@@ -120,8 +121,9 @@ export default function NewSource() {
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
+  const currentUser = await requireUser({ request });
+
   try {
-    const currentUser = await getClientUser({ request, require: true });
     const user = await prisma.user.findUniqueOrThrow({
       where: {
         publicId: currentUser?.publicId ?? "",

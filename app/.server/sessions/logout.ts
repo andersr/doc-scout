@@ -7,7 +7,7 @@ export async function logout({ request }: { request: Request }) {
   const cookie = await getSessionCookie({
     request,
   });
-  return redirect(appRoutes("/login"), {
+  throw redirect(appRoutes("/login"), {
     headers: {
       "Set-Cookie": await authSessionStore.destroySession(cookie),
     },
