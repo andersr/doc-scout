@@ -4,14 +4,19 @@ import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
+import { PageTitle } from "~/components/PageTitle";
+import { useFetcherWithReset } from "~/hooks/useFetcherWithReset";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { Route } from "./+types/projects.$id._index";
 
-export function meta() {
-  return [{ title: "Project Details" }, { name: "description", content: "" }];
+export function meta({ data }: Route.MetaArgs) {
+  return [
+    { title: `Project: ${data.project?.name}` },
+    { name: "description", content: "" },
+  ];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -40,12 +45,14 @@ export default function ProjectDetails() {
   const { currentUser, project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
+  const deleteFetcher = useFetcherWithReset<{
+    errorMessage?: string;
+  }>();
+
   return (
     <MainLayout currentUser={currentUser}>
-      <div className="mx-auto max-w-3xl px-4">
-        <h1 className="text-2xl font-bold mb-6">Project: {project?.name}</h1>
-      </div>
-      <div className="mx-auto max-w-3xl px-4">
+      <PageTitle>Project: {project?.name}</PageTitle>
+      <div className="">
         {project?.publicId ? (
           <Link
             className="underline text-blue-600"
@@ -79,8 +86,8 @@ export default function ProjectDetails() {
           ))}
         </ul>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <Form method="POST" className="flex flex-col gap-4">
+      <div className="">
+        <Form method="POST" className="">
           <button
             type="submit"
             className={twMerge(
@@ -90,6 +97,26 @@ export default function ProjectDetails() {
             generate graph
           </button>
         </Form>
+
+        <div className="p-4">
+          {project?.publicId && (
+            <deleteFetcher.Form
+              method="DELETE"
+              action={appRoutes("/api/projects/:id", {
+                id: project?.publicId,
+              })}
+              onSubmit={(event) => {
+                if (!confirm("Are you sure?")) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <button type="submit" className={twMerge("")}>
+                Delete project
+              </button>
+            </deleteFetcher.Form>
+          )}
+        </div>
 
         {actionData?.errorMessage && (
           <div className="mt-4 text-center font-semibold text-red-400">

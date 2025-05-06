@@ -13,6 +13,7 @@ import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
+import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -86,7 +87,7 @@ export default function NewProject() {
   return (
     <MainLayout currentUser={currentUser}>
       <div className="mx-auto max-w-3xl px-4">
-        <h1 className="text-2xl font-bold mb-6">New Project</h1>
+        <PageTitle>New Project</PageTitle>
 
         <div className="bg-white p-6 rounded-lg shadow-md">
           <Form method="POST" className="flex flex-col gap-4">

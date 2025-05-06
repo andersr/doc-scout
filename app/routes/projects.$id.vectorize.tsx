@@ -7,6 +7,7 @@ import { getVectorStore } from "~/.server/langchain/vectorStore";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { MainLayout } from "~/components/MainLayout";
+import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
@@ -41,9 +42,7 @@ export default function ProjectDetails() {
   return (
     <MainLayout currentUser={currentUser}>
       <div className="mx-auto max-w-3xl px-4">
-        <h1 className="text-2xl font-bold mb-6">
-          Vectorize sources: {project?.name}
-        </h1>
+        <PageTitle>Vectorize sources: {project?.name}</PageTitle>
       </div>
       <div className="mx-auto max-w-3xl px-4">
         <h2 className="text-xl font-bold mb-6">Sources</h2>

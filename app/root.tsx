@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { PageTitle } from "./components/PageTitle";
 
 export function meta() {
   return [{ title: "Research App" }, { name: "description", content: "" }];
@@ -67,7 +68,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
+      <PageTitle>{message}</PageTitle>
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
