@@ -169,7 +169,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     };
 
     const result = await graph.invoke(inputs);
-    console.log(result.answer);
+    console.info(result.answer);
 
     return data<ActionData>({
       errorMessage: "",

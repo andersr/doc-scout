@@ -19,6 +19,14 @@ export default defineConfig([
         version: "detect",
       },
     },
+    rules: {
+      "no-console": [
+        "error",
+        {
+          allow: ["warn", "error", "info"],
+        },
+      ],
+    },
   },
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,

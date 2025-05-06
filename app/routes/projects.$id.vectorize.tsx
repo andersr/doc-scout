@@ -140,7 +140,6 @@ export async function action({ request, params }: Route.ActionArgs) {
     const sourcePaths = project.sources
       .map((s) => s.storagePath)
       .filter((p) => p !== null);
-    console.log("sourcePaths: ", sourcePaths);
 
     if (sourcePaths.length === 0) {
       return data<ActionData>({
