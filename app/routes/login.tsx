@@ -17,16 +17,9 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  // await requireAnon(request);
+  await requireAnon(request);
 
-  try {
-    // const users = await prisma.user.findMany({});
-    // console.log(users);
-    return { data: null };
-  } catch (error) {
-    console.error("error: ", error);
-    return { data: null };
-  }
+  return {};
 }
 
 export async function action({ request }: Route.ActionArgs) {
