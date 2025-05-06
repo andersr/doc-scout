@@ -16,7 +16,7 @@ export async function maybeUser(request: Request): Promise<null | User> {
     });
   } catch (error) {
     console.warn(
-      "user token is in the session but no user found in the db - maybe they were deleted?"
+      "user token is in the session but no user found in the db - maybe they were deleted?",
     );
     console.error("maybeUser error: ", error);
     return null;

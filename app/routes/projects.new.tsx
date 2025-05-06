@@ -114,7 +114,7 @@ export default function NewProject() {
               disabled={submitDisabled}
               className={twMerge(
                 "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : ""
+                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
               )}
             >
               {submitDisabled ? "Submitting..." : "Create Project"}

@@ -35,12 +35,12 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     const projectId = requireParam({ params, key: "id" });
 
     const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectId
+      (pm) => pm.project?.publicId === projectId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
@@ -87,7 +87,7 @@ export default function NewSource() {
               disabled={submitDisabled}
               className={twMerge(
                 "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : ""
+                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
               )}
             >
               {submitDisabled ? "Adding..." : "Add"}
@@ -137,12 +137,12 @@ export async function action({ request, params }: Route.ActionArgs) {
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectPublicId
+      (pm) => pm.project?.publicId === projectPublicId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
@@ -202,7 +202,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     // })}.json`;
 
     const storagePath = `projects/${projectPublicId}/sources/${sourcePublicId}/${slugify(
-      url
+      url,
     )}_${slugify(timestamp, {
       lower: false,
     })}.json`;

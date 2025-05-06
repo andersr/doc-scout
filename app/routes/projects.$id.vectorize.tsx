@@ -22,12 +22,12 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     const projectId = requireParam({ params, key: "id" });
 
     const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectId
+      (pm) => pm.project?.publicId === projectId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
@@ -64,7 +64,7 @@ export default function ProjectDetails() {
             <button
               type="submit"
               className={twMerge(
-                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer"
+                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
               )}
             >
               Vectorize
@@ -115,12 +115,12 @@ export async function action({ request, params }: Route.ActionArgs) {
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectPublicId
+      (pm) => pm.project?.publicId === projectPublicId,
     );
 
     if (!projectMembership) {
       throw new Error(
-        "No matching project found or current user is not a member"
+        "No matching project found or current user is not a member",
       );
     }
 
