@@ -15,6 +15,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { slugify } from "~/.server/utils/slugify";
 import { MainLayout } from "~/components/MainLayout";
+import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import {
@@ -64,9 +65,7 @@ export default function NewSource() {
   return (
     <MainLayout currentUser={currentUser}>
       <div className="mx-auto max-w-3xl px-4">
-        <h1 className="text-2xl font-bold mb-6">
-          Project: {project?.name}: Add source
-        </h1>
+        <PageTitle>Project: {project?.name}: Add source</PageTitle>
         <div className="bg-white p-6 rounded-lg shadow-md">
           <Form method="POST" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">

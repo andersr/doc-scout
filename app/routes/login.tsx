@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { createSession } from "~/.server/sessions/createSession";
 import { requireAnon } from "~/.server/sessions/requireAnon";
 import { upsertUser } from "~/.server/users/upsertUser";
+import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
@@ -87,7 +88,7 @@ export default function LoginRoute() {
     <>
       <div className="mx-auto flex max-w-3xl flex-col gap-16 px-4">
         <div className="flex flex-col gap-6">
-          <h1 className={twMerge("text-center")}>Sign In</h1>
+          <PageTitle>Sign In</PageTitle>
         </div>
         <div className="mx-auto flex w-full max-w-sm flex-col gap-6 md:max-w-xs">
           {/* <googleFetcher.Form

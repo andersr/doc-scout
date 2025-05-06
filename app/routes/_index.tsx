@@ -1,6 +1,7 @@
 import { Link, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
 import { MainLayout } from "~/components/MainLayout";
+import { PageTitle } from "~/components/PageTitle";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_index";
 
@@ -20,7 +21,7 @@ export default function Dashboard() {
   return (
     <MainLayout currentUser={currentUser}>
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <PageTitle>Dashboard</PageTitle>
       </div>
       <div className="">
         <div className="flex items-baseline gap-2">
