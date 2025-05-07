@@ -2,7 +2,7 @@ import { data, redirect, useLoaderData } from "react-router";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
-import { ButtonLink } from "~/components/ButtonLink";
+import { LinkButton } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -49,11 +49,11 @@ export default function ProjectSources() {
 
   return (
     <>
-      <ButtonLink
+      <LinkButton
         to={appRoutes("/projects/:id/keys/new", { id: project.publicId })}
       >
         Add API Key
-      </ButtonLink>
+      </LinkButton>
       <ul>
         {project.apiKeys.map((apiKey) => (
           <li key={apiKey.id}>{apiKey.id}</li>
