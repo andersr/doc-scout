@@ -10,6 +10,7 @@ import type { Route } from "../+types/root";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const currentUser = await requireUser({ request });
+
   try {
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util

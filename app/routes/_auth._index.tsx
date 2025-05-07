@@ -1,9 +1,9 @@
 import { Link, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
-import { MainLayout } from "~/components/MainLayout";
+import { ButtonLink } from "~/components/ButtonLink";
 import { PageTitle } from "~/components/PageTitle";
 import { appRoutes } from "~/shared/appRoutes";
-import type { Route } from "./+types/_index";
+import type { Route } from "./+types/_auth._index";
 
 export function meta() {
   return [{ title: "Dashboard" }, { name: "description", content: "" }];
@@ -19,16 +19,14 @@ export default function Dashboard() {
   const { currentUser } = useLoaderData<typeof loader>();
 
   return (
-    <MainLayout currentUser={currentUser}>
+    <>
       <div className="mx-auto max-w-3xl">
         <PageTitle>Dashboard</PageTitle>
       </div>
       <div className="">
         <div className="flex items-baseline gap-2">
           <h2 className="text-xl font-bold mb-6 flex-1">Projects</h2>
-          <Link className="border p-1 rounded" to={appRoutes("/projects/new")}>
-            New Project
-          </Link>
+          <ButtonLink to={appRoutes("/projects/new")}>New Project</ButtonLink>
         </div>
 
         <ul>
@@ -48,6 +46,6 @@ export default function Dashboard() {
           ))}
         </ul>
       </div>
-    </MainLayout>
+    </>
   );
 }

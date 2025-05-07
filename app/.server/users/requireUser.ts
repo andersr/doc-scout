@@ -17,8 +17,19 @@ export async function requireUser({ request }: { request: Request }) {
       projectMemberships: {
         include: {
           project: {
-            include: {
+            select: {
+              id: true,
+              publicId: true,
+              name: true,
+              collectionName: true,
               sources: true,
+              apiKeys: {
+                select: {
+                  id: true,
+                  name: true,
+                  createdAt: true,
+                },
+              },
             },
           },
         },

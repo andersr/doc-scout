@@ -1,5 +1,4 @@
-import { data, Form, Link, useActionData, useLoaderData } from "react-router";
-import { twMerge } from "tailwind-merge";
+import { data, Link, useActionData, useLoaderData } from "react-router";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
@@ -10,11 +9,11 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/projects.$id._index";
+import type { Route } from "./+types/_auth.projects.$id._index";
 
 export function meta({ data }: Route.MetaArgs) {
   return [
-    { title: `Project: ${data.project?.name}` },
+    { title: `Project: ${data.project?.name} > Sources` },
     { name: "description", content: "" },
   ];
 }
@@ -41,7 +40,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   }
 }
 
-export default function ProjectDetails() {
+export default function ProjectPlayground() {
   const { currentUser, project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
@@ -51,7 +50,7 @@ export default function ProjectDetails() {
 
   return (
     <MainLayout currentUser={currentUser}>
-      <PageTitle>Project: {project?.name}</PageTitle>
+      <PageTitle>Project: {project?.name} - Playground</PageTitle>
       <div className="">
         {project?.publicId ? (
           <Link
@@ -65,7 +64,6 @@ export default function ProjectDetails() {
         ) : (
           <span>No public id</span>
         )}
-        <h2 className="text-xl font-bold mb-6">Sources</h2>
         {project?.publicId ? (
           <Link
             className="underline text-blue-600"
@@ -85,58 +83,6 @@ export default function ProjectDetails() {
             </li>
           ))}
         </ul>
-      </div>
-      <div className="">
-        <Form method="POST" className="">
-          <button
-            type="submit"
-            className={twMerge(
-              "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-            )}
-          >
-            generate graph
-          </button>
-        </Form>
-
-        <div className="p-4">
-          {project?.publicId && (
-            <deleteFetcher.Form
-              method="DELETE"
-              action={appRoutes("/api/projects/:id", {
-                id: project?.publicId,
-              })}
-              onSubmit={(event) => {
-                if (!confirm("Are you sure?")) {
-                  event.preventDefault();
-                }
-              }}
-            >
-              <button type="submit" className={twMerge("")}>
-                Delete project
-              </button>
-            </deleteFetcher.Form>
-          )}
-        </div>
-
-        {actionData?.errorMessage && (
-          <div className="mt-4 text-center font-semibold text-red-400">
-            {actionData.errorMessage}
-          </div>
-        )}
-
-        {actionData?.successMessage && (
-          <div className="mt-4 text-center font-semibold text-green-500">
-            {actionData.successMessage}
-            {actionData.s3Key && (
-              <div className="mt-2 text-sm text-gray-600">
-                <p>Saved to S3 with key:</p>
-                <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
-                  {actionData.s3Key}
-                </code>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </MainLayout>
   );
