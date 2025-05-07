@@ -1,6 +1,8 @@
 import { Link, redirect, useLoaderData } from "react-router";
+import { twMerge } from "tailwind-merge";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
+import { useFetcherWithReset } from "~/hooks/useFetcherWithReset";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth.projects.$id._index";
 
@@ -41,26 +43,58 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function ProjectDetails() {
   const { project } = useLoaderData<typeof loader>();
 
+  const deleteFetcher = useFetcherWithReset<{
+    errorMessage?: string;
+  }>();
+
   return (
-    <ul>
-      <li>
-        <Link to={appRoutes("/projects/:id/keys", { id: project.publicId })}>
-          API Keys
-        </Link>
-      </li>
-      <li>
-        <Link to={appRoutes("/projects/:id/sources", { id: project.publicId })}>
-          Sources
-        </Link>
-      </li>
-      <li>
-        <Link
-          to={appRoutes("/projects/:id/playground", { id: project.publicId })}
+    <div>
+      <ul>
+        <li>
+          <Link to={appRoutes("/projects/:id/keys", { id: project.publicId })}>
+            API Keys
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={appRoutes("/projects/:id/sources", { id: project.publicId })}
+          >
+            Sources
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={appRoutes("/projects/:id/playground", { id: project.publicId })}
+          >
+            Playground
+          </Link>
+        </li>
+      </ul>
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+      <h2>Danger Zone</h2>
+      <div className="p-4">
+        <deleteFetcher.Form
+          method="DELETE"
+          action={appRoutes("/resources/projects/:id", {
+            id: project.publicId,
+          })}
+          onSubmit={(event) => {
+            if (!confirm("Are you sure?")) {
+              event.preventDefault();
+            }
+          }}
         >
-          Playground
-        </Link>
-      </li>
-    </ul>
+          <button type="submit" className={twMerge("")}>
+            Delete project
+          </button>
+        </deleteFetcher.Form>
+        {deleteFetcher?.data?.errorMessage && (
+          <div className="mt-4 text-center font-semibold text-red-400">
+            {deleteFetcher?.data?.errorMessage}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

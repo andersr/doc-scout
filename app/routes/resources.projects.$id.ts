@@ -38,16 +38,12 @@ export async function action({ request, params }: Route.ActionArgs) {
       throw new Error("No project id found");
     }
 
-    const project = await prisma.project.delete({
+    await prisma.project.delete({
       where: { id: projectId ?? -1 },
     });
 
     // TODO: use flash message provider instead?
-    return redirect(
-      appRoutes("/", {
-        alertMessage: encodeURIComponent(`${project.name} was deleted.`),
-      }),
-    );
+    return redirect(appRoutes("/"));
 
     // return data<ActionData>({
     //   errorMessage: "",
