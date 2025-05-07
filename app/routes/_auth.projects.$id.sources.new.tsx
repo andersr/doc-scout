@@ -14,8 +14,6 @@ import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { slugify } from "~/.server/utils/slugify";
-import { MainLayout } from "~/components/MainLayout";
-import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import {
@@ -24,7 +22,12 @@ import {
 } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { ActionData } from "~/types/actionData";
-import type { Route } from "./+types/projects.$id.sources.new";
+import type { RouteData } from "~/types/routeData";
+import type { Route } from "./+types/_auth.projects.$id.sources.new";
+
+export const handle: RouteData = {
+  pageTitle: "Add Sources",
+};
 
 export function meta() {
   return [{ title: "Add source" }, { name: "description", content: "" }];
@@ -32,29 +35,26 @@ export function meta() {
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const currentUser = await requireUser({ request });
+  const projectId = requireParam({ params, key: "id" });
 
-  try {
-    const projectId = requireParam({ params, key: "id" });
+  const projectMembership = currentUser?.projectMemberships.find(
+    (pm) => pm.project?.publicId === projectId,
+  );
 
-    const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectId,
-    );
-
-    if (!projectMembership) {
-      throw new Error(
-        "No matching project found or current user is not a member",
-      );
-    }
-
-    return { currentUser, project: projectMembership.project };
-  } catch (error) {
-    console.error("error: ", error);
-    return { currentUser: null, project: null };
+  // Add alert via AlertProvider OR flash message provider
+  if (!projectMembership) {
+    console.warn("user is not a member");
+    throw redirect(appRoutes("/"));
   }
-}
+  if (!projectMembership.project) {
+    console.warn("No project found");
+    throw redirect(appRoutes("/"));
+  }
 
+  return { project: projectMembership.project };
+}
 export default function NewSource() {
-  const { currentUser, project } = useLoaderData<typeof loader>();
+  const { project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
@@ -63,59 +63,54 @@ export default function NewSource() {
   const submitDisabled = navigation.state === "submitting";
 
   return (
-    <MainLayout currentUser={currentUser}>
-      <div className="mx-auto max-w-3xl px-4">
-        <PageTitle>Project: {project?.name}: Add source</PageTitle>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <Form method="POST" className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="url">URL</label>
-              <input
-                type="url"
-                id="url"
-                name={PARAMS.URL}
-                placeholder="https://example.com"
-                value={urlValue}
-                onChange={(e) => setUrlValue(e.target.value)}
-                className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
-                required
-              />
-            </div>
+    <div>
+      <Form method="POST" className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="url">URL</label>
+          <input
+            type="url"
+            id="url"
+            name={PARAMS.URL}
+            placeholder="https://example.com"
+            value={urlValue}
+            onChange={(e) => setUrlValue(e.target.value)}
+            className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
+            required
+          />
+        </div>
 
-            <button
-              type="submit"
-              disabled={submitDisabled}
-              className={twMerge(
-                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-                submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
-              )}
-            >
-              {submitDisabled ? "Adding..." : "Add"}
-            </button>
-          </Form>
-
-          {actionData?.errorMessage && (
-            <div className="mt-4 text-center font-semibold text-red-400">
-              {actionData.errorMessage}
-            </div>
+        <button
+          type="submit"
+          disabled={submitDisabled}
+          className={twMerge(
+            "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
+            submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
           )}
+        >
+          {submitDisabled ? "Adding..." : "Add"}
+        </button>
+      </Form>
 
-          {actionData?.successMessage && (
-            <div className="mt-4 text-center font-semibold text-green-500">
-              {actionData.successMessage}
-              {actionData.s3Key && (
-                <div className="mt-2 text-sm text-gray-600">
-                  <p>Saved to S3 with key:</p>
-                  <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
-                    {actionData.s3Key}
-                  </code>
-                </div>
-              )}
+      {actionData?.errorMessage && (
+        <div className="mt-4 text-center font-semibold text-red-400">
+          {actionData.errorMessage}
+        </div>
+      )}
+
+      {actionData?.successMessage && (
+        <div className="mt-4 text-center font-semibold text-green-500">
+          {actionData.successMessage}
+          {actionData.s3Key && (
+            <div className="mt-2 text-sm text-gray-600">
+              <p>Saved to S3 with key:</p>
+              <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
+                {actionData.s3Key}
+              </code>
             </div>
           )}
         </div>
-      </div>
-    </MainLayout>
+      )}
+    </div>
   );
 }
 
