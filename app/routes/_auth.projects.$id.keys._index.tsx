@@ -56,7 +56,7 @@ export default function ProjectSources() {
       </LinkButton>
       <ul>
         {project.apiKeys.map((apiKey) => (
-          <li key={apiKey.id}>{apiKey.id}</li>
+          <li key={apiKey.id}>{apiKey.name}</li>
         ))}
       </ul>
     </>

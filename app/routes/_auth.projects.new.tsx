@@ -30,7 +30,7 @@ export const handle: RouteData = {
 };
 
 export function meta() {
-  return [{ title: PAGE_TITLE }, { name: "description", content: "" }];
+  return [{ title: PAGE_TITLE }];
 }
 
 export default function NewProject() {
