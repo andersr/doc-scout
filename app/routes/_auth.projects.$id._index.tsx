@@ -48,28 +48,34 @@ export default function ProjectDetails() {
   }>();
 
   return (
-    <div>
-      <ul>
-        <li>
-          <Link to={appRoutes("/projects/:id/keys", { id: project.publicId })}>
-            API Keys
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={appRoutes("/projects/:id/sources", { id: project.publicId })}
-          >
-            Sources
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={appRoutes("/projects/:id/playground", { id: project.publicId })}
-          >
-            Playground
-          </Link>
-        </li>
-      </ul>
+    <>
+      <div className="flex-1">
+        <ul>
+          <li>
+            <Link
+              to={appRoutes("/projects/:id/keys", { id: project.publicId })}
+            >
+              API Keys
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={appRoutes("/projects/:id/sources", { id: project.publicId })}
+            >
+              Sources
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={appRoutes("/projects/:id/playground", {
+                id: project.publicId,
+              })}
+            >
+              Playground
+            </Link>
+          </li>
+        </ul>
+      </div>
       <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
       <h2>Danger Zone</h2>
       <div className="p-4">
@@ -94,7 +100,7 @@ export default function ProjectDetails() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
