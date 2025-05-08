@@ -1,5 +1,5 @@
 {
-  "include": ["app/**/*", ".react-router/types/**/*"],
+  "include": ["app/**/*", ".react-router/types/**/*", "app/.server/**/*"],
   "exclude": ["tmp"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],

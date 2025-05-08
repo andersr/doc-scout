@@ -1,37 +1,46 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import {
-  data,
   Form,
   redirect,
   useActionData,
+  useLoaderData,
+  useNavigate,
   useNavigation,
 } from "react-router";
-import { twMerge } from "tailwind-merge";
-import { uploadJsonToBucket } from "~/.server/aws/uploadJsonToBucket";
-import { fcApp } from "~/.server/firecrawl/fcApp";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
+import { z } from "zod";
 import { requireUser } from "~/.server/users/requireUser";
-import { generateId } from "~/.server/utils/generateId";
+import { genApiKey } from "~/.server/utils/genApiKey";
+import { genRandomString } from "~/.server/utils/genRandomString";
+import { generateHash } from "~/.server/utils/hashUtils";
 import { requireParam } from "~/.server/utils/requireParam";
-import { slugify } from "~/.server/utils/slugify";
+import { CopyButton } from "~/components/buttons/CopyButton";
+import { IconButton } from "~/components/buttons/IconButton";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
-import {
-  INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-  INVALID_URL_ERROR,
-} from "~/shared/messages";
-import { PARAMS } from "~/shared/params";
-import type { ActionData } from "~/types/actionData";
+import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
-
 const SECTION_NAME = "Add API Key";
+
+const schema = z.object({
+  name: z.string().min(1),
+});
+
+type FormData = z.infer<typeof schema>;
+const resolver = zodResolver(schema);
 
 export const handle: RouteData = {
   pageTitle: SECTION_NAME,
 };
 
 export function meta() {
-  return [{ title: SECTION_NAME }, { name: "description", content: "" }];
+  return [{ title: SECTION_NAME }];
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -42,7 +51,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     (pm) => pm.project?.publicId === projectId,
   );
 
-  // Add alert via AlertProvider OR flash message provider
   if (!projectMembership) {
     console.warn("user is not a member");
     throw redirect(appRoutes("/"));
@@ -55,83 +63,120 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return { project: projectMembership.project };
 }
 export default function NewSource() {
-  // const { project } = useLoaderData<typeof loader>();
+  const { project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
 
-  const [inputValue, setInputValue] = useState("");
+  const pendingUi = useNavigation();
+  const navigate = useNavigate();
+  const [showKey, setShowKey] = useState(false);
+  const [copyDone, setCopyDone] = useState(false);
+  const [viewInput, setViewInput] = useState(false);
 
-  const submitDisabled = navigation.state === "submitting";
+  const { handleCopyClick, didCopy } = useCopyToClipboard();
+
+  useEffect(() => {
+    if (!showKey && actionData?.ok && actionData?.apiKey) {
+      setShowKey(true);
+    }
+  }, [actionData]);
+
+  useEffect(() => {
+    if (copyDone) {
+      setTimeout(() => {
+        setCopyDone(false);
+      }, 3000);
+    }
+  }, [copyDone]);
+
+  const {
+    handleSubmit,
+    formState: { errors, isValid },
+    register,
+  } = useRemixForm<FormData>({
+    mode: "onSubmit",
+    resolver,
+  });
 
   return (
-    <div>
-      <Form method="POST" className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <label htmlFor={PARAMS.NAME}>Name</label>
-          <input
-            id={PARAMS.NAME}
-            name={PARAMS.NAME}
-            placeholder="https://example.com"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
-            required
-          />
+    <>
+      {showKey ? (
+        <div className="w-full">
+          <p>
+            This is the API Key &ldquo;{actionData?.name}&rdquo;. It will only
+            be displayed once. Copy it now and store in a safe place.{" "}
+          </p>
+          <div className="flex items-center gap-2">
+            <Input
+              readOnly
+              type={viewInput ? "text" : "password"}
+              value={actionData?.apiKey}
+              className="flex-1"
+            />
+            <IconButton
+              name={viewInput ? "visibility_off" : "visibility"}
+              onClick={() => setViewInput(!viewInput)}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            {actionData?.apiKey && (
+              <CopyButton
+                copyDone={copyDone}
+                onClick={() => {
+                  handleCopyClick(actionData.apiKey);
+                  setCopyDone(true);
+                }}
+              />
+            )}
+            <Button
+              disabled={!didCopy}
+              onClick={() =>
+                navigate(
+                  appRoutes("/projects/:id/keys", { id: project.publicId }),
+                )
+              }
+            >
+              Done
+            </Button>
+          </div>
         </div>
-        <button
-          type="submit"
-          disabled={submitDisabled}
-          className={twMerge(
-            "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-            submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
-          )}
-        >
-          {submitDisabled ? "Adding..." : "Add"}
-        </button>
-      </Form>
-
-      {actionData?.errorMessage && (
-        <div className="mt-4 text-center font-semibold text-red-400">
-          {actionData.errorMessage}
-        </div>
+      ) : (
+        <Form onSubmit={handleSubmit} method="POST">
+          <div className="pb-4">
+            <Label className="pb-2">Name</Label>
+            <Input
+              type="text"
+              placeholder="E.g. Dev Key"
+              {...register("name")}
+            />
+            {errors.name && <p>{errors.name.message}</p>}
+          </div>
+          <Button type="submit" disabled={!isValid}>
+            {pendingUi.state !== "idle" ? "Creating..." : "Continue"}
+          </Button>
+        </Form>
       )}
-
-      {actionData?.successMessage && (
-        <div className="mt-4 text-center font-semibold text-green-500">
-          {actionData.successMessage}
-          {actionData.s3Key && (
-            <div className="mt-2 text-sm text-gray-600">
-              <p>Saved to S3 with key:</p>
-              <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
-                {actionData.s3Key}
-              </code>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
-  const currentUser = await requireUser({ request });
+  const internalUser = await requireUser({ request });
 
   try {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: {
-        publicId: currentUser?.publicId ?? "",
-      },
-      include: {
-        projectMemberships: {
-          include: {
-            project: true,
-          },
-        },
-      },
-    });
+    const {
+      errors,
+      data: formData,
+      receivedValues: defaultValues,
+    } = await getValidatedFormData<FormData>(request, resolver);
+
+    if (errors) {
+      // The keys "errors" and "defaultValues" are picked up automatically by useRemixForm
+      return { errors, defaultValues };
+    }
+
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
-    const projectMembership = user?.projectMemberships.find(
+    const projectMembership = internalUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
     );
 
@@ -147,72 +192,14 @@ export async function action({ request, params }: Route.ActionArgs) {
       throw new Error("No project id found or current user is not a member");
     }
 
-    const formPayload = Object.fromEntries(await request.formData());
-    // TODO: add name param
-    const urlFormData = formPayload[PARAMS.URL];
-    const url = urlFormData.toString().trim();
+    const randomString = genRandomString();
+    const secret = await generateHash(randomString);
 
-    // TODO: get name from title value instead
-    // const nameFormData = formPayload[PARAMS.NAME];
-    // const name = nameFormData.toString().trim();
-
-    // Validate URL
-    const urlPattern =
-      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-    if (!urlPattern.test(url)) {
-      return data<ActionData>({
-        url,
-        errorMessage: INVALID_URL_ERROR,
-        ok: false,
-      });
-    }
-
-    // Scrape a website
-    const scrapeResponse = await fcApp.scrapeUrl(url, {
-      formats: ["markdown", "html"],
-    });
-    // console.log("scrapeResponse: ", scrapeResponse);
-
-    if (!scrapeResponse.success) {
-      throw new Error(`Failed to scrape: ${scrapeResponse.error}`);
-    }
-
-    let name = scrapeResponse?.metadata?.title;
-    if (!name) {
-      console.warn("no page title found");
-      name = url;
-    }
-
-    const sourcePublicId = generateId();
-
-    // console.log(scrapeResponse);
-    // generate an id and add to s3 key
-
-    // Generate a unique filename for S3
-    // projects/<id>-nameSlug/sources/<id>-nameSlug.json
-    const timestamp = new Date().toISOString();
-    // const sanitizedUrl = url.replace(/[^a-zA-Z0-9]/g, "_");
-    // const s3Key = `scrapes/${slugify(url)}_${slugify(timestamp, {
-    //   lower: false,
-    // })}.json`;
-
-    const storagePath = `projects/${projectPublicId}/sources/${sourcePublicId}/${slugify(
-      url,
-    )}_${slugify(timestamp, {
-      lower: false,
-    })}.json`;
-
-    // console.log("s3Key: ", s3Key);
-    // Upload the scrape response to S3
-    await uploadJsonToBucket(storagePath, scrapeResponse);
-
-    await prisma.source.create({
+    const key = await prisma.key.create({
       data: {
-        name,
-        publicId: sourcePublicId,
+        name: formData.name,
         createdAt: new Date(),
-        url,
-        storagePath,
+        secret,
         project: {
           connect: {
             id: project.id,
@@ -221,25 +208,21 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
     });
 
-    // add to vector db: https://qdrant.tech/documentation/examples/rag-chatbot-scaleway/ https://js.langchain.com/docs/introduction/ https://www.npmjs.com/package/@qdrant/qdrant-js https://js.langchain.com/docs/tutorials/rag
-    // will work for a single file, but not ideal for batches
+    const apiKey = genApiKey(key.id, randomString);
 
-    // update so that generating the chunks and embeddings is a separate step, which reads from the s3 files
-
-    // Return success with the S3 key
-    // return data<ActionData>({
-    //   url,
-    //   successMessage: "URL submitted and saved to S3 successfully!",
-    //   ok: true,
-    //   s3Key,
-    // });
-    return redirect(appRoutes("/projects/:id", { id: project.publicId }));
+    return {
+      apiKey,
+      name: key.name,
+      errorMessage: "",
+      ok: true,
+    };
   } catch (error) {
-    console.error("URL submission error: ", error);
-    return data<ActionData>({
-      url: "",
+    console.error("error: ", error);
+    return {
+      apiKey: "",
+      name: "",
       errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
       ok: false,
-    });
+    };
   }
 }

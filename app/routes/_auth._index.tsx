@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
-import { ButtonLink } from "~/components/ButtonLink";
 import { PageTitle } from "~/components/PageTitle";
+import { LinkButton } from "~/components/ui/button";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth._index";
 
@@ -26,7 +26,7 @@ export default function Dashboard() {
       <div className="">
         <div className="flex items-baseline gap-2">
           <h2 className="text-xl font-bold mb-6 flex-1">Projects</h2>
-          <ButtonLink to={appRoutes("/projects/new")}>New Project</ButtonLink>
+          <LinkButton to={appRoutes("/projects/new")}>New Project</LinkButton>
         </div>
 
         <ul>

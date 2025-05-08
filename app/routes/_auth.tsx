@@ -1,6 +1,7 @@
 import { Outlet, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
-import { MainLayout } from "~/components/MainLayout";
+import { AppNav } from "~/components/AppNav";
+import { UserNav } from "~/components/UserNav";
 import type { Route } from "./+types/_auth";
 
 export function meta() {
@@ -17,8 +18,14 @@ export default function AuthLayout() {
   const { currentUser } = useLoaderData<typeof loader>();
 
   return (
-    <MainLayout currentUser={currentUser}>
-      <Outlet />
-    </MainLayout>
+    <div className="h-full p-4 flex flex-col">
+      <div className="flex items-center gap-2">
+        <AppNav />
+        <UserNav currentUser={currentUser} />
+      </div>
+      <main className="py-4 flex-1 flex flex-col">
+        <Outlet />
+      </main>
+    </div>
   );
 }
