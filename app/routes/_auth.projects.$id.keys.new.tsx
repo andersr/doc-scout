@@ -1,21 +1,31 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { data, Form, redirect, useNavigation } from "react-router";
+import { useEffect, useState } from "react";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { z } from "zod";
 import { requireUser } from "~/.server/users/requireUser";
-import { generateKey } from "~/.server/utils/generateKey";
+import { genApiKey } from "~/.server/utils/genApiKey";
+import { genRandomString } from "~/.server/utils/genRandomString";
 import { generateHash } from "~/.server/utils/hashUtils";
 import { requireParam } from "~/.server/utils/requireParam";
+import { IconButton } from "~/components/buttons/IconButton";
+import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import type { ActionData } from "~/types/actionData";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
-
 const SECTION_NAME = "Add API Key";
 
 const schema = z.object({
@@ -54,12 +64,30 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return { project: projectMembership.project };
 }
 export default function NewSource() {
-  // const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
+  const { project } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
 
-  // const [inputValue, setInputValue] = useState("");
+  const pendingUi = useNavigation();
+  const navigate = useNavigate();
+  const [showKey, setShowKey] = useState(false);
+  const [copyDone, setCopyDone] = useState(false);
+  const [viewInput, setViewInput] = useState(false);
 
-  // const submitDisabled = navigation.state === "submitting";
+  const { handleCopyClick, didCopy } = useCopyToClipboard();
+
+  useEffect(() => {
+    if (!showKey && actionData?.ok && actionData?.apiKey) {
+      setShowKey(true);
+    }
+  }, [actionData]);
+
+  useEffect(() => {
+    if (copyDone) {
+      setTimeout(() => {
+        setCopyDone(false);
+      }, 3000);
+    }
+  }, [copyDone]);
 
   const {
     handleSubmit,
@@ -71,16 +99,67 @@ export default function NewSource() {
   });
 
   return (
-    <Form onSubmit={handleSubmit} method="POST">
-      <div className="pb-4">
-        <Label>Name</Label>
-        <Input type="text" {...register("name")} />
-        {errors.name && <p>{errors.name.message}</p>}
-      </div>
-      <Button type="submit" disabled={!isValid}>
-        {navigation.state !== "idle" ? "Adding..." : "Add Key"}
-      </Button>
-    </Form>
+    <>
+      {showKey ? (
+        <div className="w-full">
+          <p>
+            This is the API Key &ldquo;{actionData?.name}&rdquo;. It will only
+            be displayed once. Copy it now and store in a safe place.{" "}
+          </p>
+          <div className="flex items-center gap-2">
+            <Input
+              readOnly
+              type={viewInput ? "text" : "password"}
+              value={actionData?.apiKey}
+              className="flex-1"
+            />
+            <IconButton
+              name={viewInput ? "visibility_off" : "visibility"}
+              onClick={() => setViewInput(!viewInput)}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            {actionData?.apiKey && (
+              <Button
+                variant={"outline"}
+                onClick={() => {
+                  handleCopyClick(actionData.apiKey);
+                  setCopyDone(true);
+                }}
+              >
+                <Icon name={copyDone ? "done" : "content_copy"} />{" "}
+                {copyDone ? "Copied" : "Copy"}
+              </Button>
+            )}
+            <Button
+              disabled={!didCopy}
+              onClick={() =>
+                navigate(
+                  appRoutes("/projects/:id/keys", { id: project.publicId }),
+                )
+              }
+            >
+              Done
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <Form onSubmit={handleSubmit} method="POST">
+          <div className="pb-4">
+            <Label className="pb-2">Name</Label>
+            <Input
+              type="text"
+              placeholder="E.g. Dev Key"
+              {...register("name")}
+            />
+            {errors.name && <p>{errors.name.message}</p>}
+          </div>
+          <Button type="submit" disabled={!isValid}>
+            {pendingUi.state !== "idle" ? "Creating..." : "Continue"}
+          </Button>
+        </Form>
+      )}
+    </>
   );
 }
 
@@ -90,7 +169,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   try {
     const {
       errors,
-      data,
+      data: formData,
       receivedValues: defaultValues,
     } = await getValidatedFormData<FormData>(request, resolver);
 
@@ -117,13 +196,12 @@ export async function action({ request, params }: Route.ActionArgs) {
       throw new Error("No project id found or current user is not a member");
     }
 
-    const key = generateKey();
+    const randomString = genRandomString();
+    const secret = await generateHash(randomString);
 
-    const secret = await generateHash(key);
-
-    await prisma.key.create({
+    const key = await prisma.key.create({
       data: {
-        name: data.name,
+        name: formData.name,
         createdAt: new Date(),
         secret,
         project: {
@@ -134,15 +212,21 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
     });
 
-    // display modal with
+    const apiKey = genApiKey(key.id, randomString);
 
-    // return redirect(appRoutes("/projects/:id/keys", { id: project.publicId }));
+    return {
+      apiKey,
+      name: key.name,
+      errorMessage: "",
+      ok: true,
+    };
   } catch (error) {
-    console.error("URL submission error: ", error);
-    return data<ActionData>({
-      url: "",
+    console.error("error: ", error);
+    return {
+      apiKey: "",
+      name: "",
       errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
       ok: false,
-    });
+    };
   }
 }
