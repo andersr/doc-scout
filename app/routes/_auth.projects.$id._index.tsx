@@ -1,6 +1,7 @@
 import { Link, redirect, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { requireUser } from "~/.server/users/requireUser";
+import { getDomainHost } from "~/.server/utils/getDomainHost";
 import { requireParam } from "~/.server/utils/requireParam";
 import { CopyButton } from "~/components/buttons/CopyButton";
 import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
@@ -36,6 +37,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return {
     currentUser,
     project: projectMembership.project,
+    apiHost: getDomainHost({ request, withProtocol: true }),
     pageData: {
       title: `Project: ${projectMembership.project?.name}`,
     },
@@ -43,7 +45,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function ProjectDetails() {
-  const { project } = useLoaderData<typeof loader>();
+  const { project, apiHost } = useLoaderData<typeof loader>();
 
   const deleteFetcher = useFetcherWithReset<{
     errorMessage?: string;
@@ -85,7 +87,7 @@ export default function ProjectDetails() {
             <CopyButton
               onClick={() => {
                 handleCopyClick(
-                  `http://localhost:3000/api/v1/projects/${project.publicId}`,
+                  `${apiHost}/api/v1/projects/${project.publicId}`,
                 );
               }}
               copyDone={didCopy}
