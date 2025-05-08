@@ -1,17 +1,14 @@
 import { twMerge } from "tailwind-merge";
 import { DEFAULT_ICON_SIZE } from "~/config/icons";
 
-export function Icon({
-  name,
-  fontSize,
-  customStyles,
-  ariaLabel,
-}: {
+export interface IconProps {
   name: string;
   fontSize?: string;
   customStyles?: string;
   ariaLabel?: string;
-}) {
+}
+
+export function Icon({ name, fontSize, customStyles, ariaLabel }: IconProps) {
   return (
     <span
       style={{

@@ -51,7 +51,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     (pm) => pm.project?.publicId === projectId,
   );
 
-  // Add alert via AlertProvider OR flash message provider
   if (!projectMembership) {
     console.warn("user is not a member");
     throw redirect(appRoutes("/"));
@@ -119,18 +118,6 @@ export default function NewSource() {
             />
           </div>
           <div className="flex items-center gap-2">
-            {/* {actionData?.apiKey && (
-              <Button
-                variant={"outline"}
-                onClick={() => {
-                  handleCopyClick(actionData.apiKey);
-                  setCopyDone(true);
-                }}
-              >
-                <Icon name={copyDone ? "done" : "content_copy"} />{" "}
-                {copyDone ? "Copied" : "Copy"}
-              </Button>
-            )} */}
             {actionData?.apiKey && (
               <CopyButton
                 copyDone={copyDone}

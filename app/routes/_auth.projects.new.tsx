@@ -46,8 +46,8 @@ export default function NewProject() {
 
   return (
     <Form onSubmit={handleSubmit} method="POST">
-      <div className="pb-4">
-        <Label>Name</Label>
+      <div className="mb-2">
+        <Label className="pb-2">Name</Label>
         <Input type="text" {...register("name")} />
         {errors.name && <p>{errors.name.message}</p>}
       </div>

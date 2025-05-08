@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const ERROR_MESSAGE =
-  "Sorry, there was a problem copying.  Please copy the text manually.";
+  "Sorry, there was a problem copying. Please copy the text manually.";
 
 export function useCopyToClipboard(options?: { withTimeout?: boolean }) {
   const [didCopy, setDidCopy] = useState(false);
