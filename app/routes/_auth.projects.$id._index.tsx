@@ -2,6 +2,8 @@ import { Link, redirect, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
+import { CopyButton } from "~/components/buttons/CopyButton";
+import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { useFetcherWithReset } from "~/hooks/useFetcherWithReset";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth.projects.$id._index";
@@ -47,6 +49,10 @@ export default function ProjectDetails() {
     errorMessage?: string;
   }>();
 
+  const { handleCopyClick, didCopy } = useCopyToClipboard({
+    withTimeout: true,
+  });
+
   return (
     <>
       <div className="flex-1">
@@ -73,6 +79,17 @@ export default function ProjectDetails() {
             >
               Playground
             </Link>
+          </li>
+          <li>
+            Endpoint: {`.../api/v1/projects/${project.publicId}`}{" "}
+            <CopyButton
+              onClick={() => {
+                handleCopyClick(
+                  `http://localhost:3000/api/v1/projects/${project.publicId}`,
+                );
+              }}
+              copyDone={didCopy}
+            />
           </li>
         </ul>
       </div>

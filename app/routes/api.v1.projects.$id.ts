@@ -1,65 +1,38 @@
-import { Role } from "@prisma/client";
-import { data, redirect } from "react-router";
-import { requireUser } from "~/.server/users/requireUser";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { data } from "react-router";
+import { requireApiKey } from "~/.server/auth/requireApiKey";
 import { requireParam } from "~/.server/utils/requireParam";
-import { prisma } from "~/lib/prisma";
-import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import type { ActionData } from "~/types/actionData";
+import { APIError, type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
-export async function action({ request, params }: Route.ActionArgs) {
-  const currentUser = await requireUser({ request });
-
+// next: enable adding q param and get response
+export async function loader({ request, params }: Route.LoaderArgs) {
   try {
-    const projectPublicId = requireParam({ params, key: "id" });
-    // TODO: turn into util
-    const projectMembership = currentUser?.projectMemberships.find(
-      (pm) => pm.project?.publicId === projectPublicId,
-    );
+    const id = requireParam({ key: "id", params });
 
-    if (!projectMembership) {
-      throw new Error(
-        "No matching project found or current user is not a member",
-      );
+    const project = await requireApiKey({ request });
+
+    if (id !== project?.publicId) {
+      throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
     }
 
-    if (projectMembership.role !== Role.ADMIN) {
-      throw new Error("Insufficient permissions to complete this action");
-    }
-
-    if (request.method !== "DELETE") {
-      // return correct code
-      throw new Error("Bad request");
-    }
-
-    const projectId = projectMembership.project?.id;
-
-    if (!projectId) {
-      throw new Error("No project id found");
-    }
-
-    const project = await prisma.project.delete({
-      where: { id: projectId ?? -1 },
+    return data<ApiResponse>({
+      errorMessage: "",
+      successMessage: "This worked",
+      ok: true,
+      data: project,
     });
-
-    // TODO: use flash message provider instead?
-    return redirect(
-      appRoutes("/", {
-        alertMessage: encodeURIComponent(`${project.name} was deleted.`),
-      }),
+  } catch (error: unknown) {
+    console.error("api error: ", error);
+    return data<ApiResponse>(
+      {
+        errorMessage:
+          (error as APIError).message ?? INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+        ok: false,
+        data: null,
+      },
+      (error as APIError).statusCode ?? 500,
     );
-
-    // return data<ActionData>({
-    //   errorMessage: "",
-    //   successMessage: "Project deleted.",
-    //   ok: true,
-    // });
-  } catch (error) {
-    console.error("project delete error: ", error);
-    return data<ActionData>({
-      errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-      ok: false,
-    });
   }
 }

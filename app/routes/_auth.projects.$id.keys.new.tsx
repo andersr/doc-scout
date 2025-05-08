@@ -15,8 +15,8 @@ import { genApiKey } from "~/.server/utils/genApiKey";
 import { genRandomString } from "~/.server/utils/genRandomString";
 import { generateHash } from "~/.server/utils/hashUtils";
 import { requireParam } from "~/.server/utils/requireParam";
+import { CopyButton } from "~/components/buttons/CopyButton";
 import { IconButton } from "~/components/buttons/IconButton";
-import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -119,7 +119,7 @@ export default function NewSource() {
             />
           </div>
           <div className="flex items-center gap-2">
-            {actionData?.apiKey && (
+            {/* {actionData?.apiKey && (
               <Button
                 variant={"outline"}
                 onClick={() => {
@@ -130,6 +130,15 @@ export default function NewSource() {
                 <Icon name={copyDone ? "done" : "content_copy"} />{" "}
                 {copyDone ? "Copied" : "Copy"}
               </Button>
+            )} */}
+            {actionData?.apiKey && (
+              <CopyButton
+                copyDone={copyDone}
+                onClick={() => {
+                  handleCopyClick(actionData.apiKey);
+                  setCopyDone(true);
+                }}
+              />
             )}
             <Button
               disabled={!didCopy}

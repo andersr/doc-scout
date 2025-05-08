@@ -69,7 +69,6 @@ export async function action({ request }: Route.ActionArgs) {
     } = await getValidatedFormData<FormData>(request, resolver);
 
     if (errors) {
-      // The keys "errors" and "defaultValues" are picked up automatically by useRemixForm
       return { errors, defaultValues };
     }
 
@@ -83,6 +82,7 @@ export async function action({ request }: Route.ActionArgs) {
         name: data.name,
         collectionName,
         publicId: generateId(),
+        createdAt: new Date(),
         members: {
           create: {
             role: Role.ADMIN,
