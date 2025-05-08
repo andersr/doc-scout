@@ -44,7 +44,6 @@
     "nanoid": "^5.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.56.2",
     "react-router": "^7.5.3",
     "remix-hook-form": "^7.0.1",
     "safe-routes": "^1.0.12",
