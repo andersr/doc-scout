@@ -1,10 +1,10 @@
-import type { Project } from "@prisma/client";
+import type { ProjectClient } from "./project";
 
 export interface ApiResponse {
   ok: boolean;
   errorMessage?: string;
   successMessage?: string;
-  data: Project | null;
+  data: ProjectClient | null;
 }
 
 export class APIError extends Error {

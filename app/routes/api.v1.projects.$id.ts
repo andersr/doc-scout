@@ -1,19 +1,31 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { data } from "react-router";
-import { requireApiKey } from "~/.server/auth/requireApiKey";
+import { requireProjectId } from "~/.server/auth/requireProjectId";
 import { requireParam } from "~/.server/utils/requireParam";
+import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { APIError, type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
-// next: enable adding q param and get response
 export async function loader({ request, params }: Route.LoaderArgs) {
   try {
-    const id = requireParam({ key: "id", params });
+    const projectPublicIdParam = requireParam({ key: "id", params });
 
-    const project = await requireApiKey({ request });
+    const { projectId } = await requireProjectId({ request });
 
-    if (id !== project?.publicId) {
+    const project = await prisma.project.findUniqueOrThrow({
+      where: {
+        id: projectId,
+      },
+      select: {
+        name: true,
+        collectionName: true,
+        createdAt: true,
+        publicId: true,
+      },
+    });
+
+    if (projectPublicIdParam !== project.publicId) {
       throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
     }
 

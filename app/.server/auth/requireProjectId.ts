@@ -4,7 +4,11 @@ import { prisma } from "~/lib/prisma";
 import { APIError } from "~/types/api";
 import { verifyHash } from "../utils/hashUtils";
 
-export async function requireApiKey({ request }: { request: Request }) {
+export async function requireProjectId({
+  request,
+}: {
+  request: Request;
+}): Promise<{ projectId: number }> {
   const apiKey = request.headers.get(API_KEY_HEADER);
 
   if (!apiKey) {
@@ -35,5 +39,12 @@ export async function requireApiKey({ request }: { request: Request }) {
     throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
   }
 
-  return key.project;
+  if (!key.project?.id) {
+    throw new APIError(
+      ReasonPhrases.INTERNAL_SERVER_ERROR,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+
+  return { projectId: key.project?.id };
 }
