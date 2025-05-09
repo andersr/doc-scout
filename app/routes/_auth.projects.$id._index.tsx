@@ -55,10 +55,11 @@ export default function ProjectDetails() {
     withTimeout: true,
   });
 
+  const endPoint = `${apiHost}/api/v1/projects/${project.publicId}`;
   return (
     <>
-      <div className="flex-1">
-        <ul>
+      <div className="flex-1 w-full">
+        <ul className="w-full">
           <li>
             <Link
               to={appRoutes("/projects/:id/keys", { id: project.publicId })}
@@ -82,13 +83,11 @@ export default function ProjectDetails() {
               Playground
             </Link>
           </li>
-          <li>
-            Endpoint: {`.../api/v1/projects/${project.publicId}`}{" "}
+          <li className="w-full flex flex-wrap">
+            <span className="flex-1">Endpoint: {endPoint}</span>{" "}
             <CopyButton
               onClick={() => {
-                handleCopyClick(
-                  `${apiHost}/api/v1/projects/${project.publicId}`,
-                );
+                handleCopyClick(endPoint);
               }}
               copyDone={didCopy}
             />
