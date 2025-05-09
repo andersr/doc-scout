@@ -8,25 +8,29 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   try {
     const project = await requireProject({ request, params });
 
-    // const projectPublicIdParam = requireParam({ key: "id", params });
+    return data<ApiResponse>({
+      errorMessage: "",
+      successMessage: "This worked",
+      ok: true,
+      data: project,
+    });
+  } catch (error: unknown) {
+    console.error("api error: ", error);
+    return data<ApiResponse>(
+      {
+        errorMessage:
+          (error as APIError).message ?? INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+        ok: false,
+        data: null,
+      },
+      (error as APIError).statusCode ?? 500,
+    );
+  }
+}
 
-    // const { projectId } = await requireProjectId({ request });
-
-    // const project = await prisma.project.findUniqueOrThrow({
-    //   where: {
-    //     id: projectId,
-    //   },
-    //   select: {
-    //     name: true,
-    //     collectionName: true,
-    //     createdAt: true,
-    //     publicId: true,
-    //   },
-    // });
-
-    // if (projectPublicIdParam !== project.publicId) {
-    //   throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
-    // }
+export async function action({ request, params }: Route.ActionArgs) {
+  try {
+    const project = await requireProject({ request, params });
 
     return data<ApiResponse>({
       errorMessage: "",

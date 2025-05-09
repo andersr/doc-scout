@@ -2,13 +2,14 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { API_KEY_HEADER, ID_SECRET_DIVIDER } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { APIError } from "~/types/api";
+import type { ApiKeyWithProject } from "~/types/apiKey";
 import { verifyHash } from "../utils/hashUtils";
 
-export async function requireProjectId({
+export async function requireApiKey({
   request,
 }: {
   request: Request;
-}): Promise<{ projectId: number }> {
+}): Promise<ApiKeyWithProject> {
   const apiKey = request.headers.get(API_KEY_HEADER);
 
   if (!apiKey) {
@@ -39,12 +40,5 @@ export async function requireProjectId({
     throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
   }
 
-  if (!key.project?.id) {
-    throw new APIError(
-      ReasonPhrases.INTERNAL_SERVER_ERROR,
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    );
-  }
-
-  return { projectId: key.project?.id };
+  return key;
 }
