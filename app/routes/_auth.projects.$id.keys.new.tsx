@@ -102,8 +102,11 @@ export default function NewSource() {
       {showKey ? (
         <div className="w-full">
           <p>
-            This is the API Key &ldquo;{actionData?.name}&rdquo;. It will only
-            be displayed once. Copy it now and store in a safe place.{" "}
+            This is the API Key &ldquo;{actionData?.name}&rdquo;.{" "}
+            <span className="font-semibold">
+              It will only be displayed once. Copy it now and store in a safe
+              place.
+            </span>{" "}
           </p>
           <div className="flex items-center gap-2">
             <Input
