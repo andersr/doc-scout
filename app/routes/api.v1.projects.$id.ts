@@ -11,6 +11,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     return data<ApiResponse>({
       errorMessage: "",
       successMessage: "This worked",
+      errors: null,
       ok: true,
       data: project,
     });
