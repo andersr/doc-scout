@@ -1,32 +1,12 @@
 import { data } from "react-router";
+import { apiError } from "~/.server/api/apiError";
 import { requireProject } from "~/.server/projects/requireProject";
-import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { APIError, type ApiResponse } from "~/types/api";
+import { type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   try {
     const project = await requireProject({ request, params });
-
-    // const projectPublicIdParam = requireParam({ key: "id", params });
-
-    // const { projectId } = await requireProjectId({ request });
-
-    // const project = await prisma.project.findUniqueOrThrow({
-    //   where: {
-    //     id: projectId,
-    //   },
-    //   select: {
-    //     name: true,
-    //     collectionName: true,
-    //     createdAt: true,
-    //     publicId: true,
-    //   },
-    // });
-
-    // if (projectPublicIdParam !== project.publicId) {
-    //   throw new APIError(ReasonPhrases.FORBIDDEN, StatusCodes.FORBIDDEN);
-    // }
 
     return data<ApiResponse>({
       errorMessage: "",
@@ -35,15 +15,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
       data: project,
     });
   } catch (error: unknown) {
-    console.error("api error: ", error);
-    return data<ApiResponse>(
-      {
-        errorMessage:
-          (error as APIError).message ?? INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-        ok: false,
-        data: null,
-      },
-      (error as APIError).statusCode ?? 500,
-    );
+    return apiError(error);
   }
 }
