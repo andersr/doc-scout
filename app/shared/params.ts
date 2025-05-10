@@ -3,4 +3,5 @@ export const PARAMS = {
   EMAIL: "email",
   NAME: "name",
   URL: "url",
+  URLS: "urls",
 };

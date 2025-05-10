@@ -3,13 +3,13 @@ import { data } from "react-router";
 import { z } from "zod";
 import { apiError } from "~/.server/api/apiError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
-import { requireProject } from "~/.server/projects/requireProject";
+import { requireProjectViaKey } from "~/.server/projects/requireProjectViaKey";
 import { APIError, type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   try {
-    const project = await requireProject({ request, params });
+    const project = await requireProjectViaKey({ request, params });
 
     return data<ApiResponse>({
       errorMessage: "",
@@ -30,7 +30,7 @@ const querySchema = z.object({
 
 export async function action({ request, params }: Route.ActionArgs) {
   try {
-    const project = await requireProject({ request, params });
+    const project = await requireProjectViaKey({ request, params });
 
     if (!project.collectionName) {
       throw new APIError(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);

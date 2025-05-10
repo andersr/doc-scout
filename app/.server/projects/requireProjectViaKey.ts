@@ -5,7 +5,7 @@ import { APIError } from "~/types/api";
 import { requireApiKey } from "../auth/requireApiKey";
 import { requireParam } from "../utils/requireParam";
 
-export async function requireProject({
+export async function requireProjectViaKey({
   request,
   params,
 }: {

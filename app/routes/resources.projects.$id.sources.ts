@@ -1,35 +1,56 @@
 import { Role } from "@prisma/client";
-import { redirect } from "react-router";
+import { data, redirect } from "react-router";
 import { apiError } from "~/.server/api/apiError";
+import { requireProjectId } from "~/.server/projects/requireProjectId";
 import { requireUser } from "~/.server/users/requireUser";
 import { requireParam } from "~/.server/utils/requireParam";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
+import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
+import type { ActionData } from "~/types/actionData";
 import type { Route } from "../+types/root";
 
-// export async function loader({ request, params }: Route.LoaderArgs) {
-//   try {
-//     const user = await requireUser({ request });
-//     const projectPublicId = requireParam({ key: "id", params });
-//     const projectId = await requireProjectId({ user, projectPublicId });
+export async function loader({ request, params }: Route.LoaderArgs) {
+  try {
+    const user = await requireUser({ request });
+    const projectPublicId = requireParam({ key: "id", params });
+    const projectId = await requireProjectId({ user, projectPublicId });
 
-//     const project = await prisma.project.findFirstOrThrow({
-//       where: {
-//         id: projectId,
-//       },
-//       include: {
-//         sources: true,
-//       },
-//     });
+    // const project = await prisma.project.findFirstOrThrow({
+    //   where: {
+    //     id: projectId,
+    //   },
+    //   include: {
+    //     sources: true,
+    //   },
+    // });
 
-//     return {
-//       project,
-//     };
-//   } catch (error) {
-//     console.error("error: ", error);
-//     return apiError(error);
-//   }
-// }
+    const sources = await prisma.source.findMany({
+      where: {
+        projectId: projectId ?? -1,
+        url: {
+          in: ["asdasd"],
+        },
+      },
+    });
+
+    return {
+      sources,
+    };
+    // return data<ActionData>({
+    //   errorMessage: "",
+    //   successMessage: "Project deleted.",
+    //   ok: true,
+    // });
+  } catch (error) {
+    console.error("project delete error: ", error);
+    return apiError(error);
+    // return data<ActionData>({
+    //   errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+    //   ok: false,
+    // });
+  }
+}
 
 export async function action({ request, params }: Route.ActionArgs) {
   const currentUser = await requireUser({ request });
@@ -75,10 +96,9 @@ export async function action({ request, params }: Route.ActionArgs) {
     // });
   } catch (error) {
     console.error("project delete error: ", error);
-    // return data<ActionData>({
-    //   errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-    //   ok: false,
-    // });
-    return apiError(error);
+    return data<ActionData>({
+      errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      ok: false,
+    });
   }
 }

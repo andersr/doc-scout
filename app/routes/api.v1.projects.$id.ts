@@ -1,12 +1,12 @@
 import { data } from "react-router";
 import { apiError } from "~/.server/api/apiError";
-import { requireProject } from "~/.server/projects/requireProject";
+import { requireProjectViaKey } from "~/.server/projects/requireProjectViaKey";
 import { type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   try {
-    const project = await requireProject({ request, params });
+    const project = await requireProjectViaKey({ request, params });
 
     return data<ApiResponse>({
       errorMessage: "",
