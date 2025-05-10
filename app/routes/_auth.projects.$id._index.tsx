@@ -56,33 +56,36 @@ export default function ProjectDetails() {
   });
 
   const endPoint = `${apiHost}/api/v1/projects/${project.publicId}`;
+
+  const navLinks: { to: string; label: string }[] = [
+    {
+      to: appRoutes("/projects/:id/keys", { id: project.publicId }),
+      label: "API Keys",
+    },
+    {
+      to: appRoutes("/projects/:id/sources", { id: project.publicId }),
+      label: "Sources",
+    },
+    {
+      to: appRoutes("/projects/:id/sources", { id: project.publicId }),
+      label: "Update Search Index",
+    },
+    {
+      to: appRoutes("/projects/:id/playground", { id: project.publicId }),
+      label: "Playground",
+    },
+  ];
   return (
     <>
       <div className="flex-1 w-full">
         <ul className="w-full">
-          <li>
-            <Link
-              to={appRoutes("/projects/:id/keys", { id: project.publicId })}
-            >
-              API Keys
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={appRoutes("/projects/:id/sources", { id: project.publicId })}
-            >
-              Sources
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={appRoutes("/projects/:id/playground", {
-                id: project.publicId,
-              })}
-            >
-              Playground
-            </Link>
-          </li>
+          {navLinks.map((n) => (
+            <li className="pb-1" key={n.to}>
+              <Link className="underline text-blue-500" to={n.to}>
+                {n.label}
+              </Link>
+            </li>
+          ))}
           <li className="w-full flex flex-wrap">
             <span className="flex-1">Endpoint: {endPoint}</span>{" "}
             <CopyButton
