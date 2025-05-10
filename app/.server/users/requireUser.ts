@@ -1,4 +1,5 @@
 import { prisma } from "~/lib/prisma";
+import { USER_INCLUDE } from "~/types/user";
 import { logout } from "../sessions/logout";
 import { getUserPublicId } from "./getUserPublicId";
 
@@ -13,28 +14,7 @@ export async function requireUser({ request }: { request: Request }) {
     where: {
       publicId: publicId ?? "",
     },
-    include: {
-      projectMemberships: {
-        include: {
-          project: {
-            select: {
-              id: true,
-              publicId: true,
-              name: true,
-              collectionName: true,
-              sources: true,
-              apiKeys: {
-                select: {
-                  id: true,
-                  name: true,
-                  createdAt: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    include: USER_INCLUDE,
   });
 
   if (!user) {
