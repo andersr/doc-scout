@@ -89,25 +89,9 @@ export default function NewSource() {
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
-  const currentUser = await requireUser({ request });
-
   try {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: {
-        publicId: currentUser?.publicId ?? "",
-      },
-      include: {
-        projectMemberships: {
-          include: {
-            project: {
-              include: {
-                sources: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const user = await requireUser({ request });
+
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
@@ -238,26 +222,3 @@ export async function action({ request, params }: Route.ActionArgs) {
     };
   }
 }
-
-// const sourcePaths = getSourcePaths(sources);
-
-// if (sourcePaths.length === 0) {
-//   return data<ActionData>({
-//     errorMessage: "No source paths found.",
-//     ok: false,
-//   });
-// }
-
-// add to vector db: https://qdrant.tech/documentation/examples/rag-chatbot-scaleway/ https://js.langchain.com/docs/introduction/ https://www.npmjs.com/package/@qdrant/qdrant-js https://js.langchain.com/docs/tutorials/rag
-// will work for a single file, but not ideal for batches
-
-// update so that generating the chunks and embeddings is a separate step, which reads from the s3 files
-
-// Return success with the S3 key
-// return data<ActionData>({
-//   url,
-//   successMessage: "URL submitted and saved to S3 successfully!",
-//   ok: true,
-//   s3Key,
-// });
-// return redirect(appRoutes("/projects/:id", { id: project.publicId }));

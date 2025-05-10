@@ -11,8 +11,8 @@ import type { ActionData } from "~/types/actionData";
 import type { Route } from "../+types/root";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
+  const user = await requireUser({ request });
   try {
-    const user = await requireUser({ request });
     const projectPublicId = requireParam({ key: "id", params });
     const projectId = await requireProjectId({ user, projectPublicId });
 

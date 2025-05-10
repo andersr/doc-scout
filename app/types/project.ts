@@ -1,19 +1,19 @@
 import type { Prisma } from "@prisma/client";
 
-// TODO: same as in requireUser
-// export type UserInternal = Prisma.UserGetPayload<{
-//   include: {
-//     projectMemberships: {
-//       include: {
-//         project: {
-//           include: {
-//             sources: true;
-//           };
-//         };
-//       };
-//     };
-//   };
-// }>;
+export const PROJECT_SELECT = {
+  id: true,
+  publicId: true,
+  name: true,
+  collectionName: true,
+  sources: true,
+  apiKeys: {
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+    },
+  },
+} as const;
 
 export type ProjectClient = Prisma.ProjectGetPayload<{
   select: {

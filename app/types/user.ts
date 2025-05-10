@@ -1,23 +1,11 @@
 import type { Prisma } from "@prisma/client";
+import { PROJECT_SELECT } from "./project";
 
 export const USER_INCLUDE = {
   projectMemberships: {
     include: {
       project: {
-        select: {
-          id: true,
-          publicId: true,
-          name: true,
-          collectionName: true,
-          sources: true,
-          apiKeys: {
-            select: {
-              id: true,
-              name: true,
-              createdAt: true,
-            },
-          },
-        },
+        select: PROJECT_SELECT,
       },
     },
   },
