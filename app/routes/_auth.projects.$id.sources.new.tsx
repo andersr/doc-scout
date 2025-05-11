@@ -1,30 +1,23 @@
+import type { Prisma } from "@prisma/client";
 import { useState } from "react";
-import {
-  data,
-  Form,
-  redirect,
-  useActionData,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
-import { twMerge } from "tailwind-merge";
+import { Form, redirect, useActionData, useNavigation } from "react-router";
+import slugify from "slugify";
 import { uploadJsonToBucket } from "~/.server/aws/uploadJsonToBucket";
 import { fcApp } from "~/.server/firecrawl/fcApp";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
-import { slugify } from "~/.server/utils/slugify";
+import { stripTrailingSlash } from "~/.server/utils/stripTrailingSlash";
+import { Button } from "~/components/ui/button";
+import { URLS_INPUT_PLACEHOLDER } from "~/config/inputs";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
-import {
-  INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-  INVALID_URL_ERROR,
-} from "~/shared/messages";
+import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
-import type { ActionData } from "~/types/actionData";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
 
+const URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
 export const handle: RouteData = {
   pageTitle: "Add Sources",
 };
@@ -54,41 +47,36 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return { project: projectMembership.project };
 }
 export default function NewSource() {
-  const { project } = useLoaderData<typeof loader>();
+  // const { project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
-  const [urlValue, setUrlValue] = useState("");
+  // TODO: use remix hook form
+  const [inputValue, setInputValue] = useState("");
 
   const submitDisabled = navigation.state === "submitting";
-
+  // TODO: validate comma-separated URLs on blur
+  // TODO: display - please wait message if item count is high
   return (
     <div>
       <Form method="POST" className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="url">URL</label>
-          <input
-            type="url"
-            id="url"
-            name={PARAMS.URL}
-            placeholder="https://example.com"
-            value={urlValue}
-            onChange={(e) => setUrlValue(e.target.value)}
-            className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
-            required
-          />
+          <label htmlFor="url">URLs (comma-separated)</label>
+          <textarea
+            name={PARAMS.URLS}
+            value={inputValue}
+            placeholder={URLS_INPUT_PLACEHOLDER}
+            onChange={(e) => setInputValue(e.target.value)}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+          ></textarea>
         </div>
-
-        <button
+        <Button
           type="submit"
-          disabled={submitDisabled}
-          className={twMerge(
-            "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full border cursor-pointer",
-            submitDisabled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
-          )}
+          disabled={inputValue.trim() === "" || submitDisabled}
         >
           {submitDisabled ? "Adding..." : "Add"}
-        </button>
+        </Button>
       </Form>
 
       {actionData?.errorMessage && (
@@ -96,40 +84,14 @@ export default function NewSource() {
           {actionData.errorMessage}
         </div>
       )}
-
-      {actionData?.successMessage && (
-        <div className="mt-4 text-center font-semibold text-green-500">
-          {actionData.successMessage}
-          {actionData.s3Key && (
-            <div className="mt-2 text-sm text-gray-600">
-              <p>Saved to S3 with key:</p>
-              <code className="block mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
-                {actionData.s3Key}
-              </code>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
-  const currentUser = await requireUser({ request });
-
   try {
-    const user = await prisma.user.findUniqueOrThrow({
-      where: {
-        publicId: currentUser?.publicId ?? "",
-      },
-      include: {
-        projectMemberships: {
-          include: {
-            project: true,
-          },
-        },
-      },
-    });
+    const user = await requireUser({ request });
+
     const projectPublicId = requireParam({ params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
@@ -150,97 +112,113 @@ export async function action({ request, params }: Route.ActionArgs) {
 
     const formPayload = Object.fromEntries(await request.formData());
     // TODO: add name param
-    const urlFormData = formPayload[PARAMS.URL];
-    const url = urlFormData.toString().trim();
+    const urlFormData = formPayload[PARAMS.URLS];
+    const urlsNoNewLines = urlFormData
+      .toString()
+      .trim()
+      .replace(/(\r\n|\n|\r)/gm, "");
 
-    // TODO: get name from title value instead
-    // const nameFormData = formPayload[PARAMS.NAME];
-    // const name = nameFormData.toString().trim();
+    const urlsFormatted = urlsNoNewLines
+      .toString()
+      .trim()
+      .split(",")
+      .map((u) => stripTrailingSlash(u));
 
-    // Validate URL
-    const urlPattern =
-      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-    if (!urlPattern.test(url)) {
-      return data<ActionData>({
-        url,
-        errorMessage: INVALID_URL_ERROR,
-        ok: false,
+    const urls = [...new Set(urlsFormatted)];
+
+    if (urls.length === 0) {
+      console.warn("no urls");
+      return new Response(JSON.stringify({ ok: false }), {
+        status: 400,
+        statusText: "No urls returned",
       });
     }
 
-    // Scrape a website
-    const scrapeResponse = await fcApp.scrapeUrl(url, {
+    for (let index = 0; index < urls.length; index++) {
+      if (!URL_REGEX.test(urls[index])) {
+        console.warn("invalid url");
+        return new Response(JSON.stringify({ ok: false }), {
+          status: 400,
+          statusText: `Invalid url: ${urls[index]}`,
+        });
+      }
+    }
+
+    const existingSources = project.sources.filter(
+      (s) => s.url && urls.includes(s.url),
+    );
+
+    if (existingSources.length > 0) {
+      throw new Error(
+        `Some URLs have already been added: ${existingSources.map((s) => s.url).join(", ")}`,
+      );
+    }
+
+    // TODO: check first if data for url already exists in storage: query s3 bucket for matching source public id in this project
+
+    const scrapeBatchResponse = await fcApp.batchScrapeUrls(urls, {
       formats: ["markdown", "html"],
     });
-    // console.log("scrapeResponse: ", scrapeResponse);
 
-    if (!scrapeResponse.success) {
-      throw new Error(`Failed to scrape: ${scrapeResponse.error}`);
+    if (!scrapeBatchResponse.success) {
+      throw new Error(`Failed to scrape: ${scrapeBatchResponse.error}`);
     }
+    // console.log("scrapeBatchResponse: ", scrapeBatchResponse?.data[0].metadata);
 
-    let name = scrapeResponse?.metadata?.title;
-    if (!name) {
-      console.warn("no page title found");
-      name = url;
-    }
+    const sourcesInput: Prisma.SourceCreateManyInput[] = [];
 
-    const sourcePublicId = generateId();
+    for (let index = 0; index < scrapeBatchResponse.data.length; index++) {
+      let name = scrapeBatchResponse.data[index].metadata?.title;
+      if (!name) {
+        console.warn(
+          `no page title found for: ${scrapeBatchResponse.data[index].metadata}`,
+        );
+        name = "untitled"; // TODO: set using metadata values
+      }
+      const url = scrapeBatchResponse.data[index].metadata?.url;
+      if (!url) {
+        console.warn(
+          `no url found for: ${scrapeBatchResponse.data[index].metadata}`,
+        );
+        continue;
+      }
+      const sourcePublicId = generateId();
+      const timestamp = new Date().toISOString();
 
-    // console.log(scrapeResponse);
-    // generate an id and add to s3 key
+      // TODO: strip protocol from url
+      const storagePath = `projects/${projectPublicId}/sources/${sourcePublicId}/${slugify(
+        url,
+      )}_${slugify(timestamp, {
+        lower: false,
+      })}.json`;
 
-    // Generate a unique filename for S3
-    // projects/<id>-nameSlug/sources/<id>-nameSlug.json
-    const timestamp = new Date().toISOString();
-    // const sanitizedUrl = url.replace(/[^a-zA-Z0-9]/g, "_");
-    // const s3Key = `scrapes/${slugify(url)}_${slugify(timestamp, {
-    //   lower: false,
-    // })}.json`;
-
-    const storagePath = `projects/${projectPublicId}/sources/${sourcePublicId}/${slugify(
-      url,
-    )}_${slugify(timestamp, {
-      lower: false,
-    })}.json`;
-
-    // console.log("s3Key: ", s3Key);
-    // Upload the scrape response to S3
-    await uploadJsonToBucket(storagePath, scrapeResponse);
-
-    await prisma.source.create({
-      data: {
+      sourcesInput.push({
         name,
         publicId: sourcePublicId,
         createdAt: new Date(),
         url,
         storagePath,
-        project: {
-          connect: {
-            id: project.id,
-          },
-        },
-      },
+        projectId: project.id,
+      });
+
+      await uploadJsonToBucket(storagePath, scrapeBatchResponse.data[index]);
+    }
+
+    await prisma.source.createMany({
+      data: sourcesInput,
     });
 
-    // add to vector db: https://qdrant.tech/documentation/examples/rag-chatbot-scaleway/ https://js.langchain.com/docs/introduction/ https://www.npmjs.com/package/@qdrant/qdrant-js https://js.langchain.com/docs/tutorials/rag
-    // will work for a single file, but not ideal for batches
-
-    // update so that generating the chunks and embeddings is a separate step, which reads from the s3 files
-
-    // Return success with the S3 key
-    // return data<ActionData>({
-    //   url,
-    //   successMessage: "URL submitted and saved to S3 successfully!",
-    //   ok: true,
-    //   s3Key,
-    // });
     return redirect(appRoutes("/projects/:id", { id: project.publicId }));
   } catch (error) {
+    // TODO: fix this - should not be using 'data' which will always return a 200
     console.error("URL submission error: ", error);
-    return data<ActionData>({
-      url: "",
-      errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+    // return null;
+    return {
       ok: false,
-    });
+      errorMessage:
+        error instanceof Error && error.message
+          ? error.message
+          : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+    };
   }
 }

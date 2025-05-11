@@ -1,10 +1,16 @@
 import type { ProjectClient } from "./project";
 
+// for now - use zod schema
+interface QueryResponse {
+  answer: string;
+}
+
 export interface ApiResponse {
   ok: boolean;
-  errorMessage?: string;
-  successMessage?: string;
-  data: ProjectClient | null;
+  errorMessage?: string; // LEGACY
+  errors: null; // for now
+  successMessage?: string; // LEGACY
+  data: ProjectClient | QueryResponse | null;
 }
 
 export class APIError extends Error {

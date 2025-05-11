@@ -9,14 +9,16 @@ import type { ActionData } from "~/types/actionData";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id._index";
 
+const SECTION_NAME = "Sources";
+
 export const handle: RouteData = {
-  pageTitle: "Sources",
+  pageTitle: SECTION_NAME,
 };
 
 export function meta({ data }: Route.MetaArgs) {
   return [
-    { title: `Project: ${data.project?.name} > Sources` },
-    { name: "description", content: "" },
+    { title: `Project: ${data.project?.name} > ${SECTION_NAME}` },
+    // { name: "description", content: "" },
   ];
 }
 
@@ -45,18 +47,6 @@ export default function ProjectSources() {
 
   return (
     <div className="">
-      {/* {project?.publicId ? (
-        <Link
-          className="underline text-blue-600"
-          to={appRoutes("/projects/:id/vectorize", {
-            id: project?.publicId,
-          })}
-        >
-          Vectorize
-        </Link>
-      ) : (
-        <span>No public id</span>
-      )} */}
       {project?.publicId ? (
         <Link
           className="underline text-blue-600"

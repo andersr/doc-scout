@@ -9,6 +9,7 @@ import { slugify } from "~/.server/utils/slugify";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { newProjectSchema } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -18,12 +19,8 @@ import type { Route } from "./+types/_auth.projects.new";
 
 const PAGE_TITLE = "New Project";
 
-const schema = z.object({
-  name: z.string().min(1),
-});
-
-type FormData = z.infer<typeof schema>;
-const resolver = zodResolver(schema);
+type FormData = z.infer<typeof newProjectSchema>;
+const resolver = zodResolver(newProjectSchema);
 
 export const handle: RouteData = {
   pageTitle: PAGE_TITLE,
@@ -33,8 +30,12 @@ export function meta() {
   return [{ title: PAGE_TITLE }];
 }
 
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser({ request });
+}
+
 export default function NewProject() {
-  const navigation = useNavigation();
+  const pendingUI = useNavigation();
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -52,7 +53,7 @@ export default function NewProject() {
         {errors.name && <p>{errors.name.message}</p>}
       </div>
       <Button type="submit" disabled={!isValid}>
-        {navigation.state !== "idle" ? "Creating..." : "Create Project"}
+        {pendingUI.state !== "idle" ? "Creating..." : "Create Project"}
       </Button>
     </Form>
   );
