@@ -7,30 +7,6 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "../+types/root";
 
-// export async function loader({ request, params }: Route.LoaderArgs) {
-//   try {
-//     const user = await requireUser({ request });
-//     const projectPublicId = requireParam({ key: "id", params });
-//     const projectId = await requireProjectId({ user, projectPublicId });
-
-//     const project = await prisma.project.findFirstOrThrow({
-//       where: {
-//         id: projectId,
-//       },
-//       include: {
-//         sources: true,
-//       },
-//     });
-
-//     return {
-//       project,
-//     };
-//   } catch (error) {
-//     console.error("error: ", error);
-//     return apiError(error);
-//   }
-// }
-
 export async function action({ request, params }: Route.ActionArgs) {
   const currentUser = await requireUser({ request });
   try {
@@ -65,20 +41,9 @@ export async function action({ request, params }: Route.ActionArgs) {
       where: { id: projectId ?? -1 },
     });
 
-    // TODO: use flash message provider instead?
     return redirect(appRoutes("/"));
-
-    // return data<ActionData>({
-    //   errorMessage: "",
-    //   successMessage: "Project deleted.",
-    //   ok: true,
-    // });
   } catch (error) {
     console.error("project delete error: ", error);
-    // return data<ActionData>({
-    //   errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-    //   ok: false,
-    // });
     return apiError(error);
   }
 }
