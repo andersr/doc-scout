@@ -5,3 +5,8 @@ export const PARAMS = {
   URL: "url",
   URLS: "urls",
 };
+
+export const INTENTS = {
+  LOGIN: "login",
+  OTP: "otp",
+};

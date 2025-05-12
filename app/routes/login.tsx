@@ -1,20 +1,23 @@
-import { useState } from "react";
-import { data, Form, useActionData, useNavigation } from "react-router";
-import { twMerge } from "tailwind-merge";
-import { createSession } from "~/.server/sessions/createSession";
+import { useEffect, useState } from "react";
+import { useActionData, useNavigation } from "react-router";
+import { loginAction } from "~/.server/actions/loginAction";
+import { otpAction } from "~/.server/actions/otpAction";
 import { requireAnon } from "~/.server/sessions/requireAnon";
-import { upsertUser } from "~/.server/users/upsertUser";
+import { LoginForm } from "~/components/LoginForm";
+import { OtpForm } from "~/components/OtpForm";
 import { PageTitle } from "~/components/PageTitle";
-import { prisma } from "~/lib/prisma";
-import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { PARAMS } from "~/shared/params";
+import { INTENTS } from "~/shared/params";
+import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/login";
 
+const PAGE_TITLE = "Sign In";
+
+export const handle: RouteData = {
+  pageTitle: PAGE_TITLE,
+};
+
 export function meta() {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
+  return [{ title: PAGE_TITLE }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -23,58 +26,24 @@ export async function loader({ request }: Route.LoaderArgs) {
   return {};
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  await requireAnon(request);
-
-  const formPayload = Object.fromEntries(await request.formData());
-  const emailFormData = formPayload[PARAMS.EMAIL];
-  const email = emailFormData.toString().trim();
-
-  try {
-    const user = await upsertUser({
-      email,
-    });
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        lastLogin: new Date(),
-      },
-    });
-
-    return createSession({
-      publicId: user.publicId,
-      // redirectTo: redirectTo || route("/"),
-      remember: true,
-      request,
-    });
-  } catch (error) {
-    console.error("login error: ", error);
-    return data({
-      email: "",
-      errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-      ok: false,
-    });
-  }
-}
-
 export default function LoginRoute() {
   // const { loginPageTitle, invalidCode, invalidLogin } =
   //   useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
+  const pendingUI = useNavigation();
 
-  const [emailValue, setEmailValue] = useState("");
+  const [loginView, setLoginView] = useState<"EMAIL" | "OTP">("EMAIL");
   // const [confirmationMessage, setConfirmationMessage] = useState("");
 
-  // useEffect(() => {
-  //   if (actionData?.email) {
-  //     setEmailValue("");
-  //     setConfirmationMessage(
-  //       `Login link sent. Please check the inbox for "${actionData?.email}"`,
-  //     );
-  //   }
-  // }, [actionData]);
+  useEffect(() => {
+    if (loginView === "EMAIL" && actionData?.email) {
+      setLoginView("OTP");
+      // setEmailValue("");
+      // setConfirmationMessage(
+      //   `Login link sent. Please check the inbox for "${actionData?.email}"`,
+      // );
+    }
+  }, [actionData]);
 
   // useEffect(() => {
   //   if (confirmationMessage && emailValue.trim() !== "") {
@@ -82,76 +51,153 @@ export default function LoginRoute() {
   //   }
   // }, [confirmationMessage, emailValue]);
 
-  const submitDisbled = navigation.state === "submitting";
+  // const submitDisbled = pendingUI.state === "submitting";
+
+  // const {
+  //   handleSubmit: handleLoginSubmit,
+  //   formState: { errors, isValid },
+  //   register: registerLogin,
+  // } = useRemixForm<LoginFormData>({
+  //   mode: "onSubmit",
+  //   resolver: loginResolver,
+  // });
+
+  // const {
+  //   handleSubmit: handleOtpSubmit,
+  //   formState: { errors, isValid },
+  //   register: registerOtp,
+  // } = useRemixForm<OtpFormData>({
+  //   mode: "onSubmit",
+  //   resolver: otpResolver,
+  // });
 
   return (
     <>
+      {/* {confirmationMessage && <SuccessBanner message={confirmationMessage} />} */}
       <div className="mx-auto flex max-w-3xl flex-col gap-16 px-4">
         <div className="flex flex-col gap-6">
-          <PageTitle>Sign In</PageTitle>
+          <PageTitle>
+            {loginView === "EMAIL" ? "Sign In" : "Enter code"}
+          </PageTitle>
         </div>
         <div className="mx-auto flex w-full max-w-sm flex-col gap-6 md:max-w-xs">
-          {/* <googleFetcher.Form
-            method="POST"
-            action={route("/login/google/auth-url")}
-          >
-            <button
-              className={twMerge(
-                "flex h-12 w-full items-center justify-center gap-3 rounded border border-black p-2",
-                HEADING_5,
-              )}
-            >
-              <img
-                src="/images/google-logo.png"
-                alt="Google logo"
-                className="size-[18px]"
-              />
-              {googleFetcher.state !== "idle"
-                ? "Submitting..."
-                : "Continue with Google"}
-            </button>
-          </googleFetcher.Form> */}
-          <div className="flex h-6 items-center">
-            <div className="flex h-px w-full items-center justify-center bg-grey-2">
-              <span className="h-6 bg-white px-6 text-grey-3">Or</span>
-            </div>
-          </div>
-          <Form
-            method="POST"
-            className="flex w-full flex-col items-end gap-3 md:items-center"
-          >
-            <div className="flex w-full max-w-md flex-col gap-1">
-              <label htmlFor={"email"}>Email</label>
-              <input
-                type="email"
-                name={PARAMS.EMAIL}
-                placeholder="name@example.com"
-                value={emailValue}
-                onChange={(e) => setEmailValue(e.target.value)}
-                className="rounded-md border border-grey-2 bg-transparent p-3 text-base leading-normal placeholder:font-normal placeholder:text-grey-3"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              name="intent"
-              value={PARAMS.EMAIL}
-              disabled={submitDisbled}
-              className={twMerge(
-                "clickable bg-light-blue text-dark-blue font-medium p-4 rounded w-full",
-                submitDisbled ? "bg-grey-1 text-grey-3 cursor-wait" : "",
-              )}
-            >
-              {submitDisbled ? "Sending..." : "Sign In"}
-            </button>
-          </Form>
-          {actionData?.errorMessage && (
-            <div className="mt-4 text-center font-semibold text-red-400">
-              {actionData?.errorMessage}
-            </div>
+          {loginView === "EMAIL" && <LoginForm />}
+          {loginView === "OTP" && actionData?.email && (
+            <OtpForm email={actionData.email} />
           )}
         </div>
       </div>
     </>
   );
 }
+
+// async function handleActionIntent({
+//   request,
+//   handlers,
+// }: {
+//   request: Request;
+//   handlers: Record<string, () => Promise<string>>;
+// }) {
+//   const formPayload = Object.fromEntries(await request.formData());
+//   console.log("formPayload: ", formPayload);
+//   const intent = formPayload["intent"].toString();
+//   console.log("intent: ", intent);
+
+//   if (handlers[intent]) {
+//     console.log("handler: ", handlers[intent]);
+//     return await handlers[intent]();
+//   }
+
+//   return intent;
+// }
+
+export async function action({ request }: Route.ActionArgs) {
+  // TODO: instead of cloning, get the form data here, and pass it in, then use validateFormData in each action
+  const clone = request.clone();
+  const formPayload = Object.fromEntries(await clone.formData());
+  const intent = formPayload["intent"].toString();
+
+  // TODO: both these intents need a shared return type(?)
+  if (intent === INTENTS.LOGIN) {
+    return await loginAction({ request });
+  }
+  if (intent === INTENTS.OTP) {
+    return await otpAction({ request });
+  }
+
+  // throw error, no matching intent
+
+  return { email: "" };
+}
+
+// try {
+// const {
+//   errors,
+//   data: formData,
+//   receivedValues: defaultValues,
+// } = await getValidatedFormData<FormData>(request, resolver);
+
+// if (errors) {
+//   return data({
+//     email: "",
+//     errorMessage: "",
+//     ok: false,
+//     defaultValues,
+//     errors,
+//   });
+// }
+
+// const { user, newUser } = await upsertUser({ email: formData.email });
+
+// const { otp, verificationConfig } = await getTOTP();
+
+// const target = user.email;
+// const type = "email";
+
+// const verificationData = {
+//   algorithm: verificationConfig.algorithm,
+//   digits: verificationConfig.digits,
+//   email: user.email,
+//   expiresAt: new Date(Date.now() + verificationConfig.period * 1000),
+//   // hash: signature,
+//   period: verificationConfig.period,
+//   secret: verificationConfig.secret,
+//   target,
+//   type,
+// };
+
+// await prisma.verification.upsert({
+//   create: verificationData,
+//   update: verificationData,
+//   where: { target_type: { target, type } },
+// });
+
+// const emailGreeting = newUser ? "Welcome to" : "Sign in to";
+// const domainHost = getDomainHost({ request });
+
+// const title = `${emailGreeting} Muni Admin (${domainHost})`;
+
+// await sendEmail({
+//   config: {
+//     textLines: [
+//       `Your OTP: ${otp}`,
+//       "If you did not request this email, you can safely ignore it.",
+//     ],
+//     title,
+//   },
+//   to: user.email,
+// });
+
+// return data({
+//   email: user.email,
+//   errorMessage: "",
+//   ok: true,
+// });
+// } catch (error) {
+//   console.error("login error: ", error);
+//   return data({
+//     email: "",
+//     errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+//     ok: false,
+//   });
+// }
