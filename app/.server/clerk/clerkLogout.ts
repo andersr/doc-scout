@@ -2,7 +2,7 @@ import { redirect } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
 import { clerkClient } from "./clerk";
 
-export async function clerkLogout(clerkId: string) {
+export async function clerkLogout(clerkId: string, redirectTo?: string) {
   const sessions = await clerkClient.sessions.getSessionList({
     userId: clerkId,
   });
@@ -13,5 +13,5 @@ export async function clerkLogout(clerkId: string) {
     throw new Error(`Error signing out from Clerk`);
   }
   await clerkClient.sessions.revokeSession(sessionId);
-  throw redirect(appRoutes("/login"));
+  throw redirect(redirectTo ?? appRoutes("/login"));
 }

@@ -1,4 +1,5 @@
 import { prisma } from "~/lib/prisma";
+import { appRoutes } from "~/shared/appRoutes";
 import { USER_INCLUDE } from "~/types/user";
 import { clerkLogout } from "../clerk/clerkLogout";
 
@@ -42,7 +43,7 @@ export async function waitForUser(clerkId: string) {
   }
 
   console.warn("failed to acquire app user via clerk id, signing out...");
-  throw await clerkLogout(clerkId);
+  throw await clerkLogout(clerkId, appRoutes("/sorry"));
   // const sessions = await clerkClient.sessions.getSessionList({
   //   userId: clerkId,
   // });
