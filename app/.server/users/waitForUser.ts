@@ -33,29 +33,13 @@ export async function waitForUser(clerkId: string) {
       return user;
     }
 
-    // If this was the last attempt, don't wait
     if (attempts >= MAX_ATTEMPTS) {
       break;
     }
 
-    // Wait before trying again
     await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
   }
 
   console.warn("failed to acquire app user via clerk id, signing out...");
   throw await clerkLogout(clerkId, appRoutes("/sorry"));
-  // const sessions = await clerkClient.sessions.getSessionList({
-  //   userId: clerkId,
-  // });
-  // const sessionId =
-  //   sessions && sessions.data.length > 0 ? sessions.data[0].id : undefined;
-
-  // if (sessionId) {
-  //   await clerkClient.sessions.revokeSession(sessionId);
-  //   throw redirect(appRoutes("/login"));
-  // }
-
-  // throw new Error(
-  //   `User with clerkId ${clerkId} not found after ${MAX_ATTEMPTS} attempts`,
-  // );
 }
