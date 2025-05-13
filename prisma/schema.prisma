@@ -66,14 +66,13 @@ model User {
   id       Int    @id @default(autoincrement())
   publicId String @unique
 
-  // TODO: remove
-  clerkId String? @unique
+  clerkId String @unique
 
   // role      Role      @default(USER)
-  email     String    @unique
-  name      String?
-  createdAt DateTime?
-  lastLogin DateTime?
+  // email     String    @unique
+  // name      String?
+  // createdAt DateTime?
+  // lastLogin DateTime?
 
   projectMemberships ProjectUser[]
 }

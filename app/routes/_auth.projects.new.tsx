@@ -3,7 +3,7 @@ import { Role } from "@prisma/client";
 import { data, Form, redirect, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { z } from "zod";
-import { requireUser } from "~/.server/users/requireUser";
+import { requireUser } from "~/.server/users";
 import { generateId } from "~/.server/utils/generateId";
 import { slugify } from "~/.server/utils/slugify";
 import { Button } from "~/components/ui/button";
@@ -30,8 +30,9 @@ export function meta() {
   return [{ title: PAGE_TITLE }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  await requireUser({ request });
+export async function loader(args: Route.LoaderArgs) {
+  await requireUser(args);
+  return null;
 }
 
 export default function NewProject() {
@@ -59,15 +60,15 @@ export default function NewProject() {
   );
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action(args: Route.ActionArgs) {
   try {
-    const internalUser = await requireUser({ request });
+    const internalUser = await requireUser(args);
 
     const {
       errors,
       data,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<FormData>(request, resolver);
+    } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
       return { errors, defaultValues };
@@ -89,7 +90,7 @@ export async function action({ request }: Route.ActionArgs) {
             role: Role.ADMIN,
             user: {
               connect: {
-                id: internalUser.id,
+                id: internalUser?.id,
               },
             },
           },

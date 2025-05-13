@@ -1,3 +1,7 @@
+import { ClerkProvider } from "@clerk/react-router";
+import { rootAuthLoader } from "@clerk/react-router/ssr.server";
+
+import "material-symbols/outlined.css";
 import {
   isRouteErrorResponse,
   Links,
@@ -6,14 +10,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
-import "material-symbols/outlined.css";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { PageTitle } from "./components/PageTitle";
+import { appRoutes } from "./shared/appRoutes";
 
 export function meta() {
-  return [{ title: "Research App" }, { name: "description", content: "" }];
+  return [{ title: "Muni Admin" }, { name: "description", content: "" }];
 }
 
 export const links: Route.LinksFunction = () => [
@@ -28,6 +31,10 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader(args: Route.LoaderArgs) {
+  return rootAuthLoader(args);
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -47,8 +54,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData }: Route.ComponentProps) {
+  return (
+    <ClerkProvider
+      loaderData={loaderData}
+      signUpFallbackRedirectUrl={appRoutes("/signup")}
+      signInFallbackRedirectUrl={appRoutes("/login")}
+    >
+      <Outlet />
+    </ClerkProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

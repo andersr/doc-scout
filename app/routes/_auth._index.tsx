@@ -3,20 +3,20 @@ import { requireUser } from "~/.server/users/requireUser";
 import { PageTitle } from "~/components/PageTitle";
 import { LinkButton } from "~/components/ui/button";
 import { appRoutes } from "~/shared/appRoutes";
-import type { Route } from "./+types/_auth._index";
+import type { Route } from "../+types/root";
 
 export function meta() {
   return [{ title: "Dashboard" }, { name: "description", content: "" }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
+export async function loader(args: Route.LoaderArgs) {
+  const user = await requireUser(args);
 
-  return { currentUser };
+  return { user };
 }
 
 export default function Dashboard() {
-  const { currentUser } = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -28,9 +28,8 @@ export default function Dashboard() {
           <h2 className="text-xl font-bold mb-6 flex-1">Projects</h2>
           <LinkButton to={appRoutes("/projects/new")}>New Project</LinkButton>
         </div>
-
         <ul>
-          {currentUser?.projectMemberships.map((p) => (
+          {user?.projectMemberships?.map((p) => (
             <li key={p.project?.publicId} className="pb-2">
               {p.project?.publicId ? (
                 <Link

@@ -7,10 +7,10 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "../+types/root";
 
-export async function action({ request, params }: Route.ActionArgs) {
-  const currentUser = await requireUser({ request });
+export async function action(args: Route.ActionArgs) {
+  const currentUser = await requireUser(args);
   try {
-    const projectPublicId = requireParam({ params, key: "id" });
+    const projectPublicId = requireParam({ params: args.params, key: "id" });
     // TODO: turn into util
     const projectMembership = currentUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
@@ -26,7 +26,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       throw new Error("Insufficient permissions to complete this action");
     }
 
-    if (request.method !== "DELETE") {
+    if (args.request.method !== "DELETE") {
       // return correct code
       throw new Error("Bad request");
     }

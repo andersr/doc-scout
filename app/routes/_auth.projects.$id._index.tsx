@@ -16,9 +16,9 @@ export function meta({ data }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
-  const projectId = requireParam({ params, key: "id" });
+export async function loader(args: Route.LoaderArgs) {
+  const currentUser = await requireUser(args);
+  const projectId = requireParam({ params: args.params, key: "id" });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -37,7 +37,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   return {
     currentUser,
     project: projectMembership.project,
-    apiHost: getDomainHost({ request, withProtocol: true }),
+    apiHost: getDomainHost({ request: args.request, withProtocol: true }),
     pageData: {
       title: `Project: ${projectMembership.project?.name}`,
     },

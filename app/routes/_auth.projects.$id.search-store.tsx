@@ -26,10 +26,10 @@ export function meta({ data }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const user = await requireUser({ request });
+export async function loader(args: Route.LoaderArgs) {
+  const user = await requireUser(args);
 
-  const project = await requireProjectById({ user, params });
+  const project = await requireProjectById({ user, params: args.params });
 
   return { project };
 }
@@ -51,10 +51,10 @@ export default function SearchStore() {
   );
 }
 
-export async function action({ request, params }: Route.ActionArgs) {
-  const user = await requireUser({ request });
+export async function action(args: Route.ActionArgs) {
+  const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params });
+    const project = await requireProjectById({ user, params: args.params });
 
     if (!project.collectionName) {
       throw new Error("no collection name found");

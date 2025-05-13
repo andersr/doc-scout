@@ -2,7 +2,7 @@ import { SignIn } from "@clerk/react-router";
 import { appRoutes } from "~/shared/appRoutes";
 
 export function meta() {
-  return [{ title: "Sign In/Up" }];
+  return [{ title: "Sign In" }];
 }
 
 // TODO: add a handler for if no user exists in the db
