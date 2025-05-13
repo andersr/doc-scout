@@ -17,21 +17,15 @@ export async function getFromBucket(key: string) {
   return s3Client.send(command);
 }
 
-export async function getBucketData(paths: string[]): Promise<ScrapeData[]> {
-  const data: ScrapeData[] = [];
+export async function getBucketData(path: string): Promise<ScrapeData> {
+  const res = await getFromBucket(path);
 
-  for (let index = 0; index < paths.length; index++) {
-    const res = await getFromBucket(paths[index]);
-
-    if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
-      throw new Error("error getting data from bucket");
-    }
-    const bodyString = await res?.Body?.transformToString();
-
-    const sourceData: ScrapeData = JSON.parse(bodyString);
-
-    data.push(sourceData);
+  if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
+    throw new Error("error getting data from bucket");
   }
+  const bodyString = await res?.Body?.transformToString();
 
-  return data;
+  const sourceData: ScrapeData = JSON.parse(bodyString);
+
+  return sourceData;
 }
