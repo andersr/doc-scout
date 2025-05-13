@@ -26,9 +26,9 @@ export function meta() {
   return [{ title: "Add source" }, { name: "description", content: "" }];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
-  const projectId = requireParam({ params, key: "id" });
+export async function loader(args: Route.LoaderArgs) {
+  const currentUser = await requireUser(args);
+  const projectId = requireParam({ params: args.params, key: "id" });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -88,11 +88,11 @@ export default function NewSource() {
   );
 }
 
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action(args: Route.ActionArgs) {
   try {
-    const user = await requireUser({ request });
+    const user = await requireUser(args);
 
-    const projectPublicId = requireParam({ params, key: "id" });
+    const projectPublicId = requireParam({ params: args.params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
@@ -110,7 +110,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       throw new Error("No project id found or current user is not a member");
     }
 
-    const formPayload = Object.fromEntries(await request.formData());
+    const formPayload = Object.fromEntries(await args.request.formData());
     // TODO: add name param
     const urlFormData = formPayload[PARAMS.URLS];
     const urlsNoNewLines = urlFormData

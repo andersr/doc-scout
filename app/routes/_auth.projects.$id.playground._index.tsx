@@ -27,10 +27,10 @@ export function meta() {
 type FormData = z.infer<typeof playgroundSchema>;
 const resolver = zodResolver(playgroundSchema);
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const user = await requireUser({ request });
+export async function loader(args: Route.LoaderArgs) {
+  const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params });
+    const project = await requireProjectById({ user, params: args.params });
 
     return { project };
   } catch (error) {
@@ -75,10 +75,10 @@ export default function ProjectPlayground() {
   );
 }
 
-export async function action({ request, params }: Route.ActionArgs) {
-  const user = await requireUser({ request });
+export async function action(args: Route.ActionArgs) {
+  const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params });
+    const project = await requireProjectById({ user, params: args.params });
 
     if (!project.collectionName) {
       throw new Error("missing collection name");
@@ -88,7 +88,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       errors,
       data,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<FormData>(request, resolver);
+    } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
       return { errors, defaultValues };

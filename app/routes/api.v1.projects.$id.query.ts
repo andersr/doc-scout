@@ -7,9 +7,9 @@ import { requireProjectViaKey } from "~/.server/projects/requireProjectViaKey";
 import { APIError, type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
-export async function loader({ request, params }: Route.LoaderArgs) {
+export async function loader(args: Route.LoaderArgs) {
   try {
-    const project = await requireProjectViaKey({ request, params });
+    const project = await requireProjectViaKey(args);
 
     return data<ApiResponse>({
       errorMessage: "",
@@ -28,15 +28,15 @@ const querySchema = z.object({
   prompt: z.string().min(1),
 });
 
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action(args: Route.ActionArgs) {
   try {
-    const project = await requireProjectViaKey({ request, params });
+    const project = await requireProjectViaKey(args);
 
     if (!project.collectionName) {
       throw new APIError(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
     }
 
-    const payload = await request.json();
+    const payload = await args.request.json();
     const validated = querySchema.parse(payload);
 
     const graph = await generateGraph({

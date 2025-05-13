@@ -4,9 +4,9 @@ import { requireProjectViaKey } from "~/.server/projects/requireProjectViaKey";
 import { type ApiResponse } from "~/types/api";
 import type { Route } from "../+types/root";
 
-export async function loader({ request, params }: Route.LoaderArgs) {
+export async function loader(args: Route.LoaderArgs) {
   try {
-    const project = await requireProjectViaKey({ request, params });
+    const project = await requireProjectViaKey(args);
 
     return data<ApiResponse>({
       errorMessage: "",

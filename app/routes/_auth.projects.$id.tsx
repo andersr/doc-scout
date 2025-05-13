@@ -13,9 +13,9 @@ export function meta({ data }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
-  const projectId = requireParam({ params, key: "id" });
+export async function loader(args: Route.LoaderArgs) {
+  const currentUser = await requireUser(args);
+  const projectId = requireParam({ params: args.params, key: "id" });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -49,8 +49,8 @@ export default function ProjectDetails() {
   );
 }
 
-// export async function action({ request, params }: Route.ActionArgs) {
-//   const currentUser = await requireUser({ request });
+// export async function action(args: Route.ActionArgs) {
+//   const currentUser = await requireUser(args);
 //   try {
 //     const user = await prisma.user.findUniqueOrThrow({
 //       where: {
@@ -65,7 +65,7 @@ export default function ProjectDetails() {
 //       },
 //     });
 
-//     const projectPublicId = requireParam({ params, key: "id" });
+//     const projectPublicId = requireParam({ params: args.params, key: "id" });
 //     // TODO: turn into util
 //     const projectMembership = user?.projectMemberships.find(
 //       (pm) => pm.project?.publicId === projectPublicId,

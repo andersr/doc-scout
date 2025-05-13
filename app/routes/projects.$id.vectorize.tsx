@@ -17,9 +17,9 @@ export function meta() {
   return [{ title: "Vectorize" }, { name: "description", content: "" }];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
-  const projectId = requireParam({ params, key: "id" });
+export async function loader(args: Route.LoaderArgs) {
+  const currentUser = await requireUser(args);
+  const projectId = requireParam({ params: args.params, key: "id" });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -37,10 +37,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function ProjectDetails() {
   const actionData = useActionData<typeof action>();
 
-  const { currentUser, project } = useLoaderData<typeof loader>();
+  const { project } = useLoaderData<typeof loader>();
 
   return (
-    <MainLayout currentUser={currentUser}>
+    <MainLayout>
       <div className="mx-auto max-w-3xl px-4">
         <PageTitle>Vectorize sources: {project?.name}</PageTitle>
       </div>
@@ -90,9 +90,9 @@ export default function ProjectDetails() {
   );
 }
 
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action(args: Route.ActionArgs) {
   try {
-    const currentUser = await requireUser({ request });
+    const currentUser = await requireUser(args);
     const user = await prisma.user.findUniqueOrThrow({
       where: {
         publicId: currentUser?.publicId ?? "",
@@ -106,7 +106,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       },
     });
 
-    const projectPublicId = requireParam({ params, key: "id" });
+    const projectPublicId = requireParam({ params: args.params, key: "id" });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,

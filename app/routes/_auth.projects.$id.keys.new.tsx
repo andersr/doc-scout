@@ -43,9 +43,9 @@ export function meta() {
   return [{ title: SECTION_NAME }];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const currentUser = await requireUser({ request });
-  const projectId = requireParam({ params, key: "id" });
+export async function loader(args: Route.LoaderArgs) {
+  const currentUser = await requireUser(args);
+  const projectId = requireParam({ params: args.params, key: "id" });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -162,22 +162,22 @@ export default function NewSource() {
   );
 }
 
-export async function action({ request, params }: Route.ActionArgs) {
-  const internalUser = await requireUser({ request });
+export async function action(args: Route.ActionArgs) {
+  const internalUser = await requireUser(args);
 
   try {
     const {
       errors,
       data: formData,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<FormData>(request, resolver);
+    } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
       // The keys "errors" and "defaultValues" are picked up automatically by useRemixForm
       return { errors, defaultValues };
     }
 
-    const projectPublicId = requireParam({ params, key: "id" });
+    const projectPublicId = requireParam({ params: args.params, key: "id" });
     // TODO: turn into util
     const projectMembership = internalUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,

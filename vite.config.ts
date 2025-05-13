@@ -8,5 +8,6 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths(), safeRoutes()],
   server: {
     port: 3000,
+    allowedHosts: process.env.DEV_HOST ? [process.env.DEV_HOST] : undefined,
   },
 });
