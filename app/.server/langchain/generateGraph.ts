@@ -23,13 +23,6 @@ export async function generateGraph({
     answer: Annotation<string>,
   });
 
-  // const pineconeIndex = pcClient.Index(collectionName, ENV.PINECONE_HOST);
-
-  // const vectorStore = await PineconeStore.fromExistingIndex(oaiEmbeddings, {
-  //   pineconeIndex,
-  //   maxConcurrency: 5,
-  //   namespace: collectionName,
-  // });
   const vectorStore = await getVectorStore(collectionName);
 
   // Define application steps
