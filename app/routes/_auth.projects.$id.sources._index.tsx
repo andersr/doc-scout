@@ -84,7 +84,7 @@ export default function ProjectSources() {
                 id: project?.publicId,
               })}
             >
-              Upload file
+              Upload files
             </Link>
           </div>
         ) : (

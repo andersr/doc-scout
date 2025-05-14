@@ -14,13 +14,13 @@ import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
 
 export const handle: RouteData = {
-  pageTitle: "Upload Markdown File",
+  pageTitle: "Upload Markdown Files",
 };
 
 export function meta() {
   return [
-    { title: "Upload Markdown File" },
-    { name: "description", content: "Upload a markdown file as a source" },
+    { title: "Upload Markdown Files" },
+    { name: "description", content: "Upload markdown files as sources" },
   ];
 }
 
@@ -45,16 +45,20 @@ export async function loader(args: Route.LoaderArgs) {
   return { project: projectMembership.project };
 }
 
-export default function UploadMarkdownFile() {
+export default function UploadMarkdownFiles() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
+
+  const MAX_FILES = 10;
 
   const submitDisabled =
-    navigation.state === "submitting" || !selectedFile || !!fileError;
+    navigation.state === "submitting" ||
+    selectedFiles.length === 0 ||
+    Object.keys(fileErrors).length > 0;
 
-  const validateFile = (file: File) => {
+  const validateFile = (file: File): string | null => {
     // Check file extension
     if (!file.name.toLowerCase().endsWith(".md")) {
       return "Only markdown (.md) files are allowed";
@@ -74,15 +78,35 @@ export default function UploadMarkdownFile() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    if (file) {
-      const error = validateFile(file);
-      setFileError(error);
-      setSelectedFile(error ? null : file);
-    } else {
-      setSelectedFile(null);
-      setFileError(null);
+    const files = e.target.files;
+    if (!files || files.length === 0) {
+      setSelectedFiles([]);
+      setFileErrors({});
+      return;
     }
+
+    // Check if too many files are selected
+    if (files.length > MAX_FILES) {
+      setFileErrors({ tooMany: `Maximum ${MAX_FILES} files allowed` });
+      setSelectedFiles([]);
+      return;
+    }
+
+    const newSelectedFiles: File[] = [];
+    const newFileErrors: { [key: string]: string } = {};
+
+    // Validate each file
+    Array.from(files).forEach((file) => {
+      const error = validateFile(file);
+      if (error) {
+        newFileErrors[file.name] = error;
+      } else {
+        newSelectedFiles.push(file);
+      }
+    });
+
+    setSelectedFiles(newSelectedFiles);
+    setFileErrors(newFileErrors);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -94,20 +118,57 @@ export default function UploadMarkdownFile() {
     e.preventDefault();
     e.stopPropagation();
 
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      const error = validateFile(file);
-      setFileError(error);
-      setSelectedFile(error ? null : file);
+    const files = e.dataTransfer.files;
+    if (!files || files.length === 0) {
+      setSelectedFiles([]);
+      setFileErrors({});
+      return;
+    }
 
-      // Update the file input element to reflect the dropped file
-      const fileInput = document.getElementById("file") as HTMLInputElement;
-      if (fileInput) {
-        // Create a new DataTransfer object and add our file
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
+    // Check if too many files are selected
+    if (files.length > MAX_FILES) {
+      setFileErrors({ tooMany: `Maximum ${MAX_FILES} files allowed` });
+      setSelectedFiles([]);
+      return;
+    }
+
+    const newSelectedFiles: File[] = [];
+    const newFileErrors: { [key: string]: string } = {};
+
+    // Validate each file
+    Array.from(files).forEach((file) => {
+      const error = validateFile(file);
+      if (error) {
+        newFileErrors[file.name] = error;
+      } else {
+        newSelectedFiles.push(file);
       }
+    });
+
+    setSelectedFiles(newSelectedFiles);
+    setFileErrors(newFileErrors);
+
+    // Update the file input element to reflect the dropped files
+    const fileInput = document.getElementById("file") as HTMLInputElement;
+    if (fileInput && newSelectedFiles.length > 0) {
+      // Create a new DataTransfer object and add our files
+      const dataTransfer = new DataTransfer();
+      newSelectedFiles.forEach((file) => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
+    }
+  };
+
+  const removeFile = (fileName: string) => {
+    setSelectedFiles((prev) => prev.filter((file) => file.name !== fileName));
+
+    // Update the file input element to reflect the removed file
+    const fileInput = document.getElementById("file") as HTMLInputElement;
+    if (fileInput && selectedFiles.length > 0) {
+      const dataTransfer = new DataTransfer();
+      selectedFiles
+        .filter((file) => file.name !== fileName)
+        .forEach((file) => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
     }
   };
 
@@ -123,33 +184,64 @@ export default function UploadMarkdownFile() {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <Label htmlFor="file">Upload Markdown File</Label>
+          <Label htmlFor="file">Upload Markdown Files</Label>
           <Input
             id="file"
             name={PARAMS.FILE}
             type="file"
             accept=".md"
+            multiple
             onChange={handleFileChange}
             className="mt-2"
           />
           <p className="text-sm text-gray-500 mt-2">
-            Drag and drop a markdown file here, or click to select a file
+            Drag and drop markdown files here, or click to select files
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Only .md files up to 1MB are allowed
+            Only .md files up to 1MB are allowed (maximum {MAX_FILES} files)
           </p>
-          {fileError && (
-            <p className="text-sm text-red-500 mt-2">{fileError}</p>
+
+          {/* Display errors */}
+          {Object.keys(fileErrors).length > 0 && (
+            <div className="mt-2">
+              {Object.entries(fileErrors).map(([fileName, error]) => (
+                <p key={fileName} className="text-sm text-red-500">
+                  {fileName === "tooMany" ? error : `${fileName}: ${error}`}
+                </p>
+              ))}
+            </div>
           )}
-          {selectedFile && !fileError && (
-            <p className="text-sm text-green-500 mt-2">
-              Selected: {selectedFile.name} (
-              {Math.round(selectedFile.size / 1024)} KB)
-            </p>
+
+          {/* Display selected files */}
+          {selectedFiles.length > 0 && (
+            <div className="mt-4 text-left">
+              <h3 className="font-medium mb-2">Selected Files:</h3>
+              <ul className="space-y-1">
+                {selectedFiles.map((file) => (
+                  <li
+                    key={file.name}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-sm">
+                      {file.name} ({Math.round(file.size / 1024)} KB)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(file.name)}
+                      className="text-red-500 text-sm hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
         <Button type="submit" disabled={submitDisabled}>
-          {navigation.state === "submitting" ? "Uploading..." : "Upload"}
+          {navigation.state === "submitting"
+            ? "Uploading..."
+            : `Upload ${selectedFiles.length} ${selectedFiles.length === 1 ? "File" : "Files"}`}
         </Button>
       </Form>
 
@@ -183,58 +275,94 @@ export async function action(args: Route.ActionArgs) {
       throw new Error("No project id found or current user is not a member");
     }
 
-    // Get the uploaded file
+    // Get the uploaded files
     const formData = await args.request.formData();
-    const file = formData.get(PARAMS.FILE) as File;
+    const files = formData.getAll(PARAMS.FILE) as File[];
 
-    if (!file) {
+    const MAX_FILES = 10;
+
+    if (!files || files.length === 0) {
       return {
         ok: false,
-        errorMessage: "No file uploaded",
+        errorMessage: "No files uploaded",
       };
     }
 
-    // Validate file extension
-    if (!file.name.toLowerCase().endsWith(".md")) {
+    // Check if too many files are uploaded
+    if (files.length > MAX_FILES) {
       return {
         ok: false,
-        errorMessage: "Only markdown (.md) files are allowed",
+        errorMessage: `Maximum ${MAX_FILES} files allowed`,
       };
     }
 
-    // Validate MIME type
-    if (file.type !== "text/markdown" && file.type !== "text/plain") {
+    // Process each file
+    const createdSources = [];
+    const errors = [];
+
+    for (const file of files) {
+      // Validate file extension
+      if (!file.name.toLowerCase().endsWith(".md")) {
+        errors.push(`${file.name}: Only markdown (.md) files are allowed`);
+        continue;
+      }
+
+      // Validate MIME type
+      if (file.type !== "text/markdown" && file.type !== "text/plain") {
+        errors.push(
+          `${file.name}: Invalid file type. Only markdown files are allowed`,
+        );
+        continue;
+      }
+
+      // Validate file size (1MB = 1048576 bytes)
+      if (file.size > 1048576) {
+        errors.push(`${file.name}: File size exceeds 1MB limit`);
+        continue;
+      }
+
+      try {
+        // Read file content
+        const fileContent = await file.text();
+
+        // Generate a unique ID for the source
+        const sourcePublicId = generateId();
+
+        // Create a new Source in the database
+        const source = await prisma.source.create({
+          data: {
+            name: file.name.replace(/\.md$/i, ""), // Use filename without extension
+            publicId: sourcePublicId,
+            createdAt: new Date(),
+            text: fileContent,
+            projectId: project.id,
+          },
+        });
+
+        createdSources.push(source);
+      } catch (err) {
+        errors.push(`${file.name}: Failed to process file`);
+        console.error(`Error processing file ${file.name}:`, err);
+      }
+    }
+
+    // If there were errors but some files were processed successfully
+    if (errors.length > 0 && createdSources.length > 0) {
       return {
-        ok: false,
-        errorMessage: "Invalid file type. Only markdown files are allowed",
+        ok: true,
+        errorMessage: `Uploaded ${createdSources.length} file(s) with ${errors.length} error(s): ${errors.join("; ")}`,
       };
     }
 
-    // Validate file size (1MB = 1048576 bytes)
-    if (file.size > 1048576) {
+    // If all files failed
+    if (errors.length > 0 && createdSources.length === 0) {
       return {
         ok: false,
-        errorMessage: "File size exceeds 1MB limit",
+        errorMessage: `Failed to upload files: ${errors.join("; ")}`,
       };
     }
 
-    // Read file content
-    const fileContent = await file.text();
-
-    // Generate a unique ID for the source
-    const sourcePublicId = generateId();
-
-    // Create a new Source in the database
-    await prisma.source.create({
-      data: {
-        name: file.name.replace(/\.md$/i, ""), // Use filename without extension
-        publicId: sourcePublicId,
-        createdAt: new Date(),
-        text: fileContent,
-        projectId: project.id,
-      },
-    });
-
+    // If all files were processed successfully
     // Redirect back to the sources list
     return redirect(
       appRoutes("/projects/:id/sources", { id: project.publicId }),
