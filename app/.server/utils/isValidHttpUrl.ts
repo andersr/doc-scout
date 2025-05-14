@@ -1,3 +1,4 @@
+// src: https://stackoverflow.com/a/43467144/2008639
 export function isValidHttpUrl(str: string) {
   let url;
 
