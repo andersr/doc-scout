@@ -87,7 +87,7 @@ export default function NewSource() {
     </div>
   );
 }
-
+// TODO: handle and ignore trailing comma or double commas, strip whitespace
 export async function action(args: Route.ActionArgs) {
   try {
     const user = await requireUser(args);
