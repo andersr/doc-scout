@@ -122,6 +122,7 @@ export async function action(args: Route.ActionArgs) {
       .toString()
       .trim()
       .split(",")
+      .filter((u) => u.trim() !== "" && u !== ",")
       .map((u) => stripTrailingSlash(u));
 
     const urls = [...new Set(urlsFormatted)];

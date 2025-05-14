@@ -1,7 +1,7 @@
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { data, Form, redirect, useActionData } from "react-router";
 import { getBucketData } from "~/.server/aws/getFromBucket";
 import { getResetVectorStore } from "~/.server/langchain/getResetVectorStore";
+import { splitDocuments } from "~/.server/langchain/splitDocuments";
 import { requireProjectById } from "~/.server/projects/requireProjectById";
 import { requireUser } from "~/.server/users/requireUser";
 import { Button } from "~/components/ui/button";
@@ -74,19 +74,16 @@ export async function action(args: Route.ActionArgs) {
 
       docs.push({
         pageContent: data.markdown,
-        id: sources[index].publicId,
+        // id: sources[index].publicId,
         metadata: {
           title: sources[index].name,
           url: sources[index].url,
+          sourceId: sources[index].publicId,
         },
       });
     }
 
-    const splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1000,
-      chunkOverlap: 200,
-    });
-    const allSplits = await splitter.splitDocuments(docs);
+    const allSplits = await splitDocuments(docs);
 
     const vectorStore = await getResetVectorStore(project.collectionName);
 

@@ -7,8 +7,10 @@ import { getVectorStore } from "./vectorStore";
 
 export async function generateGraph({
   collectionName,
+  sources,
 }: {
   collectionName: string;
+  sources?: string[];
 }) {
   const promptTemplate = PromptTemplate.fromTemplate(RAG_TEMPLATE);
 
@@ -27,7 +29,13 @@ export async function generateGraph({
 
   // Define application steps
   const retrieve = async (state: typeof InputStateAnnotation.State) => {
-    const retrievedDocs = await vectorStore.similaritySearch(state.question);
+    const retrievedDocs = await vectorStore.similaritySearch(
+      state.question,
+      4, // default value
+      sources && sources.length > 0
+        ? { sourceId: { $in: sources } }
+        : undefined,
+    );
     return { context: retrievedDocs };
   };
 
