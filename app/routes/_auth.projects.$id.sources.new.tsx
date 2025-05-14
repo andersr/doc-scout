@@ -1,15 +1,17 @@
 import type { Prisma } from "@prisma/client";
 import { useState } from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
-import slugify from "slugify";
 import { uploadJsonToBucket } from "~/.server/aws/uploadJsonToBucket";
 import { fcApp } from "~/.server/firecrawl/fcApp";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
+import { isValidHttpUrl } from "~/.server/utils/isValidHttpUrl";
 import { requireParam } from "~/.server/utils/requireParam";
+import { slugify } from "~/.server/utils/slugify";
 import { stripTrailingSlash } from "~/.server/utils/stripTrailingSlash";
 import { Button } from "~/components/ui/button";
 import { URLS_INPUT_PLACEHOLDER } from "~/config/inputs";
+import { MAX_SCRAPES } from "~/config/scrape";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -17,7 +19,6 @@ import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
 
-const URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
 export const handle: RouteData = {
   pageTitle: "Add Sources",
 };
@@ -47,7 +48,6 @@ export async function loader(args: Route.LoaderArgs) {
   return { project: projectMembership.project };
 }
 export default function NewSource() {
-  // const { project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
 
@@ -87,7 +87,7 @@ export default function NewSource() {
     </div>
   );
 }
-
+// TODO: handle and ignore trailing comma or double commas, strip whitespace
 export async function action(args: Route.ActionArgs) {
   try {
     const user = await requireUser(args);
@@ -134,9 +134,16 @@ export async function action(args: Route.ActionArgs) {
       });
     }
 
+    if (urls.length > MAX_SCRAPES) {
+      return new Response(JSON.stringify({ ok: false }), {
+        status: 400,
+        statusText: "Sorry, no more than 10 scrapes are allowed.",
+      });
+    }
+
     for (let index = 0; index < urls.length; index++) {
-      if (!URL_REGEX.test(urls[index])) {
-        console.warn("invalid url");
+      if (!isValidHttpUrl(urls[index])) {
+        console.warn(`invalid url: ${urls[index]}`);
         return new Response(JSON.stringify({ ok: false }), {
           status: 400,
           statusText: `Invalid url: ${urls[index]}`,
@@ -168,12 +175,11 @@ export async function action(args: Route.ActionArgs) {
     const sourcesInput: Prisma.SourceCreateManyInput[] = [];
 
     for (let index = 0; index < scrapeBatchResponse.data.length; index++) {
-      let name = scrapeBatchResponse.data[index].metadata?.title;
+      const name = scrapeBatchResponse.data[index].metadata?.title ?? "";
       if (!name) {
         console.warn(
           `no page title found for: ${scrapeBatchResponse.data[index].metadata}`,
         );
-        name = "untitled"; // TODO: set using metadata values
       }
       const url = scrapeBatchResponse.data[index].metadata?.url;
       if (!url) {
@@ -185,7 +191,6 @@ export async function action(args: Route.ActionArgs) {
       const sourcePublicId = generateId();
       const timestamp = new Date().toISOString();
 
-      // TODO: strip protocol from url
       const storagePath = `projects/${projectPublicId}/sources/${sourcePublicId}/${slugify(
         url,
       )}_${slugify(timestamp, {
