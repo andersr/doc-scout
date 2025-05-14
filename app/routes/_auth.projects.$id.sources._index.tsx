@@ -48,21 +48,31 @@ export default function ProjectSources() {
   return (
     <div className="">
       {project?.publicId ? (
-        <Link
-          className="underline text-blue-600"
-          to={appRoutes("/projects/:id/sources/new", {
-            id: project?.publicId,
-          })}
-        >
-          Add sources
-        </Link>
+        <div className="flex gap-4">
+          <Link
+            className="underline text-blue-600"
+            to={appRoutes("/projects/:id/sources/new", {
+              id: project?.publicId,
+            })}
+          >
+            Add sources
+          </Link>
+          <Link
+            className="underline text-blue-600"
+            to={appRoutes("/projects/:id/sources/upload", {
+              id: project?.publicId,
+            })}
+          >
+            Upload file
+          </Link>
+        </div>
       ) : (
         <span>No public id</span>
       )}
       <ul>
         {project?.sources.map((s) => (
           <li key={s.publicId}>
-            {s.name} ({s.url})
+            {s.name} {s.url ? s.url : s.text ? "(markdown)" : ""}
           </li>
         ))}
       </ul>
