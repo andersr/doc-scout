@@ -1,3 +1,6 @@
+import type { Source } from "@prisma/client";
+import { useState } from "react";
+import Markdown from "react-markdown";
 import { data, Link, redirect, useLoaderData } from "react-router";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
@@ -44,38 +47,74 @@ export async function loader(args: Route.LoaderArgs) {
 }
 export default function ProjectSources() {
   const { project } = useLoaderData<typeof loader>();
+  const [selectedSource, setSelectedSource] = useState<{
+    id: string;
+    text: string | null;
+  } | null>(null);
+
+  const handleSourceClick = (source: Source) => {
+    if (source.url) {
+      // If source has a URL, open it in a new tab
+      window.open(source.url, "_blank");
+    } else if (source.text) {
+      // If source has text (markdown), display it
+      setSelectedSource({
+        id: source.publicId,
+        text: source.text,
+      });
+    }
+  };
 
   return (
-    <div className="">
-      {project?.publicId ? (
-        <div className="flex gap-4">
-          <Link
-            className="underline text-blue-600"
-            to={appRoutes("/projects/:id/sources/new", {
-              id: project?.publicId,
-            })}
-          >
-            Add sources
-          </Link>
-          <Link
-            className="underline text-blue-600"
-            to={appRoutes("/projects/:id/sources/upload", {
-              id: project?.publicId,
-            })}
-          >
-            Upload file
-          </Link>
+    <div className="flex flex-col md:flex-row gap-6">
+      <div className="md:w-1/3">
+        {project?.publicId ? (
+          <div className="flex gap-4 mb-4">
+            <Link
+              className="underline text-blue-600"
+              to={appRoutes("/projects/:id/sources/new", {
+                id: project?.publicId,
+              })}
+            >
+              Add sources
+            </Link>
+            <Link
+              className="underline text-blue-600"
+              to={appRoutes("/projects/:id/sources/upload", {
+                id: project?.publicId,
+              })}
+            >
+              Upload file
+            </Link>
+          </div>
+        ) : (
+          <span>No public id</span>
+        )}
+        <ul className="space-y-2">
+          {project?.sources.map((s) => (
+            <li
+              key={s.publicId}
+              className={`cursor-pointer hover:text-blue-600 ${
+                selectedSource?.id === s.publicId ? "font-bold" : ""
+              }`}
+              onClick={() => handleSourceClick(s)}
+            >
+              {s.name} {s.url ? "(url)" : s.text ? "(markdown)" : ""}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {selectedSource && (
+        <div className="md:w-2/3">
+          <h2 className="text-xl mb-2">Source Content</h2>
+          <div className="border border-gray-300 rounded-md p-4 max-h-[80%] overflow-y-auto">
+            <div className="prose dark:prose-invert">
+              <Markdown>{selectedSource.text || ""}</Markdown>
+            </div>
+          </div>
         </div>
-      ) : (
-        <span>No public id</span>
       )}
-      <ul>
-        {project?.sources.map((s) => (
-          <li key={s.publicId}>
-            {s.name} {s.url ? s.url : s.text ? "(markdown)" : ""}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

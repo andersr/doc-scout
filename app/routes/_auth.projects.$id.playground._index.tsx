@@ -94,7 +94,9 @@ export default function ProjectPlayground() {
       {actionData?.answer && (
         <div className="mt-4">
           <h2 className=" text-xl mb-2">Answer</h2>
-          <Markdown>{actionData?.answer}</Markdown>
+          <div className="prose dark:prose-invert">
+            <Markdown>{actionData?.answer}</Markdown>
+          </div>
         </div>
       )}
     </div>
