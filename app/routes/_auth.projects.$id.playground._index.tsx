@@ -1,7 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Markdown from "react-markdown";
-import { data, Form, useActionData, useNavigation } from "react-router";
+import {
+  data,
+  Form,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
+import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireProjectById } from "~/.server/projects/requireProjectById";
@@ -40,6 +47,7 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function ProjectPlayground() {
+  const { project } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   const pendingUI = useNavigation();
@@ -60,6 +68,24 @@ export default function ProjectPlayground() {
           <Label className="pb-2">Question</Label>
           <Input type="text" {...register("question")} />
           {errors.question && <p>{errors.question.message}</p>}
+        </div>
+        <div className="py-4">
+          <h2>Sources</h2>
+          <ul>
+            {project?.sources.map((s) => (
+              <li key={s.publicId}>
+                <label className={twMerge("cursor-pointer")}>
+                  <input
+                    {...register("sources")}
+                    type="checkbox"
+                    className="mr-3 cursor-pointer disabled:opacity-70"
+                    value={s.publicId}
+                  />
+                  {s.name}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
         <Button type="submit" disabled={!isValid}>
           {pendingUI.state !== "idle" ? "Asking..." : "Ask"}
@@ -96,6 +122,7 @@ export async function action(args: Route.ActionArgs) {
 
     const graph = await generateGraph({
       collectionName: project.collectionName,
+      sources: data.sources,
     });
 
     const inputs = {

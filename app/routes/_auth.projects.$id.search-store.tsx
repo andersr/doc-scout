@@ -74,10 +74,11 @@ export async function action(args: Route.ActionArgs) {
 
       docs.push({
         pageContent: data.markdown,
-        id: sources[index].publicId,
+        // id: sources[index].publicId,
         metadata: {
           title: sources[index].name,
           url: sources[index].url,
+          sourceId: sources[index].publicId,
         },
       });
     }
