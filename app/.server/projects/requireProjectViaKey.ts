@@ -2,6 +2,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import type { LoaderFunctionArgs } from "react-router";
 import { prisma } from "~/lib/prisma";
 import { APIError } from "~/types/api";
+import { PROJECT_SELECT_CLIENT } from "~/types/project";
 import { requireApiKey } from "../auth/requireApiKey";
 import { requireParam } from "../utils/requireParam";
 
@@ -27,12 +28,7 @@ export async function requireProjectViaKey({
     where: {
       id: projectKey.project?.id,
     },
-    select: {
-      name: true,
-      collectionName: true,
-      createdAt: true,
-      publicId: true,
-    },
+    select: PROJECT_SELECT_CLIENT,
   });
 
   if (projectPublicIdParam !== project.publicId) {

@@ -1,11 +1,11 @@
 import type { Prisma } from "@prisma/client";
-import { PROJECT_SELECT } from "./project";
+import { PROJECT_SELECT_INTERNAL } from "./project";
 
 export const USER_INCLUDE = {
   projectMemberships: {
     include: {
       project: {
-        select: PROJECT_SELECT,
+        select: PROJECT_SELECT_INTERNAL,
       },
     },
   },

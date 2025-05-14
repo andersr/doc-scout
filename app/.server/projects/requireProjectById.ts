@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { prisma } from "~/lib/prisma";
-import { PROJECT_SELECT } from "~/types/project";
+import { PROJECT_SELECT_INTERNAL } from "~/types/project";
 import type { UserInternal } from "~/types/user";
 import { requireParam } from "../utils/requireParam";
 import { requireProjectId } from "./requireProjectId";
@@ -20,7 +20,7 @@ export async function requireProjectById({
     where: {
       id: projectId ?? -1,
     },
-    select: PROJECT_SELECT,
+    select: PROJECT_SELECT_INTERNAL,
   });
 
   return project;
