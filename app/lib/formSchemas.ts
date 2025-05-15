@@ -5,6 +5,6 @@ export const newProjectSchema = z.object({
 });
 
 export const playgroundSchema = z.object({
-  question: z.string().min(1),
-  sources: z.string().array().min(1),
+  question: z.string(),
+  sources: z.union([z.string(), z.string().array()]),
 });

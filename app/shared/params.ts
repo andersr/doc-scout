@@ -5,4 +5,5 @@ export const PARAMS = {
   SOURCE: "source",
   URL: "url",
   URLS: "urls",
+  FILE: "file",
 };

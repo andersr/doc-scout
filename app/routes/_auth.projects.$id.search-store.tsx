@@ -64,23 +64,37 @@ export async function action(args: Route.ActionArgs) {
     const docs: LCDocument[] = [];
 
     for (let index = 0; index < sources.length; index++) {
+      const textData = sources[index].text;
       const storagePath = sources[index].storagePath;
 
-      if (!storagePath) {
-        console.warn(`No storage path found for source ${sources[index].id}`);
+      if (!textData && !storagePath) {
+        console.warn(`No data found for source ${sources[index].id}, skipping`);
         continue;
       }
-      const data = await getBucketData(storagePath);
 
-      docs.push({
-        pageContent: data.markdown,
-        // id: sources[index].publicId,
-        metadata: {
-          title: sources[index].name,
-          url: sources[index].url,
-          sourceId: sources[index].publicId,
-        },
-      });
+      const storageData = storagePath ? await getBucketData(storagePath) : null;
+
+      if (storageData) {
+        docs.push({
+          pageContent: storageData.markdown,
+          metadata: {
+            title: sources[index].name,
+            url: sources[index].url,
+            sourceId: sources[index].publicId,
+          },
+        });
+      }
+
+      if (textData) {
+        docs.push({
+          pageContent: textData,
+          metadata: {
+            title: sources[index].name,
+            sourceId: sources[index].publicId,
+            type: "markdown", // for now, create actual doc types
+          },
+        });
+      }
     }
 
     const allSplits = await splitDocuments(docs);
