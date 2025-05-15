@@ -14,7 +14,6 @@ import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireProjectById } from "~/.server/projects/requireProjectById";
 import { requireUser } from "~/.server/users/requireUser";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { playgroundSchema } from "~/lib/formSchemas";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -66,7 +65,12 @@ export default function ProjectPlayground() {
       <Form onSubmit={handleSubmit} method="POST">
         <div className="mb-2">
           <Label className="pb-2">Question</Label>
-          <Input type="text" {...register("question")} />
+          {/* <Input type="text" {...register("question")} /> */}
+          <textarea
+            {...register("question")}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+          ></textarea>
           {errors.question && <p>{errors.question.message}</p>}
         </div>
         <div className="py-4">
@@ -124,7 +128,7 @@ export async function action(args: Route.ActionArgs) {
 
     const graph = await generateGraph({
       collectionName: project.collectionName,
-      sources: data.sources,
+      sources: Array.isArray(data.sources) ? data.sources : [data.sources],
     });
 
     const inputs = {
