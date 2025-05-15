@@ -65,7 +65,6 @@ export default function ProjectPlayground() {
       <Form onSubmit={handleSubmit} method="POST">
         <div className="mb-2">
           <Label className="pb-2">Question</Label>
-          {/* <Input type="text" {...register("question")} /> */}
           <textarea
             {...register("question")}
             rows={3}
