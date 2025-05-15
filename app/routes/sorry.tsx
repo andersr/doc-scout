@@ -1,3 +1,6 @@
+import { Link } from "react-router";
+import { appRoutes } from "~/shared/appRoutes";
+
 export function meta() {
   return [{ title: "Sorry" }];
 }
@@ -10,6 +13,9 @@ export default function SorryRoute() {
         insufficient permissions. Please contact the site owner for more
         details.
       </div>
+      <Link className="text-blue-600 underline" to={appRoutes("/")}>
+        Back to Home
+      </Link>
     </div>
   );
 }
