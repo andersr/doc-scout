@@ -8,20 +8,16 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Project {
+model Collection {
   id        Int       @id @default(autoincrement())
   publicId  String    @unique
-  name      String
-  // make required
   createdAt DateTime?
   updatedAt DateTime?
+  name      String
+  sources   Source[]
 
-  // make required
-  collectionName String?
-
-  sources Source[]
-  members ProjectUser[]
-  apiKeys Key[]
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
 }
 
 model Key {
@@ -33,6 +29,27 @@ model Key {
 
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int?
+}
+
+model Project {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  name      String
+  // make required
+  createdAt DateTime?
+  updatedAt DateTime?
+
+  // legacy?
+  // make required
+  collectionName String?
+
+  // legacy?
+  sources Source[]
+
+  collections Collection[]
+
+  members ProjectUser[]
+  apiKeys Key[]
 }
 
 model ProjectUser {
@@ -61,8 +78,12 @@ model Source {
   storagePath String?
   text        String?
 
+  // legacy
   project   Project? @relation(fields: [projectId], references: [id])
   projectId Int?
+
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
 }
 
 model User {
