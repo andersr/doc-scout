@@ -165,7 +165,7 @@ export async function action(args: LoaderFunctionArgs) {
 
     await addDocsToVectorStore({
       docs,
-      collectionName: slugify(collection.name),
+      collectionName: `${collection.publicId}-${slugify(collection.name)}`,
     });
 
     return redirect(appRoutes("/collections/:id", { id: collection.publicId }));
