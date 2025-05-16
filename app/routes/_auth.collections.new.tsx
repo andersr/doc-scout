@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
+import { slugify } from "~/.server/utils/slugify";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/FileUploader";
 import { Button } from "~/components/ui/button";
@@ -162,7 +163,10 @@ export async function action(args: LoaderFunctionArgs) {
       }
     }
 
-    await addDocsToVectorStore({ docs, collectionName: collection.name });
+    await addDocsToVectorStore({
+      docs,
+      collectionName: slugify(collection.name),
+    });
 
     return redirect(appRoutes("/collections/:id", { id: collection.publicId }));
   } catch (error) {
