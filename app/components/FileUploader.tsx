@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { validateFile } from "~/utils/validateFile";
 
 export interface FileUploaderProps {
   maxFiles?: number;
@@ -17,7 +18,7 @@ export function FileUploader({
   maxFiles = 10,
   maxSizeInBytes = 1048576, // 1MB default
   allowedFileTypes = ["text/markdown", "text/plain"],
-  allowedExtensions = [".md"],
+  allowedExtensions = [".md", ".txt"],
   onFilesChange,
   inputName,
   label = "Upload Files",
@@ -25,26 +26,6 @@ export function FileUploader({
 }: FileUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
-
-  const validateFile = (file: File): string | null => {
-    // Check file extension
-    const fileExtension = `.${file.name.split(".").pop()?.toLowerCase()}`;
-    if (!allowedExtensions.includes(fileExtension)) {
-      return `Only ${allowedExtensions.join(", ")} files are allowed`;
-    }
-
-    // Check MIME type
-    if (!allowedFileTypes.includes(file.type)) {
-      return `Invalid file type. Only ${allowedExtensions.join(", ")} files are allowed`;
-    }
-
-    // Check file size
-    if (file.size > maxSizeInBytes) {
-      return `File size exceeds ${maxSizeInBytes / 1024 / 1024}MB limit`;
-    }
-
-    return null;
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -68,7 +49,11 @@ export function FileUploader({
 
     // Validate each file
     Array.from(files).forEach((file) => {
-      const error = validateFile(file);
+      const error = validateFile(file, {
+        allowedFileTypes,
+        maxSizeInBytes,
+        allowedExtensions,
+      });
       if (error) {
         newFileErrors[file.name] = error;
       } else {
@@ -111,7 +96,11 @@ export function FileUploader({
 
     // Validate each file
     Array.from(files).forEach((file) => {
-      const error = validateFile(file);
+      const error = validateFile(file, {
+        allowedFileTypes,
+        maxSizeInBytes,
+        allowedExtensions,
+      });
       if (error) {
         newFileErrors[file.name] = error;
       } else {
