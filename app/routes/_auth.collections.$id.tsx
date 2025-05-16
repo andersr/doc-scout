@@ -99,7 +99,7 @@ export default function CollectionDetails() {
           <div className="md:w-2/3">
             <h2 className="text-xl mb-2">Source Content</h2>
             <div className="border border-gray-300 rounded-md p-4 max-h-[80vh] overflow-y-auto">
-              <div className="prose dark:prose-invert">
+              <div className="prose dark:prose-invert whitespace-pre">
                 <Markdown>{selectedSource.text || ""}</Markdown>
               </div>
             </div>
