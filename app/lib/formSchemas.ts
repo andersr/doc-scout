@@ -4,6 +4,11 @@ export const newProjectSchema = z.object({
   name: z.string().min(1),
 });
 
+export const newCollectionSchema = z.object({
+  name: z.string().min(1, "Collection name is required"),
+  // The file validation will be handled in the component
+});
+
 export const playgroundSchema = z.object({
   question: z.string(),
   sources: z.union([z.string(), z.string().array()]),
