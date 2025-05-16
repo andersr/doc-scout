@@ -4,15 +4,15 @@ import { splitDocuments } from "../langchain/splitDocuments";
 
 export async function addDocsToVectorStore({
   docs,
-  collectionName,
+  namespace,
 }: {
   docs: LCDocument[];
-  collectionName: string;
+  namespace: string;
 }) {
   try {
     const allSplits = await splitDocuments(docs);
 
-    const vectorStore = await getResetVectorStore(collectionName);
+    const vectorStore = await getResetVectorStore(namespace);
 
     await vectorStore.addDocuments(allSplits);
   } catch (error) {
