@@ -8,4 +8,5 @@ export const PARAMS = {
   URLS: "urls",
   FILE: "file",
   COLLECTION_NAME: "collectionName",
+  COLLECTION_IDS: "collectionIds",
 };

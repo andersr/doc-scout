@@ -17,6 +17,47 @@ model Collection {
   sources   Source[]
 
   projectCollections ProjectCollection[]
+
+  collectionChats CollectionChat[]
+}
+
+model CollectionChat {
+  id Int @id @default(autoincrement())
+
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  createdAt DateTime
+  updatedAt DateTime?
+  messages  Message[]
+  // threadId  String
+
+  chatCollections CollectionChat[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+  createdAt DateTime
+
+  author   User? @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int?
+
+  text String
+  type MessageType @default(USER)
+}
+
+enum MessageType {
+  USER
+  BOT
 }
 
 model Key {
@@ -109,4 +150,5 @@ model User {
   // lastLogin DateTime?
 
   projectMemberships ProjectUser[]
+  messages           Message[]
 }
