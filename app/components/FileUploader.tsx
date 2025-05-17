@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+  DEFAULT_ALLOWED_EXTENSIONS,
+  DEFAULT_ALLOWED_FILE_TYPES,
+  DEFAULT_MAX_FILES,
+  DEFAULT_MAX_FILE_SIZE,
+} from "~/config/files";
 import { validateFile } from "~/utils/validateFile";
 
-export interface FileUploaderProps {
+interface FileUploaderProps {
   maxFiles?: number;
   maxSizeInBytes?: number;
   allowedFileTypes?: string[];
@@ -15,10 +21,10 @@ export interface FileUploaderProps {
 }
 
 export function FileUploader({
-  maxFiles = 10,
-  maxSizeInBytes = 1048576, // 1MB default
-  allowedFileTypes = ["text/markdown", "text/plain"],
-  allowedExtensions = [".md", ".txt"],
+  maxFiles = DEFAULT_MAX_FILES,
+  maxSizeInBytes = DEFAULT_MAX_FILE_SIZE,
+  allowedFileTypes = DEFAULT_ALLOWED_FILE_TYPES,
+  allowedExtensions = DEFAULT_ALLOWED_EXTENSIONS,
   onFilesChange,
   inputName,
   label = "Upload Files",

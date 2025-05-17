@@ -30,11 +30,6 @@ export function meta() {
   ];
 }
 
-export async function loader(args: LoaderFunctionArgs) {
-  await requireUser(args);
-  return null;
-}
-
 export default function NewCollection() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();

@@ -21,7 +21,6 @@ export function meta({ data }: { data: { collection: { name: string } } }) {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  // const currentUser = await requireUser(args);
   const collectionId = requireParam({
     params: args.params,
     key: PARAMS.ID,

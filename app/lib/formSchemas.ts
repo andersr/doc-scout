@@ -6,7 +6,6 @@ export const newProjectSchema = z.object({
 
 export const newCollectionSchema = z.object({
   name: z.string().min(1, "Collection name is required"),
-  // The file validation will be handled in the component
 });
 
 export const playgroundSchema = z.object({
