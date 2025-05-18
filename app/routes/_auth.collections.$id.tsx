@@ -57,7 +57,7 @@ export default function CollectionDetails() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full p-4">
       <div className="flex justify-between items-center">
         <PageTitle>{collection.name}</PageTitle>
         <div className="flex gap-2">
@@ -70,8 +70,8 @@ export default function CollectionDetails() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-1/3">
+      <div className="flex flex-col md:flex-row gap-6 w-full">
+        <div className="w-96">
           <h2 className="text-xl font-semibold mb-4">Sources</h2>
           {collection.sources.length === 0 ? (
             <p className="text-gray-500">No sources in this collection</p>
@@ -95,12 +95,10 @@ export default function CollectionDetails() {
         </div>
 
         {selectedSource && (
-          <div className="md:w-2/3">
+          <div className="flex-1">
             <h2 className="text-xl mb-2">Source Content</h2>
-            <div className="border border-gray-300 rounded-md p-4 max-h-[80vh] overflow-y-auto">
-              <div className="prose dark:prose-invert whitespace-pre">
-                <Markdown>{selectedSource.text || ""}</Markdown>
-              </div>
+            <div className="border border-gray-300 rounded-md p-4 w-full h-[75vh] overflow-scroll prose !max-w-none">
+              <Markdown>{selectedSource.text || ""}</Markdown>
             </div>
           </div>
         )}
