@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-// import Markdown from "react-markdown";
 // import { DevTool } from "@hookform/devtools";
 import { MessageType } from "@prisma/client";
 import { Label } from "@radix-ui/react-label";
@@ -98,7 +97,7 @@ export default function InquiryChat() {
     handleSubmit,
     formState: { errors, isValid, isSubmitSuccessful, isLoading },
     register,
-    control,
+    // control,
     reset,
     setValue,
   } = useRemixForm<FormData>({
@@ -129,7 +128,6 @@ export default function InquiryChat() {
 
   return (
     <div>
-      {/* <DevTool control={control} placement="bottom-right" /> */}
       <div className="my-2">
         <h2>Messages</h2>
         <ul>
@@ -213,10 +211,6 @@ export async function action(args: Route.ActionArgs) {
 
     if (errors) {
       return { errors, defaultValues, ok: false };
-    }
-
-    if (!data) {
-      throw new Error("no data");
     }
 
     const userMessageCreatedAt = new Date();
