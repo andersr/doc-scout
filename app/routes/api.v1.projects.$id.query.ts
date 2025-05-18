@@ -40,7 +40,7 @@ export async function action(args: Route.ActionArgs) {
     const validated = querySchema.parse(payload);
 
     const graph = await generateGraph({
-      collectionName: project.collectionName,
+      namespace: project.collectionName,
     });
 
     const inputs = {

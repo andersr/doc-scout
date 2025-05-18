@@ -8,20 +8,57 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Project {
+model Collection {
   id        Int       @id @default(autoincrement())
   publicId  String    @unique
-  name      String
-  // make required
   createdAt DateTime?
   updatedAt DateTime?
+  name      String
+  sources   Source[]
 
-  // make required
-  collectionName String?
+  projectCollections ProjectCollection[]
 
-  sources Source[]
-  members ProjectUser[]
-  apiKeys Key[]
+  collectionChats CollectionChat[]
+}
+
+model CollectionChat {
+  id Int @id @default(autoincrement())
+
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  createdAt DateTime
+  updatedAt DateTime?
+  messages  Message[]
+  // threadId  String
+
+  chatCollections CollectionChat[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  // TODO: add publicid
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+  createdAt DateTime
+
+  author   User? @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int?
+
+  text String
+  type MessageType @default(USER)
+}
+
+enum MessageType {
+  USER
+  BOT
 }
 
 model Key {
@@ -33,6 +70,38 @@ model Key {
 
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int?
+}
+
+model Project {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique
+  name      String
+  // make required
+  createdAt DateTime?
+  updatedAt DateTime?
+
+  // legacy?
+  // make required
+  collectionName String?
+
+  // legacy?
+  sources Source[]
+
+  collections ProjectCollection[]
+
+  members ProjectUser[]
+  apiKeys Key[]
+}
+
+model ProjectCollection {
+  id   Int  @id @default(autoincrement())
+  role Role @default(USER)
+
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
 }
 
 model ProjectUser {
@@ -61,8 +130,12 @@ model Source {
   storagePath String?
   text        String?
 
+  // legacy
   project   Project? @relation(fields: [projectId], references: [id])
   projectId Int?
+
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
 }
 
 model User {
@@ -78,4 +151,5 @@ model User {
   // lastLogin DateTime?
 
   projectMemberships ProjectUser[]
+  messages           Message[]
 }

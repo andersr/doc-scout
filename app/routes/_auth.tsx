@@ -1,33 +1,30 @@
 import { Outlet } from "react-router";
 import { AppNav } from "~/components/AppNav";
-// import { UserNav } from "~/components/UserNav";
+
 import {
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
 } from "@clerk/react-router";
-
-// import type { Route } from "./+types/_auth";
+import { requireUser } from "~/.server/users";
+import type { Route } from "./+types/_auth";
 
 export function meta() {
   return [{ title: "Dashboard" }, { name: "description", content: "" }];
 }
 
-// export async function loader(args: Route.LoaderArgs) {
-//   const currentUser = await requireUser(args);
+export async function loader(args: Route.LoaderArgs) {
+  await requireUser(args);
 
-//   return { currentUser };
-// }
+  return {};
+}
 
 export default function AuthLayout() {
-  // const { currentUser } = useLoaderData<typeof loader>();
-
   return (
     <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-2">
         <AppNav />
-        {/* <UserNav currentUser={currentUser} /> */}
         <SignedOut>
           <SignInButton />
         </SignedOut>

@@ -7,7 +7,6 @@ import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { isValidHttpUrl } from "~/.server/utils/isValidHttpUrl";
 import { requireParam } from "~/.server/utils/requireParam";
-import { slugify } from "~/.server/utils/slugify";
 import { stripTrailingSlash } from "~/.server/utils/stripTrailingSlash";
 import { Button } from "~/components/ui/button";
 import { URLS_INPUT_PLACEHOLDER } from "~/config/inputs";
@@ -17,6 +16,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
+import { slugify } from "~/utils/slugify";
 import type { Route } from "./+types/_auth.projects.$id.sources.new";
 
 export const handle: RouteData = {

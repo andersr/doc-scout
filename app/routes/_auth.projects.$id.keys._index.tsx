@@ -109,7 +109,7 @@ export async function action(args: Route.ActionArgs) {
     }
 
     const graph = await generateGraph({
-      collectionName: project.collectionName,
+      namespace: project.collectionName,
     });
 
     const inputs = {
