@@ -1,9 +1,9 @@
+import type { Prisma } from "@prisma/client";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
-import { slugify } from "~/.server/utils/slugify";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/FileUploader";
 import { Button } from "~/components/ui/button";
@@ -118,17 +118,9 @@ export async function action(args: LoaderFunctionArgs) {
       };
     }
 
-    // Create collection
-    const collectionPublicId = generateId();
-    const collection = await prisma.collection.create({
-      data: {
-        name: collectionName,
-        publicId: collectionPublicId,
-        createdAt: new Date(),
-      },
-    });
-
     const docs: LCDocument[] = [];
+
+    const sourcesInput: Prisma.SourceCreateManyInput[] = [];
 
     for (const file of files) {
       try {
@@ -136,21 +128,18 @@ export async function action(args: LoaderFunctionArgs) {
         const fileName = file.name;
         const sourcePublicId = generateId();
 
-        const source = await prisma.source.create({
-          data: {
-            name: fileName,
-            publicId: sourcePublicId,
-            createdAt: new Date(),
-            text: fileContent,
-            collectionId: collection.id,
-          },
+        sourcesInput.push({
+          name: fileName,
+          publicId: sourcePublicId,
+          createdAt: new Date(),
+          text: fileContent,
         });
 
         docs.push({
           pageContent: fileContent,
           metadata: {
             title: fileName,
-            sourceId: source.publicId,
+            sourceId: sourcePublicId,
           },
         });
       } catch (err) {
@@ -158,9 +147,22 @@ export async function action(args: LoaderFunctionArgs) {
       }
     }
 
+    const collection = await prisma.collection.create({
+      data: {
+        name: collectionName,
+        publicId: generateId(),
+        createdAt: new Date(),
+        sources: {
+          createMany: {
+            data: sourcesInput,
+          },
+        },
+      },
+    });
+
     await addDocsToVectorStore({
       docs,
-      namespace: `${collection.publicId}-${slugify(collection.name)}`,
+      namespace: collection.publicId,
     });
 
     return redirect(appRoutes("/collections/:id", { id: collection.publicId }));

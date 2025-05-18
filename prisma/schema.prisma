@@ -44,6 +44,7 @@ model Chat {
 
 model Message {
   id        Int      @id @default(autoincrement())
+  // TODO: add publicid
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    Int
   createdAt DateTime

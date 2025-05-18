@@ -1,23 +1,20 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
-import {
-  Form,
-  redirect,
-  useActionData,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import { Form, redirect, useLoaderData, useNavigation } from "react-router";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
+import { z } from "zod";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import { newQuerySchema } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
 
-const PAGE_TITLE = "New Inquiry";
+const PAGE_TITLE = "New Query";
 
 export const handle: RouteData = {
   pageTitle: PAGE_TITLE,
@@ -26,9 +23,12 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: PAGE_TITLE },
-    { name: "description", content: "Start a new inquiry" },
+    { name: "description", content: "Start a new query" },
   ];
 }
+
+type FormData = z.infer<typeof newQuerySchema>;
+const resolver = zodResolver(newQuerySchema);
 
 export async function loader() {
   const collections = await prisma.collection.findMany();
@@ -44,7 +44,7 @@ export default function NewInquiry() {
   >([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
   const navigation = useNavigation();
-  const actionData = useActionData();
+  // const actionData = useActionData();
 
   // Handle adding a collection to the list
   const handleAddCollection = () => {
@@ -68,8 +68,17 @@ export default function NewInquiry() {
   };
 
   // Disable submit button if no collections are selected
-  const submitDisabled =
-    selectedCollections.length === 0 || navigation.state === "submitting";
+  // const submitDisabled =
+  //   selectedCollections.length === 0 || navigation.state === "submitting";
+
+  const {
+    handleSubmit,
+    formState: { errors, isValid, isSubmitSuccessful, isLoading },
+    register,
+  } = useRemixForm<FormData>({
+    mode: "onSubmit",
+    resolver,
+  });
 
   return (
     <div>
@@ -127,53 +136,68 @@ export default function NewInquiry() {
         )}
       </div>
 
-      <Form method="POST" className="flex flex-col gap-6">
-        {/* Hidden inputs for selected collections */}
+      <Form
+        method="POST"
+        className="flex flex-col gap-6"
+        onSubmit={handleSubmit}
+      >
         {selectedCollections.map((collection) => (
           <input
             key={collection.publicId}
             type="hidden"
-            name={PARAMS.COLLECTION_IDS}
             value={collection.publicId}
+            {...register("collectionId")}
           />
         ))}
 
-        <Button type="submit" disabled={submitDisabled}>
-          {navigation.state === "submitting" ? "Creating..." : "Create Inquiry"}
+        <Button type="submit" disabled={!isValid}>
+          {navigation.state === "submitting" ? "Creating..." : "Continue"}
         </Button>
       </Form>
-
-      {actionData?.errorMessage && (
+      {errors.collectionId && <p>{errors.collectionId.message}</p>}
+      {/* {actionData?.errorMessage && (
         <div className="mt-4 text-center font-semibold text-red-400">
           {actionData.errorMessage}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
 
 export async function action(args: LoaderFunctionArgs) {
-  const { request } = args;
+  // const { request } = args;
+  await requireUser(args);
   try {
-    await requireUser(args);
+    const {
+      errors,
+      data,
+      receivedValues: defaultValues,
+    } = await getValidatedFormData<FormData>(args.request, resolver);
 
-    // Get form data
-    const formData = await request.formData();
-    const collectionIds = formData.getAll(PARAMS.COLLECTION_IDS) as string[];
-
-    // Validate at least one collection is selected
-    if (!collectionIds || collectionIds.length === 0) {
-      return {
-        ok: false,
-        errorMessage: "At least one collection is required",
-      };
+    // console.log("errors: ", errors);
+    if (errors) {
+      return { errors, defaultValues, ok: false };
     }
 
-    const selectedCollections = await prisma.collection.findMany({
+    if (!data) {
+      throw new Error("no data");
+    }
+
+    // Get form data
+    // const formData = await request.formData();
+    // const collectionIds = formData.getAll(PARAMS.COLLECTION_IDS) as string[];
+
+    // Validate at least one collection is selected
+    // if (!collectionIds || collectionIds.length === 0) {
+    //   return {
+    //     ok: false,
+    //     errorMessage: "At least one collection is required",
+    //   };
+    // }
+
+    const selectedCollection = await prisma.collection.findFirstOrThrow({
       where: {
-        publicId: {
-          in: collectionIds,
-        },
+        publicId: data.collectionId,
       },
     });
     // Create a new Chat
@@ -183,9 +207,12 @@ export async function action(args: LoaderFunctionArgs) {
         publicId: chatPublicId,
         createdAt: new Date(),
         chatCollections: {
-          createMany: {
-            data: selectedCollections.map((c) => ({ collectionId: c.id })),
+          create: {
+            collectionId: selectedCollection.id,
           },
+          // createMany: {
+          //   data: selectedCollections.map((c) => ({ collectionId: c.id })),
+          // },
         },
       },
     });
@@ -201,7 +228,7 @@ export async function action(args: LoaderFunctionArgs) {
     // }
 
     // Redirect to the chat interface
-    return redirect(appRoutes("/inquiries/:id", { id: chat.publicId }));
+    return redirect(appRoutes("/queries/:id", { id: chat.publicId }));
   } catch (error) {
     console.error("Inquiry creation error: ", error);
     return {

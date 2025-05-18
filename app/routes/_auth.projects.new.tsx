@@ -5,7 +5,6 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { z } from "zod";
 import { requireUser } from "~/.server/users";
 import { generateId } from "~/.server/utils/generateId";
-import { slugify } from "~/.server/utils/slugify";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -15,6 +14,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { ActionData } from "~/types/actionData";
 import type { RouteData } from "~/types/routeData";
+import { slugify } from "~/utils/slugify";
 import type { Route } from "./+types/_auth.projects.new";
 
 const PAGE_TITLE = "New Project";

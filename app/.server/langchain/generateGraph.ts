@@ -6,13 +6,13 @@ import { llm } from "./llm";
 import { getVectorStore } from "./vectorStore";
 
 export async function generateGraph({
-  collectionName,
+  namespace,
   sources,
 }: {
-  collectionName: string;
+  namespace: string;
   sources?: string[];
 }) {
-  const promptTemplate = PromptTemplate.fromTemplate(RAG_TEMPLATE);
+  const prompt = PromptTemplate.fromTemplate(RAG_TEMPLATE);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const InputStateAnnotation = Annotation.Root({
@@ -25,7 +25,7 @@ export async function generateGraph({
     answer: Annotation<string>,
   });
 
-  const vectorStore = await getVectorStore(collectionName);
+  const vectorStore = await getVectorStore(namespace);
 
   // Define application steps
   const retrieve = async (state: typeof InputStateAnnotation.State) => {
@@ -41,7 +41,7 @@ export async function generateGraph({
 
   const generate = async (state: typeof StateAnnotation.State) => {
     const docsContent = state.context.map((doc) => doc.pageContent).join("\n");
-    const messages = await promptTemplate.invoke({
+    const messages = await prompt.invoke({
       question: state.question,
       context: docsContent,
     });
