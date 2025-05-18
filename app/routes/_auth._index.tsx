@@ -26,7 +26,7 @@ export default function Dashboard() {
       <div className="">
         <div className="flex items-baseline gap-2">
           <h2 className="text-xl font-bold mb-6 flex-1">Inquiries</h2>
-          <LinkButton to={appRoutes("/inquiries/new")}>New Inquiry</LinkButton>
+          <LinkButton to={appRoutes("/queries/new")}>New Inquiry</LinkButton>
         </div>
         <ul>
           {user?.projectMemberships?.map((p) => (
