@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageType } from "@prisma/client";
 import { Label } from "@radix-ui/react-label";
 import { useEffect } from "react";
-import Markdown from "react-markdown";
 import { useLoaderData } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { z } from "zod";
@@ -36,6 +35,7 @@ const resolver = zodResolver(collectionChatSchema);
 
 export async function loader({ params }: { params: { id: string } }) {
   const { id } = params;
+  console.info("id: ", id);
 
   const chat = await prisma.chat.findUniqueOrThrow({
     where: {
@@ -95,7 +95,7 @@ export default function InquiryChat() {
 
   const {
     handleSubmit,
-    formState: { errors, isValid, isSubmitSuccessful, isLoading },
+    formState: { errors, isValid, isSubmitSuccessful },
     register,
     // control,
     reset,
@@ -114,8 +114,15 @@ export default function InquiryChat() {
     ? fetcher.formData.get(PARAMS.MESSAGE)
     : null;
 
+  const isLoading = fetcher.state !== "idle";
+
   useEffect(() => {
     reset({ message: "" });
+    setValue("collectionId", collection.publicId);
+    setValue(
+      "sourceIds",
+      collection.sources.map((s) => s.publicId),
+    );
   }, [isSubmitSuccessful, reset]);
 
   useEffect(() => {
@@ -134,24 +141,16 @@ export default function InquiryChat() {
           {messages.map((m) => (
             <li key={m.id.toString()}>{m.text}</li>
           ))}
-          {newMessages.map((m) => {
-            if (m.type === MessageType.BOT) {
-              return (
-                <li key={m.id.toString()}>
-                  {isLoading ? (
-                    "BOT message Loading..."
-                  ) : (
-                    <Markdown>{m.text}</Markdown>
-                  )}
-                </li>
-              );
-            }
-            return (
-              <li key={m.id.toString()}>
-                {optimisticMessage ? optimisticMessage.toString() : m.text}
-              </li>
-            );
-          })}
+          {optimisticMessage ? (
+            <li>{optimisticMessage.toString()}</li>
+          ) : newMessages[0] ? (
+            <li>{newMessages[0].text}</li>
+          ) : null}
+          {isLoading ? (
+            <li>BOT message Loading</li>
+          ) : newMessages[1] ? (
+            <li>{newMessages[1].text}</li>
+          ) : null}
         </ul>
       </div>
       <fetcher.Form method="POST" onSubmit={handleSubmit}>
