@@ -137,9 +137,6 @@ export default function CollectionChatRoute() {
           ></textarea>
           {errors.message && <p>{errors.message.message}</p>}
         </div>
-        {/* <div className="py-4">
-          <h2>Collection: {collection.name}</h2>
-        </div> */}
         <Button type="submit" disabled={!isValid}>
           {queryFetcher.state !== "idle" ? "Submitting..." : "Submit"}
         </Button>

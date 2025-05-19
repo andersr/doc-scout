@@ -1,6 +1,4 @@
-// import { dateIsFollowingYear } from "./dateIsFollowingYear";
-
-// /typescript/lib/lib.es5.d.ts
+// src: /typescript/lib/lib.es5.d.ts
 interface DateTimeFormatOptions {
   day?: "numeric" | "2-digit" | undefined;
   era?: "long" | "short" | "narrow" | undefined;
@@ -28,8 +26,8 @@ interface Args {
   d: Date;
   withDay?: boolean;
   withTime?: boolean;
-  // withYear?: boolean;
 }
+
 export function formatDateTime({ d, withDay, withTime }: Args) {
   const currentYear = new Date().getFullYear();
   const dateYear = d.getFullYear();
@@ -38,12 +36,6 @@ export function formatDateTime({ d, withDay, withTime }: Args) {
     month: "short",
   };
 
-  // Include year in the format if the date is in the following year or later, or if explicitly specified
-  // if (dateYear > currentYear || dateIsFollowingYear(d) || withYear) {
-  //   options.year = "numeric";
-  // }
-
-  // Include weekday only if the date is in the current year and withDay is true
   if (dateYear === currentYear && withDay) {
     options.weekday = "short";
   }
