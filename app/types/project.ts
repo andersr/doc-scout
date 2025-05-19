@@ -1,29 +1,29 @@
 import type { Prisma } from "@prisma/client";
 
 export const PROJECT_SELECT_INTERNAL = {
-  id: true,
-  publicId: true,
-  name: true,
-  collectionName: true,
-  sources: true,
   apiKeys: {
     select: {
+      createdAt: true,
       id: true,
       name: true,
-      createdAt: true,
     },
   },
+  collectionName: true,
+  id: true,
+  name: true,
+  publicId: true,
+  sources: true,
 } as const;
 
 export const PROJECT_SELECT_CLIENT = {
-  name: true,
   collectionName: true,
   createdAt: true,
+  name: true,
   publicId: true,
   sources: {
     select: {
-      publicId: true,
       name: true,
+      publicId: true,
     },
   },
 } as const;

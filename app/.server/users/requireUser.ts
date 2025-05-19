@@ -1,5 +1,5 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
-import { redirect, type LoaderFunctionArgs } from "react-router";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
 import { waitForUser } from "./waitForUser";
 

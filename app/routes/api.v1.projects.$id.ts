@@ -9,11 +9,11 @@ export async function loader(args: Route.LoaderArgs) {
     const projectClient = await requireProjectViaKey(args);
 
     return data<ApiResponse>({
+      data: projectClient,
       errorMessage: "",
-      successMessage: "This worked",
       errors: null,
       ok: true,
-      data: projectClient,
+      successMessage: "This worked",
     });
   } catch (error: unknown) {
     return apiError(error);

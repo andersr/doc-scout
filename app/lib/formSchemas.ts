@@ -10,9 +10,9 @@ export const newCollectionSchema = z.object({
 });
 
 const answerSchema = z.object({
-  query: z.string().min(1),
-  namespace: z.string().min(1),
   chatPublicId: z.string().min(1),
+  namespace: z.string().min(1),
+  query: z.string().min(1),
 });
 export const answerSchemaResolver = zodResolver(answerSchema);
 export type AnswerFormTypes = z.infer<typeof answerSchema>;

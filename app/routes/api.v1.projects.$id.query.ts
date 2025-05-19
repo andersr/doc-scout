@@ -12,11 +12,11 @@ export async function loader(args: Route.LoaderArgs) {
     const project = await requireProjectViaKey(args);
 
     return data<ApiResponse>({
+      data: project,
       errorMessage: "",
-      successMessage: "This worked",
       errors: null,
       ok: true,
-      data: project,
+      successMessage: "This worked",
     });
   } catch (error: unknown) {
     return apiError(error);
@@ -51,13 +51,13 @@ export async function action(args: Route.ActionArgs) {
     console.info(result.answer);
 
     return data<ApiResponse>({
-      errorMessage: "",
-      successMessage: "",
-      errors: null,
-      ok: true,
       data: {
         answer: result.answer,
       },
+      errorMessage: "",
+      errors: null,
+      ok: true,
+      successMessage: "",
     });
   } catch (error: unknown) {
     return apiError(error);

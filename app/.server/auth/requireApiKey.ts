@@ -22,11 +22,11 @@ export async function requireApiKey({
   }
 
   const key = await prisma.key.findUnique({
-    where: {
-      id: parts[0] ?? "",
-    },
     include: {
       project: true,
+    },
+    where: {
+      id: parts[0] ?? "",
     },
   });
 

@@ -4,13 +4,13 @@ import { APIError } from "~/types/api";
 import type { UserInternal } from "~/types/user";
 
 export async function requireProjectId({
-  user,
   projectPublicId,
   requireAdmin,
+  user,
 }: {
-  user: UserInternal;
   projectPublicId: string;
   requireAdmin?: boolean;
+  user: UserInternal;
 }) {
   const projectMembership = user.projectMemberships.find(
     (pm) => pm.project?.publicId === projectPublicId,

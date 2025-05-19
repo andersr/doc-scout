@@ -1,6 +1,6 @@
 export interface DocPage {
-  title: string;
   content: string;
+  title: string;
   url: string;
 }
 
@@ -22,8 +22,8 @@ export interface DocPage {
 // }
 
 export interface ScrapeData {
-  markdown: string;
   html: string;
+  markdown: string;
   metadata: {
     title: string;
   };

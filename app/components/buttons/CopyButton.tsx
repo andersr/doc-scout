@@ -6,7 +6,7 @@ interface Props {
   copyDone: boolean;
   onClick: () => void;
 }
-export function CopyButton({ onClick, copyDone }: Props) {
+export function CopyButton({ copyDone, onClick }: Props) {
   return (
     <Button variant={"outline"} onClick={onClick}>
       <Icon name={copyDone ? "done" : "content_copy"} />{" "}

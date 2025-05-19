@@ -6,7 +6,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "../+types/root";
 
 export function meta() {
-  return [{ title: "Dashboard" }, { name: "description", content: "" }];
+  return [{ title: "Dashboard" }, { content: "", name: "description" }];
 }
 
 export async function loader(args: Route.LoaderArgs) {

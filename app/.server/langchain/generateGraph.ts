@@ -20,9 +20,9 @@ export async function generateGraph({
   });
 
   const StateAnnotation = Annotation.Root({
-    question: Annotation<string>,
-    context: Annotation<Document[]>,
     answer: Annotation<string>,
+    context: Annotation<Document[]>,
+    question: Annotation<string>,
   });
 
   const vectorStore = await getVectorStore(namespace);
@@ -42,8 +42,8 @@ export async function generateGraph({
   const generate = async (state: typeof StateAnnotation.State) => {
     const docsContent = state.context.map((doc) => doc.pageContent).join("\n");
     const messages = await prompt.invoke({
-      question: state.question,
       context: docsContent,
+      question: state.question,
     });
     const response = await llm.invoke(messages);
     return { answer: response.content };

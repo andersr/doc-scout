@@ -38,8 +38,8 @@ export async function loader(args: Route.LoaderArgs) {
 export default function NewProject() {
   const pendingUI = useNavigation();
   const {
-    handleSubmit,
     formState: { errors, isValid },
+    handleSubmit,
     register,
   } = useRemixForm<FormData>({
     mode: "onSubmit",
@@ -65,25 +65,23 @@ export async function action(args: Route.ActionArgs) {
     const internalUser = await requireUser(args);
 
     const {
-      errors,
       data,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
-      return { errors, defaultValues };
+      return { defaultValues, errors };
     }
 
     const collectionName = slugify(data.name, {
-      replacement: "_",
       lower: true,
+      replacement: "_",
     });
 
     const project = await prisma.project.create({
       data: {
-        name: data.name,
         collectionName,
-        publicId: generateId(),
         createdAt: new Date(),
         members: {
           create: {
@@ -95,6 +93,8 @@ export async function action(args: Route.ActionArgs) {
             },
           },
         },
+        name: data.name,
+        publicId: generateId(),
       },
     });
 

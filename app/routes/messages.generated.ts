@@ -3,7 +3,7 @@ import { getValidatedFormData } from "remix-hook-form";
 import { apiError } from "~/.server/api/apiError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
-import { answerSchemaResolver, type AnswerFormTypes } from "~/lib/formSchemas";
+import { type AnswerFormTypes, answerSchemaResolver } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import type { Route } from "../+types/root";
 
@@ -11,8 +11,8 @@ export async function action(args: Route.ActionArgs) {
   await requireUser(args);
   try {
     const {
-      errors,
       data,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<AnswerFormTypes>(
       args.request,
@@ -20,7 +20,7 @@ export async function action(args: Route.ActionArgs) {
     );
 
     if (errors) {
-      return { errors, defaultValues, ok: false };
+      return { defaultValues, errors, ok: false };
     }
 
     const chat = await prisma.chat.findFirstOrThrow({
@@ -41,10 +41,10 @@ export async function action(args: Route.ActionArgs) {
 
     await prisma.message.create({
       data: {
-        text: result.answer,
-        createdAt: new Date(),
-        type: MessageType.BOT,
         chatId: chat.id,
+        createdAt: new Date(),
+        text: result.answer,
+        type: MessageType.BOT,
       },
     });
 

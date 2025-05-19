@@ -4,30 +4,30 @@ import { Label } from "~/components/ui/label";
 import {
   DEFAULT_ALLOWED_EXTENSIONS,
   DEFAULT_ALLOWED_FILE_TYPES,
-  DEFAULT_MAX_FILES,
   DEFAULT_MAX_FILE_SIZE,
+  DEFAULT_MAX_FILES,
 } from "~/config/files";
 import { validateFile } from "~/utils/validateFile";
 
 interface FileUploaderProps {
-  maxFiles?: number;
-  maxSizeInBytes?: number;
-  allowedFileTypes?: string[];
   allowedExtensions?: string[];
-  onFilesChange: (files: File[]) => void;
+  allowedFileTypes?: string[];
   inputName: string;
   label?: string;
+  maxFiles?: number;
+  maxSizeInBytes?: number;
+  onFilesChange: (files: File[]) => void;
   placeholder?: string;
 }
 
 export function FileUploader({
-  maxFiles = DEFAULT_MAX_FILES,
-  maxSizeInBytes = DEFAULT_MAX_FILE_SIZE,
-  allowedFileTypes = DEFAULT_ALLOWED_FILE_TYPES,
   allowedExtensions = DEFAULT_ALLOWED_EXTENSIONS,
-  onFilesChange,
+  allowedFileTypes = DEFAULT_ALLOWED_FILE_TYPES,
   inputName,
   label = "Upload Files",
+  maxFiles = DEFAULT_MAX_FILES,
+  maxSizeInBytes = DEFAULT_MAX_FILE_SIZE,
+  onFilesChange,
   placeholder = "Drag and drop files here, or click to select files",
 }: FileUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -56,9 +56,9 @@ export function FileUploader({
     // Validate each file
     Array.from(files).forEach((file) => {
       const error = validateFile(file, {
+        allowedExtensions,
         allowedFileTypes,
         maxSizeInBytes,
-        allowedExtensions,
       });
       if (error) {
         newFileErrors[file.name] = error;
@@ -103,9 +103,9 @@ export function FileUploader({
     // Validate each file
     Array.from(files).forEach((file) => {
       const error = validateFile(file, {
+        allowedExtensions,
         allowedFileTypes,
         maxSizeInBytes,
-        allowedExtensions,
       });
       if (error) {
         newFileErrors[file.name] = error;

@@ -10,10 +10,10 @@ import { s3Client } from "./s3Client";
  */
 export async function uploadJsonToBucket(key: string, data: unknown) {
   const command = new PutObjectCommand({
-    Bucket: ENV.AWS_DATA_BUCKET_NAME,
-    Key: key,
     Body: JSON.stringify(data, null, 2),
+    Bucket: ENV.AWS_DATA_BUCKET_NAME,
     ContentType: "application/json",
+    Key: key,
   });
 
   return s3Client.send(command);

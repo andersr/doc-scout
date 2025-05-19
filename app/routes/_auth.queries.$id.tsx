@@ -15,7 +15,7 @@ import { requireUser } from "~/.server/users";
 import { requireParam } from "~/.server/utils/requireParam";
 import { Button } from "~/components/ui/button";
 import { useFetcherWithReset } from "~/hooks/useFetcherWithReset";
-import { collectionChatSchema, type AnswerFormTypes } from "~/lib/formSchemas";
+import { type AnswerFormTypes, collectionChatSchema } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { PARAMS } from "~/shared/params";
@@ -30,7 +30,7 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: PAGE_TITLE },
-    { name: "description", content: "Query chat interface" },
+    { content: "Query chat interface", name: "description" },
   ];
 }
 
@@ -38,18 +38,10 @@ type FormData = z.infer<typeof collectionChatSchema>;
 const resolver = zodResolver(collectionChatSchema);
 
 export async function loader({ params }: { params: { id: string } }) {
-  const chatPublicId = requireParam({ params, key: PARAMS.ID });
+  const chatPublicId = requireParam({ key: PARAMS.ID, params });
 
   const chat = await prisma.chat.findUniqueOrThrow({
-    where: {
-      publicId: chatPublicId,
-    },
     include: {
-      messages: {
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
       chatCollections: {
         include: {
           collection: {
@@ -59,6 +51,14 @@ export async function loader({ params }: { params: { id: string } }) {
           },
         },
       },
+      messages: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+    where: {
+      publicId: chatPublicId,
     },
   });
 
@@ -77,43 +77,43 @@ export async function loader({ params }: { params: { id: string } }) {
 
   return {
     chat,
-    messages,
     collection,
+    messages,
     pendingQueryMessage:
       mostRecentMessage?.type === MessageType.USER ? mostRecentMessage : null,
   };
 }
 
 export default function InquiryChat() {
-  const { messages, collection, chat, pendingQueryMessage } =
+  const { chat, collection, messages, pendingQueryMessage } =
     useLoaderData<typeof loader>();
 
   const queryFetcher = useFetcherWithReset();
   const answerFetcher = useFetcherWithReset();
 
   const {
+    formState: { errors, isSubmitSuccessful, isValid },
     handleSubmit,
-    formState: { errors, isValid, isSubmitSuccessful },
     register,
     reset,
   } = useRemixForm<FormData>({
+    fetcher: queryFetcher,
     mode: "onSubmit",
     resolver,
     stringifyAllValues: false,
-    fetcher: queryFetcher,
   });
 
   useEffect(() => {
     if (pendingQueryMessage && answerFetcher.state === "idle") {
       const formData = createFormData<AnswerFormTypes>({
-        query: pendingQueryMessage.text,
-        namespace: collection.publicId,
         chatPublicId: chat.publicId,
+        namespace: collection.publicId,
+        query: pendingQueryMessage.text,
       });
 
       answerFetcher.submit(formData, {
-        method: "POST",
         action: appRoutes("/messages/generated"),
+        method: "POST",
       });
     }
   }, [answerFetcher, pendingQueryMessage, collection, chat.publicId]);
@@ -162,7 +162,7 @@ export default function InquiryChat() {
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireUser(args);
   try {
-    const chatPublicId = requireParam({ params: args.params, key: PARAMS.ID });
+    const chatPublicId = requireParam({ key: PARAMS.ID, params: args.params });
 
     const chat = await prisma.chat.findFirstOrThrow({
       where: {
@@ -171,21 +171,21 @@ export async function action(args: Route.ActionArgs) {
     });
 
     const {
-      errors,
       data,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
-      return { errors, defaultValues, ok: false };
+      return { defaultValues, errors, ok: false };
     }
 
     await prisma.message.create({
       data: {
-        text: data.message,
-        createdAt: new Date(),
-        chatId: chat.id,
         authorId: currentUser.id,
+        chatId: chat.id,
+        createdAt: new Date(),
+        text: data.message,
       },
     });
 

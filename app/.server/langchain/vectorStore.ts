@@ -6,9 +6,9 @@ import { oaiEmbeddings } from "./embeddings";
 
 export async function getVectorStore(namespace: string) {
   return await PineconeStore.fromExistingIndex(oaiEmbeddings, {
-    pineconeIndex: pcClient.Index(ENV.PINECONE_INDEX_NAME),
     // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
     maxConcurrency: 5,
     namespace,
+    pineconeIndex: pcClient.Index(ENV.PINECONE_INDEX_NAME),
   });
 }

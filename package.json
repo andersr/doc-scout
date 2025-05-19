@@ -73,6 +73,7 @@
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-sort-keys-custom-order": "^2.2.1",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "npm-run-all2": "^8.0.1",

@@ -6,21 +6,21 @@ import { requireParam } from "../utils/requireParam";
 import { requireProjectId } from "./requireProjectId";
 
 export async function requireProjectById({
-  user,
   params,
+  user,
 }: {
-  user: UserInternal;
   params: LoaderFunctionArgs["params"];
+  user: UserInternal;
 }) {
   const projectPublicId = requireParam({ key: "id", params });
 
-  const projectId = await requireProjectId({ user, projectPublicId });
+  const projectId = await requireProjectId({ projectPublicId, user });
 
   const project = await prisma.project.findFirstOrThrow({
+    select: PROJECT_SELECT_INTERNAL,
     where: {
       id: projectId ?? -1,
     },
-    select: PROJECT_SELECT_INTERNAL,
   });
 
   return project;
