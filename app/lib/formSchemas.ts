@@ -9,9 +9,11 @@ export const newCollectionSchema = z.object({
   name: z.string().min(1, "Collection name is required"),
 });
 
-export const newQuerySchema = z.object({
-  collectionId: z.string().min(1),
-});
+// export const newQuerySchema = z.object({
+//   collectionId: z.string().min(1),
+// });
+// export type FormData = z.infer<typeof newQuerySchema>;
+// const resolver = zodResolver(newQuerySchema);
 
 const answerSchema = z.object({
   query: z.string().min(1),
