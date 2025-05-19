@@ -38,6 +38,9 @@ export default function NewCollection() {
 
   const handleFilesChange = (files: File[]) => {
     setSelectedFiles(files);
+    if (nameValue === "" && files.length > 0) {
+      setNameValue(files[0].name);
+    }
   };
 
   const submitDisabled =
@@ -149,6 +152,12 @@ export async function action(args: LoaderFunctionArgs) {
 
     const collection = await prisma.collection.create({
       data: {
+        chat: {
+          create: {
+            createdAt: new Date(),
+            publicId: generateId(),
+          },
+        },
         createdAt: new Date(),
         name: collectionName,
         publicId: generateId(),

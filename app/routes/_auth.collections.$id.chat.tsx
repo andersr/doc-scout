@@ -1,111 +1,100 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-// import { DevTool } from "@hookform/devtools";
 import { MessageType } from "@prisma/client";
-import { Label } from "@radix-ui/react-label";
 import { useEffect } from "react";
-import { useLoaderData } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
+import { useFetcher, useLoaderData } from "react-router";
 import {
   createFormData,
   getValidatedFormData,
   useRemixForm,
 } from "remix-hook-form";
-import { z } from "zod";
 import { apiError } from "~/.server/api/apiError";
 import { requireUser } from "~/.server/users";
+import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { Button } from "~/components/ui/button";
-import { useFetcherWithReset } from "~/hooks/useFetcherWithReset";
-import { type AnswerFormTypes, collectionChatSchema } from "~/lib/formSchemas";
+import { Label } from "~/components/ui/label";
 import { prisma } from "~/lib/prisma";
+import { type BotReply } from "~/lib/schemas/botReply";
+import {
+  type UserMessage,
+  userMessageResolver,
+} from "~/lib/schemas/userMessage";
 import { appRoutes } from "~/shared/appRoutes";
 import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
-import type { Route } from "./+types/_auth.queries.$id";
+import type { Route } from "./+types/_auth.collections.$id.chat";
 
-const PAGE_TITLE = "Query";
 export const handle: RouteData = {
-  pageTitle: PAGE_TITLE,
+  pageTitle: "Collection Chat",
 };
 
-export function meta() {
+export function meta({ data }: { data: { collection: { name: string } } }) {
   return [
-    { title: PAGE_TITLE },
-    { content: "Query chat interface", name: "description" },
+    { title: `Chat: ${data?.collection?.name || "Not Found"}` },
+    { content: "Chat with a collection", name: "description" },
   ];
 }
 
-type FormData = z.infer<typeof collectionChatSchema>;
-const resolver = zodResolver(collectionChatSchema);
-
-export async function loader({ params }: { params: { id: string } }) {
-  const chatPublicId = requireParam({ key: PARAMS.ID, params });
-
-  const chat = await prisma.chat.findUniqueOrThrow({
-    include: {
-      chatCollections: {
-        include: {
-          collection: {
-            include: {
-              sources: true,
-            },
-          },
-        },
-      },
-      messages: {
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
-    },
-    where: {
-      publicId: chatPublicId,
-    },
+export async function loader(args: LoaderFunctionArgs) {
+  const collectionId = requireParam({
+    key: PARAMS.ID,
+    params: args.params,
   });
 
-  const collections = chat.chatCollections
-    .map((c) => c.collection)
-    .filter((c) => c !== null);
-  const collection = collections[0];
+  const collection = await prisma.collection.findUniqueOrThrow({
+    include: {
+      chat: {
+        include: {
+          messages: true,
+        },
+      },
+      sources: true,
+    },
+    where: {
+      publicId: collectionId,
+    },
+  });
+  const chat = collection.chat;
 
-  if (!collection) {
-    throw new Error("no collection");
+  if (!chat) {
+    throw new Error("No collection chat found");
   }
-  const messages = chat.messages;
+
+  const messages = collection.chat?.messages;
 
   const mostRecentMessage =
-    messages.length > 0 ? messages[messages.length - 1] : null;
+    messages && messages.length > 0 ? messages[messages.length - 1] : null;
 
   return {
     chat,
     collection,
-    messages,
     pendingQueryMessage:
       mostRecentMessage?.type === MessageType.USER ? mostRecentMessage : null,
   };
 }
 
-export default function InquiryChat() {
-  const { chat, collection, messages, pendingQueryMessage } =
+export default function CollectionChatRoute() {
+  const { chat, collection, pendingQueryMessage } =
     useLoaderData<typeof loader>();
 
-  const queryFetcher = useFetcherWithReset();
-  const answerFetcher = useFetcherWithReset();
+  const queryFetcher = useFetcher();
+  const answerFetcher = useFetcher();
 
   const {
     formState: { errors, isSubmitSuccessful, isValid },
     handleSubmit,
     register,
     reset,
-  } = useRemixForm<FormData>({
+  } = useRemixForm<UserMessage>({
     fetcher: queryFetcher,
     mode: "onSubmit",
-    resolver,
+    resolver: userMessageResolver,
     stringifyAllValues: false,
   });
 
   useEffect(() => {
     if (pendingQueryMessage && answerFetcher.state === "idle") {
-      const formData = createFormData<AnswerFormTypes>({
+      const formData = createFormData<BotReply>({
         chatPublicId: chat.publicId,
         namespace: collection.publicId,
         query: pendingQueryMessage.text,
@@ -131,7 +120,7 @@ export default function InquiryChat() {
       <div className="my-2">
         <h2>Messages</h2>
         <ul>
-          {messages.map((m) => (
+          {chat.messages.map((m) => (
             <li key={m.id.toString()}>{m.text}</li>
           ))}
           {optimisticMessage && <li>{optimisticMessage.toString()}</li>}
@@ -148,9 +137,6 @@ export default function InquiryChat() {
           ></textarea>
           {errors.message && <p>{errors.message.message}</p>}
         </div>
-        <div className="py-4">
-          <h2>Collection: {collection.name}</h2>
-        </div>
         <Button type="submit" disabled={!isValid}>
           {queryFetcher.state !== "idle" ? "Submitting..." : "Submit"}
         </Button>
@@ -162,19 +148,34 @@ export default function InquiryChat() {
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireUser(args);
   try {
-    const chatPublicId = requireParam({ key: PARAMS.ID, params: args.params });
+    const collectionId = requireParam({
+      key: PARAMS.ID,
+      params: args.params,
+    });
 
-    const chat = await prisma.chat.findFirstOrThrow({
+    const collection = await prisma.collection.findUniqueOrThrow({
+      include: {
+        chat: true,
+      },
       where: {
-        publicId: chatPublicId,
+        publicId: collectionId,
       },
     });
+
+    const chat = collection.chat;
+
+    if (!chat) {
+      throw new Error("No collection chat found");
+    }
 
     const {
       data,
       errors,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<FormData>(args.request, resolver);
+    } = await getValidatedFormData<UserMessage>(
+      args.request,
+      userMessageResolver,
+    );
 
     if (errors) {
       return { defaultValues, errors, ok: false };
@@ -185,6 +186,7 @@ export async function action(args: Route.ActionArgs) {
         authorId: currentUser.id,
         chatId: chat.id,
         createdAt: new Date(),
+        publicId: generateId(),
         text: data.message,
       },
     });

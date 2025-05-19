@@ -5,6 +5,7 @@ import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { RouteData } from "~/types/routeData";
+import { formatDateTime } from "~/utils/formatDateTime";
 
 const SECTION_NAME = "Collections";
 
@@ -70,13 +71,13 @@ export default function CollectionsList() {
             >
               <h2 className="text-lg font-medium">{collection.name}</h2>
               <div className="mt-2 text-sm text-gray-500">
-                {collection.sources.length} source
+                {collection.sources.length} document
                 {collection.sources.length !== 1 ? "s" : ""}
               </div>
               <div className="mt-2 text-xs text-gray-400">
                 Created:{" "}
                 {collection.createdAt
-                  ? new Date(collection.createdAt).toLocaleDateString()
+                  ? formatDateTime({ d: collection.createdAt, withTime: true })
                   : "N/A"}
               </div>
             </Link>

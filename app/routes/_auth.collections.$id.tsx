@@ -1,7 +1,5 @@
-import { useState } from "react";
-import Markdown from "react-markdown";
 import type { LoaderFunctionArgs } from "react-router";
-import { Link, redirect, useLoaderData } from "react-router";
+import { Link, Outlet, redirect, useLoaderData } from "react-router";
 import { requireParam } from "~/.server/utils/requireParam";
 import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
@@ -42,66 +40,41 @@ export async function loader(args: LoaderFunctionArgs) {
   return { collection };
 }
 
-export default function CollectionDetails() {
+export default function CollectionDetailsLayout() {
   const { collection } = useLoaderData<typeof loader>();
-  const [selectedSource, setSelectedSource] = useState<{
-    id: string;
-    text: string | null;
-  } | null>(null);
-
-  const handleSourceClick = (sourceId: string, text: string | null) => {
-    setSelectedSource({
-      id: sourceId,
-      text,
-    });
-  };
 
   return (
-    <div className="flex flex-col gap-6 w-full p-4">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex justify-between items-center">
-        <PageTitle>{collection.name}</PageTitle>
-        <div className="flex gap-2">
-          <Link
-            to={appRoutes("/collections")}
-            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-          >
-            Back to Collections
-          </Link>
-        </div>
+        <PageTitle>Collection: {collection.name}</PageTitle>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6 w-full">
-        <div className="w-96">
-          <h2 className="text-xl font-semibold mb-4">Sources</h2>
-          {collection.sources.length === 0 ? (
-            <p className="text-gray-500">No sources in this collection</p>
-          ) : (
-            <ul className="space-y-2">
-              {collection.sources.map((source) => (
-                <li
-                  key={source.publicId}
-                  className={`cursor-pointer hover:text-blue-600 break-all ${
-                    selectedSource?.id === source.publicId ? "font-bold" : ""
-                  }`}
-                  onClick={() =>
-                    handleSourceClick(source.publicId, source.text)
-                  }
-                >
-                  {source.name || "Unnamed Source"}
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="">
+          <ul className="space-y-2">
+            <li className={`cursor-pointer hover:text-blue-600 break-all`}>
+              <Link
+                to={appRoutes("/collections/:id/sources", {
+                  id: collection.publicId,
+                })}
+              >
+                Sources
+              </Link>
+            </li>
+            <li className={`cursor-pointer hover:text-blue-600 break-all`}>
+              <Link
+                to={appRoutes("/collections/:id/chat", {
+                  id: collection.publicId,
+                })}
+              >
+                Chat
+              </Link>
+            </li>
+          </ul>
         </div>
-
-        {selectedSource && (
-          <div className="flex-1">
-            <h2 className="text-xl mb-2">Source Content</h2>
-            <div className="border border-gray-300 rounded-md p-4 w-full h-[75vh] overflow-scroll prose !max-w-none">
-              <Markdown>{selectedSource.text || ""}</Markdown>
-            </div>
-          </div>
-        )}
+        <div className="flex-1">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
