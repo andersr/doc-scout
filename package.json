@@ -10,6 +10,7 @@
     "dev": "react-router dev",
     "lint": "eslint --fix",
     "start": "react-router-serve ./build/server/index.js",
+    "start:dev": "dotenv -- npm start",
     "typecheck": "react-router typegen && tsc",
     "postinstall": "prisma generate",
     "prepare": "husky"
@@ -66,6 +67,7 @@
     "@types/node": "^22.15.15",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.4.0",
