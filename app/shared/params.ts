@@ -3,6 +3,8 @@ export const PARAMS = {
   ID: "id",
   EMAIL: "email",
   MESSAGE: "message",
+  NAMESPACE: "namespace",
+  QUERY: "query",
   NAME: "name",
   SOURCE: "source",
   URL: "url",
