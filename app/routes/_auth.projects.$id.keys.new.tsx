@@ -78,7 +78,7 @@ export default function NewSource() {
     if (!showKey && actionData?.ok && actionData?.apiKey) {
       setShowKey(true);
     }
-  }, [actionData]);
+  }, [actionData, showKey]);
 
   useEffect(() => {
     if (copyDone) {

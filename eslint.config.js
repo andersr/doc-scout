@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { default as pluginReact } from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -37,5 +38,6 @@ export default defineConfig([
   },
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat["jsx-runtime"],
+  reactHooks.configs["recommended-latest"],
   eslintPluginPrettierRecommended,
 ]);

@@ -123,13 +123,19 @@ export default function InquiryChat() {
       });
       setPendingQuery(mostRecentMessage.id.toString());
     }
-  }, [answerFetcher, mostRecentMessage, collection]);
+  }, [
+    answerFetcher,
+    mostRecentMessage,
+    collection,
+    pendingQuery,
+    chat.publicId,
+  ]);
 
   useEffect(() => {
     if (pendingQuery && answerFetcher.state === "idle") {
       setPendingQuery("");
     }
-  }, [pendingQuery]);
+  }, [answerFetcher.state, pendingQuery]);
 
   const optimisticMessage = queryFetcher.formData
     ? queryFetcher.formData.get(PARAMS.MESSAGE)

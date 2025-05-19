@@ -26,7 +26,7 @@ export function useCopyToClipboard(options?: { withTimeout?: boolean }) {
         setDidCopy(false);
       }, 2000);
     }
-  }, [didCopy]);
+  }, [didCopy, options?.withTimeout]);
 
   return {
     didCopy,
