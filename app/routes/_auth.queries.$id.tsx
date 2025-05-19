@@ -84,8 +84,6 @@ export async function loader({ params }: { params: { id: string } }) {
   };
 }
 
-// TODO: add property sort linting
-
 export default function InquiryChat() {
   const { messages, collection, chat, pendingQueryMessage } =
     useLoaderData<typeof loader>();
@@ -115,7 +113,7 @@ export default function InquiryChat() {
 
       answerFetcher.submit(formData, {
         method: "POST",
-        action: appRoutes("/api/internal/messages/generated"),
+        action: appRoutes("/messages/generated"),
       });
     }
   }, [answerFetcher, pendingQueryMessage, collection, chat.publicId]);
