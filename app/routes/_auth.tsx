@@ -11,7 +11,7 @@ import { requireUser } from "~/.server/users";
 import type { Route } from "./+types/_auth";
 
 export function meta() {
-  return [{ title: "Dashboard" }, { name: "description", content: "" }];
+  return [{ title: "Dashboard" }, { content: "", name: "description" }];
 }
 
 export async function loader(args: Route.LoaderArgs) {

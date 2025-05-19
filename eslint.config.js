@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { default as pluginReact } from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import sortKeysCustomOrder from "eslint-plugin-sort-keys-custom-order";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -9,18 +10,13 @@ import tseslint from "typescript-eslint";
 export default defineConfig([
   { ignores: ["build", "tmp", ".react-router"] },
   {
+    extends: ["js/recommended"],
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     plugins: { js },
-    extends: ["js/recommended"],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     languageOptions: { globals: globals.browser },
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
     rules: {
       "no-console": [
         "error",
@@ -29,6 +25,11 @@ export default defineConfig([
         },
       ],
     },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
   },
   tseslint.configs.recommended,
   {
@@ -36,6 +37,7 @@ export default defineConfig([
       "@typescript-eslint/no-unused-vars": "warn",
     },
   },
+  sortKeysCustomOrder.configs["flat/recommended"],
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat["jsx-runtime"],
   reactHooks.configs["recommended-latest"],

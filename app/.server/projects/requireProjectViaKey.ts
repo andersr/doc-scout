@@ -7,11 +7,11 @@ import { requireApiKey } from "../auth/requireApiKey";
 import { requireParam } from "../utils/requireParam";
 
 export async function requireProjectViaKey({
-  request,
   params,
+  request,
 }: {
-  request: Request;
   params: LoaderFunctionArgs["params"];
+  request: Request;
 }) {
   const projectPublicIdParam = requireParam({ key: "id", params });
 
@@ -25,10 +25,10 @@ export async function requireProjectViaKey({
   }
 
   const project = await prisma.project.findUniqueOrThrow({
+    select: PROJECT_SELECT_CLIENT,
     where: {
       id: projectKey.project?.id,
     },
-    select: PROJECT_SELECT_CLIENT,
   });
 
   if (projectPublicIdParam !== project.publicId) {

@@ -12,13 +12,13 @@ import type { Route } from "./+types/_auth.projects.$id._index";
 export function meta({ data }: Route.MetaArgs) {
   return [
     { title: `Project: ${data.project?.name}` },
-    { name: "description", content: "" },
+    { content: "", name: "description" },
   ];
 }
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -35,44 +35,44 @@ export async function loader(args: Route.LoaderArgs) {
   }
 
   return {
-    currentUser,
-    project: projectMembership.project,
     apiHost: getDomainHost({ request: args.request, withProtocol: true }),
+    currentUser,
     pageData: {
       title: `Project: ${projectMembership.project?.name}`,
     },
+    project: projectMembership.project,
   };
 }
 
 export default function ProjectDetails() {
-  const { project, apiHost } = useLoaderData<typeof loader>();
+  const { apiHost, project } = useLoaderData<typeof loader>();
 
   const deleteFetcher = useFetcherWithReset<{
     errorMessage?: string;
   }>();
 
-  const { handleCopyClick, didCopy } = useCopyToClipboard({
+  const { didCopy, handleCopyClick } = useCopyToClipboard({
     withTimeout: true,
   });
 
   const endPoint = `${apiHost}/api/v1/projects/${project.publicId}`;
 
-  const navLinks: { to: string; label: string }[] = [
+  const navLinks: { label: string; to: string }[] = [
     {
-      to: appRoutes("/projects/:id/keys", { id: project.publicId }),
       label: "API Keys",
+      to: appRoutes("/projects/:id/keys", { id: project.publicId }),
     },
     {
-      to: appRoutes("/projects/:id/sources", { id: project.publicId }),
       label: "Sources",
+      to: appRoutes("/projects/:id/sources", { id: project.publicId }),
     },
     {
-      to: appRoutes("/projects/:id/search-store", { id: project.publicId }),
       label: "Update Search Store",
+      to: appRoutes("/projects/:id/search-store", { id: project.publicId }),
     },
     {
-      to: appRoutes("/projects/:id/playground", { id: project.publicId }),
       label: "Playground",
+      to: appRoutes("/projects/:id/playground", { id: project.publicId }),
     },
   ];
   return (

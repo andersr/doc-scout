@@ -25,7 +25,7 @@ export function meta({ data }: Route.MetaArgs) {
 export async function loader(args: Route.LoaderArgs) {
   const user = await requireUser(args);
 
-  const project = await requireProjectById({ user, params: args.params });
+  const project = await requireProjectById({ params: args.params, user });
 
   return { project };
 }
@@ -49,7 +49,7 @@ export default function SearchStore() {
 export async function action(args: Route.ActionArgs) {
   const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params: args.params });
+    const project = await requireProjectById({ params: args.params, user });
 
     if (!project.collectionName) {
       throw new Error("no collection name found");
@@ -76,23 +76,23 @@ export async function action(args: Route.ActionArgs) {
 
       if (storageData) {
         docs.push({
-          pageContent: storageData.markdown,
           metadata: {
+            sourceId: sources[index].publicId,
             title: sources[index].name,
             url: sources[index].url,
-            sourceId: sources[index].publicId,
           },
+          pageContent: storageData.markdown,
         });
       }
 
       if (textData) {
         docs.push({
-          pageContent: textData,
           metadata: {
-            title: sources[index].name,
             sourceId: sources[index].publicId,
+            title: sources[index].name,
             type: "markdown", // for now, create actual doc types
           },
+          pageContent: textData,
         });
       }
     }

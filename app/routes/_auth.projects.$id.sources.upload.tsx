@@ -20,13 +20,13 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: "Upload Markdown Files" },
-    { name: "description", content: "Upload markdown files as sources" },
+    { content: "Upload markdown files as sources", name: "description" },
   ];
 }
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -258,7 +258,7 @@ export async function action(args: Route.ActionArgs) {
   try {
     const user = await requireUser(args);
 
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     const projectMembership = user?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
     );
@@ -283,16 +283,16 @@ export async function action(args: Route.ActionArgs) {
 
     if (!files || files.length === 0) {
       return {
-        ok: false,
         errorMessage: "No files uploaded",
+        ok: false,
       };
     }
 
     // Check if too many files are uploaded
     if (files.length > MAX_FILES) {
       return {
-        ok: false,
         errorMessage: `Maximum ${MAX_FILES} files allowed`,
+        ok: false,
       };
     }
 
@@ -331,11 +331,11 @@ export async function action(args: Route.ActionArgs) {
         // Create a new Source in the database
         const source = await prisma.source.create({
           data: {
-            name: file.name.replace(/\.md$/i, ""), // Use filename without extension
-            publicId: sourcePublicId,
             createdAt: new Date(),
-            text: fileContent,
+            name: file.name.replace(/\.md$/i, ""), // Use filename without extension
             projectId: project.id,
+            publicId: sourcePublicId,
+            text: fileContent,
           },
         });
 
@@ -349,16 +349,16 @@ export async function action(args: Route.ActionArgs) {
     // If there were errors but some files were processed successfully
     if (errors.length > 0 && createdSources.length > 0) {
       return {
-        ok: true,
         errorMessage: `Uploaded ${createdSources.length} file(s) with ${errors.length} error(s): ${errors.join("; ")}`,
+        ok: true,
       };
     }
 
     // If all files failed
     if (errors.length > 0 && createdSources.length === 0) {
       return {
-        ok: false,
         errorMessage: `Failed to upload files: ${errors.join("; ")}`,
+        ok: false,
       };
     }
 
@@ -370,11 +370,11 @@ export async function action(args: Route.ActionArgs) {
   } catch (error) {
     console.error("File upload error: ", error);
     return {
-      ok: false,
       errorMessage:
         error instanceof Error && error.message
           ? error.message
           : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      ok: false,
     };
   }
 }

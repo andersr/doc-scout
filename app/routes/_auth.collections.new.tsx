@@ -26,7 +26,7 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: PAGE_TITLE },
-    { name: "description", content: "Create a new collection" },
+    { content: "Create a new collection", name: "description" },
   ];
 }
 
@@ -105,16 +105,16 @@ export async function action(args: LoaderFunctionArgs) {
     // Validate collection name
     if (!collectionName || collectionName.trim() === "") {
       return {
-        ok: false,
         errorMessage: "Collection name is required",
+        ok: false,
       };
     }
 
     // Validate files
     if (!files || files.length === 0) {
       return {
-        ok: false,
         errorMessage: "At least one file is required",
+        ok: false,
       };
     }
 
@@ -129,18 +129,18 @@ export async function action(args: LoaderFunctionArgs) {
         const sourcePublicId = generateId();
 
         sourcesInput.push({
+          createdAt: new Date(),
           name: fileName,
           publicId: sourcePublicId,
-          createdAt: new Date(),
           text: fileContent,
         });
 
         docs.push({
-          pageContent: fileContent,
           metadata: {
-            title: fileName,
             sourceId: sourcePublicId,
+            title: fileName,
           },
+          pageContent: fileContent,
         });
       } catch (err) {
         console.error(`Error processing file ${file.name}:`, err);
@@ -149,9 +149,9 @@ export async function action(args: LoaderFunctionArgs) {
 
     const collection = await prisma.collection.create({
       data: {
+        createdAt: new Date(),
         name: collectionName,
         publicId: generateId(),
-        createdAt: new Date(),
         sources: {
           createMany: {
             data: sourcesInput,
@@ -169,11 +169,11 @@ export async function action(args: LoaderFunctionArgs) {
   } catch (error) {
     console.error("Collection creation error: ", error);
     return {
-      ok: false,
       errorMessage:
         error instanceof Error && error.message
           ? error.message
           : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      ok: false,
     };
   }
 }

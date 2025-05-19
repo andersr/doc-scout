@@ -19,7 +19,6 @@ export type UserInternal = Prisma.UserGetPayload<{
 export type UserClient = Prisma.UserGetPayload<{
   select: {
     email: true;
-    publicId: true;
     projectMemberships: {
       select: {
         project: {
@@ -29,13 +28,14 @@ export type UserClient = Prisma.UserGetPayload<{
             sources: {
               select: {
                 name: true;
-                url: true;
                 publicId: true;
+                url: true;
               };
             };
           };
         };
       };
     };
+    publicId: true;
   };
 }>;

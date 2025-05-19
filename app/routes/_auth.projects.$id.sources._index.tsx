@@ -27,7 +27,7 @@ export function meta({ data }: Route.MetaArgs) {
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -123,9 +123,6 @@ export async function action(args: Route.ActionArgs) {
   const currentUser = await requireUser(args);
   try {
     const user = await prisma.user.findUniqueOrThrow({
-      where: {
-        publicId: currentUser?.publicId ?? "",
-      },
       include: {
         projectMemberships: {
           include: {
@@ -133,9 +130,12 @@ export async function action(args: Route.ActionArgs) {
           },
         },
       },
+      where: {
+        publicId: currentUser?.publicId ?? "",
+      },
     });
 
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
@@ -154,10 +154,10 @@ export async function action(args: Route.ActionArgs) {
     }
 
     const project = await prisma.project.findUniqueOrThrow({
-      where: { id: projectId ?? -1 },
       include: {
         sources: true,
       },
+      where: { id: projectId ?? -1 },
     });
 
     if (!project.collectionName) {
@@ -177,8 +177,8 @@ export async function action(args: Route.ActionArgs) {
 
     return data<ActionData>({
       errorMessage: "",
-      successMessage: "Something worked...",
       ok: true,
+      successMessage: "Something worked...",
     });
   } catch (error) {
     console.error("URL submission error: ", error);

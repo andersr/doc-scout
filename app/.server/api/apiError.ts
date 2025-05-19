@@ -3,9 +3,9 @@ import { ZodError } from "zod";
 import { APIError, type ApiResponse } from "~/types/api";
 
 const errorData: ApiResponse = {
+  data: null,
   errors: null,
   ok: false,
-  data: null,
 };
 
 export function apiError(error: unknown) {

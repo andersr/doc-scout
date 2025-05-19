@@ -6,11 +6,11 @@ interface QueryResponse {
 }
 
 export interface ApiResponse {
-  ok: boolean;
+  data: ProjectClient | QueryResponse | null;
   errorMessage?: string; // LEGACY
   errors: null; // for now
-  successMessage?: string; // LEGACY
-  data: ProjectClient | QueryResponse | null;
+  ok: boolean; // LEGACY
+  successMessage?: string;
 }
 
 export class APIError extends Error {

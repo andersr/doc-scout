@@ -28,14 +28,14 @@ export const action = async (args: Route.ActionArgs) => {
       const clerkId = evt.data.id;
 
       await prisma.user.upsert({
+        create: {
+          clerkId,
+          publicId: generateId(),
+        },
+        update: {},
         where: {
           clerkId,
         },
-        create: {
-          publicId: generateId(),
-          clerkId,
-        },
-        update: {},
       });
     }
 

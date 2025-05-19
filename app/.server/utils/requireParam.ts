@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router";
 
 export function requireParam({
-  params,
   key,
+  params,
 }: {
   key: string;
   params: LoaderFunctionArgs["params"];

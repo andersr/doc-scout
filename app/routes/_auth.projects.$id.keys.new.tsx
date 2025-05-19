@@ -45,7 +45,7 @@ export function meta() {
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -72,7 +72,7 @@ export default function NewSource() {
   const [copyDone, setCopyDone] = useState(false);
   const [viewInput, setViewInput] = useState(false);
 
-  const { handleCopyClick, didCopy } = useCopyToClipboard();
+  const { didCopy, handleCopyClick } = useCopyToClipboard();
 
   useEffect(() => {
     if (!showKey && actionData?.ok && actionData?.apiKey) {
@@ -89,8 +89,8 @@ export default function NewSource() {
   }, [copyDone]);
 
   const {
-    handleSubmit,
     formState: { errors, isValid },
+    handleSubmit,
     register,
   } = useRemixForm<FormData>({
     mode: "onSubmit",
@@ -167,17 +167,17 @@ export async function action(args: Route.ActionArgs) {
 
   try {
     const {
-      errors,
       data: formData,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
       // The keys "errors" and "defaultValues" are picked up automatically by useRemixForm
-      return { errors, defaultValues };
+      return { defaultValues, errors };
     }
 
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     // TODO: turn into util
     const projectMembership = internalUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
@@ -200,14 +200,14 @@ export async function action(args: Route.ActionArgs) {
 
     const key = await prisma.key.create({
       data: {
-        name: formData.name,
         createdAt: new Date(),
-        secret,
+        name: formData.name,
         project: {
           connect: {
             id: project.id,
           },
         },
+        secret,
       },
     });
 
@@ -215,16 +215,16 @@ export async function action(args: Route.ActionArgs) {
 
     return {
       apiKey,
-      name: key.name,
       errorMessage: "",
+      name: key.name,
       ok: true,
     };
   } catch (error) {
     console.error("error: ", error);
     return {
       apiKey: "",
-      name: "",
       errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      name: "",
       ok: false,
     };
   }

@@ -10,7 +10,7 @@ import type { Route } from "../+types/root";
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireUser(args);
   try {
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     // TODO: turn into util
     const projectMembership = currentUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,

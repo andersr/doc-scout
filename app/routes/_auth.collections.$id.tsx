@@ -16,22 +16,22 @@ export const handle: RouteData = {
 export function meta({ data }: { data: { collection: { name: string } } }) {
   return [
     { title: `Collection: ${data?.collection?.name || "Not Found"}` },
-    { name: "description", content: "Collection details" },
+    { content: "Collection details", name: "description" },
   ];
 }
 
 export async function loader(args: LoaderFunctionArgs) {
   const collectionId = requireParam({
-    params: args.params,
     key: PARAMS.ID,
+    params: args.params,
   });
 
   const collection = await prisma.collection.findUnique({
-    where: {
-      publicId: collectionId,
-    },
     include: {
       sources: true,
+    },
+    where: {
+      publicId: collectionId,
     },
   });
 

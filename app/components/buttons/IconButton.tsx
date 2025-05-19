@@ -5,7 +5,7 @@ interface Props {
   name: string;
   onClick: () => void;
 }
-export function IconButton({ name, onClick, children }: Props) {
+export function IconButton({ children, name, onClick }: Props) {
   return (
     <button onClick={onClick} className={"flex items-center gap-1"}>
       <Icon name={name} />

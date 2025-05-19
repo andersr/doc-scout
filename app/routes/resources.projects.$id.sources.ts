@@ -12,7 +12,7 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await requireUser(args);
   try {
     const projectPublicId = requireParam({ key: "id", params: args.params });
-    const projectId = await requireProjectId({ user, projectPublicId });
+    const projectId = await requireProjectId({ projectPublicId, user });
 
     const sources = await prisma.source.findMany({
       where: {
@@ -34,7 +34,7 @@ export async function loader(args: Route.LoaderArgs) {
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireUser(args);
   try {
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     // TODO: turn into util
     const projectMembership = currentUser?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,

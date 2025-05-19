@@ -23,10 +23,10 @@ export async function waitForUser(clerkId: string) {
     attempts++;
 
     const user = await prisma.user.findUnique({
+      include: USER_INCLUDE,
       where: {
         clerkId,
       },
-      include: USER_INCLUDE,
     });
 
     if (user) {

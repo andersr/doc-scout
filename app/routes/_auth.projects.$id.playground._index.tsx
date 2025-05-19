@@ -36,7 +36,7 @@ const resolver = zodResolver(playgroundSchema);
 export async function loader(args: Route.LoaderArgs) {
   const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params: args.params });
+    const project = await requireProjectById({ params: args.params, user });
 
     return { project };
   } catch (error) {
@@ -52,8 +52,8 @@ export default function ProjectPlayground() {
   const pendingUI = useNavigation();
 
   const {
-    handleSubmit,
     formState: { errors, isValid },
+    handleSubmit,
     register,
   } = useRemixForm<FormData>({
     mode: "onSubmit",
@@ -109,20 +109,20 @@ export default function ProjectPlayground() {
 export async function action(args: Route.ActionArgs) {
   const user = await requireUser(args);
   try {
-    const project = await requireProjectById({ user, params: args.params });
+    const project = await requireProjectById({ params: args.params, user });
 
     if (!project.collectionName) {
       throw new Error("missing collection name");
     }
 
     const {
-      errors,
       data,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<FormData>(args.request, resolver);
 
     if (errors) {
-      return { errors, defaultValues };
+      return { defaultValues, errors };
     }
 
     const graph = await generateGraph({
@@ -137,16 +137,16 @@ export async function action(args: Route.ActionArgs) {
     const result = await graph.invoke(inputs);
 
     return {
+      answer: result.answer,
       errorMessage: "",
       ok: true,
-      answer: result.answer,
     };
   } catch (error) {
     console.error("error: ", error);
     return data({
+      answer: "",
       errorMessage: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
       ok: false,
-      answer: "",
     });
   }
 }

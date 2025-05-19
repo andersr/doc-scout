@@ -9,13 +9,13 @@ import type { Route } from "./+types/_auth.projects.$id._index";
 export function meta({ data }: Route.MetaArgs) {
   return [
     { title: `Project: ${data.project?.name}` },
-    { name: "description", content: "" },
+    { content: "", name: "description" },
   ];
 }
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,

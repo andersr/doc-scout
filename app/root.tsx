@@ -16,19 +16,19 @@ import { PageTitle } from "./components/PageTitle";
 import { appRoutes } from "./shared/appRoutes";
 
 export function meta() {
-  return [{ title: "Muni Admin" }, { name: "description", content: "" }];
+  return [{ title: "Muni Admin" }, { content: "", name: "description" }];
 }
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { href: "https://fonts.googleapis.com", rel: "preconnect" },
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
+    href: "https://fonts.gstatic.com",
+    rel: "preconnect",
   },
   {
-    rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    rel: "stylesheet",
   },
 ];
 

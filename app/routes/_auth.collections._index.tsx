@@ -15,7 +15,7 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: SECTION_NAME },
-    { name: "description", content: "Manage your collections" },
+    { content: "Manage your collections", name: "description" },
   ];
 }
 

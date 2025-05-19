@@ -5,7 +5,7 @@ import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
-import { newQueryResolver, type NewQuery } from "~/lib/schemas/newQuery";
+import { type NewQuery, newQueryResolver } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { RouteData } from "~/types/routeData";
@@ -19,7 +19,7 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: PAGE_TITLE },
-    { name: "description", content: "Start a new query" },
+    { content: "Start a new query", name: "description" },
   ];
 }
 
@@ -36,8 +36,8 @@ export default function NewInquiry() {
   const navigation = useNavigation();
 
   const {
-    handleSubmit,
     formState: { errors, isValid },
+    handleSubmit,
     register,
   } = useRemixForm<NewQuery>({
     mode: "onSubmit",
@@ -76,13 +76,13 @@ export async function action(args: LoaderFunctionArgs) {
   await requireUser(args);
   try {
     const {
-      errors,
       data,
+      errors,
       receivedValues: defaultValues,
     } = await getValidatedFormData<NewQuery>(args.request, newQueryResolver);
 
     if (errors) {
-      return { errors, defaultValues, ok: false };
+      return { defaultValues, errors, ok: false };
     }
 
     const selectedCollection = await prisma.collection.findFirstOrThrow({
@@ -93,13 +93,13 @@ export async function action(args: LoaderFunctionArgs) {
 
     const chat = await prisma.chat.create({
       data: {
-        publicId: generateId(),
-        createdAt: new Date(),
         chatCollections: {
           create: {
             collectionId: selectedCollection.id,
           },
         },
+        createdAt: new Date(),
+        publicId: generateId(),
       },
     });
 
@@ -107,11 +107,11 @@ export async function action(args: LoaderFunctionArgs) {
   } catch (error) {
     console.error("Inquiry creation error: ", error);
     return {
-      ok: false,
       errorMessage:
         error instanceof Error && error.message
           ? error.message
           : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      ok: false,
     };
   }
 }

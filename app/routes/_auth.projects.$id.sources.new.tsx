@@ -24,12 +24,12 @@ export const handle: RouteData = {
 };
 
 export function meta() {
-  return [{ title: "Add source" }, { name: "description", content: "" }];
+  return [{ title: "Add source" }, { content: "", name: "description" }];
 }
 
 export async function loader(args: Route.LoaderArgs) {
   const currentUser = await requireUser(args);
-  const projectId = requireParam({ params: args.params, key: "id" });
+  const projectId = requireParam({ key: "id", params: args.params });
 
   const projectMembership = currentUser?.projectMemberships.find(
     (pm) => pm.project?.publicId === projectId,
@@ -92,7 +92,7 @@ export async function action(args: Route.ActionArgs) {
   try {
     const user = await requireUser(args);
 
-    const projectPublicId = requireParam({ params: args.params, key: "id" });
+    const projectPublicId = requireParam({ key: "id", params: args.params });
     // TODO: turn into util
     const projectMembership = user?.projectMemberships.find(
       (pm) => pm.project?.publicId === projectPublicId,
@@ -199,12 +199,12 @@ export async function action(args: Route.ActionArgs) {
       })}.json`;
 
       sourcesInput.push({
-        name,
-        publicId: sourcePublicId,
         createdAt: new Date(),
-        url,
-        storagePath,
+        name,
         projectId: project.id,
+        publicId: sourcePublicId,
+        storagePath,
+        url,
       });
 
       await uploadJsonToBucket(storagePath, scrapeBatchResponse.data[index]);
@@ -220,11 +220,11 @@ export async function action(args: Route.ActionArgs) {
     console.error("URL submission error: ", error);
     // return null;
     return {
-      ok: false,
       errorMessage:
         error instanceof Error && error.message
           ? error.message
           : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+      ok: false,
     };
   }
 }

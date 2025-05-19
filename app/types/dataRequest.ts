@@ -1,5 +1,5 @@
 export interface DataRequest {
+  internal?: boolean;
   request: Request;
-  require?: boolean;
-  internal?: boolean; // include all ids and possibly sensitive data not suited for exposing to the client
+  require?: boolean; // include all ids and possibly sensitive data not suited for exposing to the client
 }
