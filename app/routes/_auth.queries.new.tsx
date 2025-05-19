@@ -4,7 +4,6 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { requireUser } from "~/.server/users/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Button } from "~/components/ui/button";
-// import { newQuerySchema } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import { newQueryResolver, type NewQuery } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
