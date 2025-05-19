@@ -19,6 +19,9 @@ model Collection {
   projectCollections ProjectCollection[]
 
   collectionChats CollectionChat[]
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
 }
 
 model CollectionChat {
@@ -40,11 +43,13 @@ model Chat {
   // threadId  String
 
   chatCollections CollectionChat[]
+
+  collections Collection[]
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
-  // TODO: add publicid
+  publicId  String   @unique
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    Int
   createdAt DateTime

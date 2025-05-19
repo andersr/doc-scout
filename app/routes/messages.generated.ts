@@ -3,6 +3,7 @@ import { getValidatedFormData } from "remix-hook-form";
 import { apiError } from "~/.server/api/apiError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/users/requireUser";
+import { generateId } from "~/.server/utils/generateId";
 import { type AnswerFormTypes, answerSchemaResolver } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
 import type { Route } from "../+types/root";
@@ -43,6 +44,7 @@ export async function action(args: Route.ActionArgs) {
       data: {
         chatId: chat.id,
         createdAt: new Date(),
+        publicId: generateId(),
         text: result.answer,
         type: MessageType.BOT,
       },
