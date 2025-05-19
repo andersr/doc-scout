@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // import { DevTool } from "@hookform/devtools";
 import { MessageType } from "@prisma/client";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import {
   createFormData,
@@ -72,25 +72,26 @@ export async function loader({ params }: { params: { id: string } }) {
   }
   const messages = chat.messages;
 
+  const mostRecentMessage =
+    messages.length > 0 ? messages[messages.length - 1] : null;
+
   return {
     chat,
     messages,
     collection,
+    pendingQueryMessage:
+      mostRecentMessage?.type === MessageType.USER ? mostRecentMessage : null,
   };
 }
 
-// TODO: add exhaustive deps linting, property sort linting
+// TODO: add property sort linting
 
 export default function InquiryChat() {
-  const { messages, collection, chat } = useLoaderData<typeof loader>();
+  const { messages, collection, chat, pendingQueryMessage } =
+    useLoaderData<typeof loader>();
 
   const queryFetcher = useFetcherWithReset();
   const answerFetcher = useFetcherWithReset();
-
-  const [pendingQuery, setPendingQuery] = useState("");
-
-  const mostRecentMessage =
-    messages.length > 0 ? messages[messages.length - 1] : null;
 
   const {
     handleSubmit,
@@ -105,14 +106,9 @@ export default function InquiryChat() {
   });
 
   useEffect(() => {
-    if (
-      mostRecentMessage &&
-      answerFetcher.state === "idle" &&
-      mostRecentMessage.type === MessageType.USER &&
-      !pendingQuery
-    ) {
+    if (pendingQueryMessage && answerFetcher.state === "idle") {
       const formData = createFormData<AnswerFormTypes>({
-        query: mostRecentMessage.text,
+        query: pendingQueryMessage.text,
         namespace: collection.publicId,
         chatPublicId: chat.publicId,
       });
@@ -121,21 +117,8 @@ export default function InquiryChat() {
         method: "POST",
         action: appRoutes("/api/internal/messages/generated"),
       });
-      setPendingQuery(mostRecentMessage.id.toString());
     }
-  }, [
-    answerFetcher,
-    mostRecentMessage,
-    collection,
-    pendingQuery,
-    chat.publicId,
-  ]);
-
-  useEffect(() => {
-    if (pendingQuery && answerFetcher.state === "idle") {
-      setPendingQuery("");
-    }
-  }, [answerFetcher.state, pendingQuery]);
+  }, [answerFetcher, pendingQueryMessage, collection, chat.publicId]);
 
   const optimisticMessage = queryFetcher.formData
     ? queryFetcher.formData.get(PARAMS.MESSAGE)
