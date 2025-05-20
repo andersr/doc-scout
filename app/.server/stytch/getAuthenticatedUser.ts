@@ -13,6 +13,7 @@ export async function getAuthenticatedUser(
     key: STYTCH_SESSION_TOKEN,
     request,
   });
+  console.info("sessionToken: ", sessionToken);
   if (!sessionToken) {
     throw logout({
       request,
@@ -22,10 +23,19 @@ export async function getAuthenticatedUser(
   const resp = await stytchClient.sessions.authenticate({
     session_token: sessionToken,
   });
+  console.info("resp: ", resp);
   const session = await getSessionCookie({ request });
+  console.info("session: ", session);
 
   if (resp.status_code !== 200) {
     console.info("Session invalid or expired");
+    throw logout({
+      request,
+    });
+  }
+
+  if (!resp.user || !resp.user.user_id) {
+    console.info("No user found");
     throw logout({
       request,
     });
