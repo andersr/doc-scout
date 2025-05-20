@@ -1,15 +1,14 @@
-// import { getAuth } from "@clerk/react-router/ssr.server";
-import { type LoaderFunctionArgs, type Session } from "react-router";
+import type { Session } from "react-router";
 import { prisma } from "~/lib/prisma";
 import type { UserClient } from "~/types/user";
 import { getCookieValue } from "../sessions/getCookieValue";
 import { getSessionCookie } from "../sessions/getSessionCookie";
 import { logout } from "../sessions/logout";
-import { STYTCH_SESSION_TOKEN, stytchClient } from "../stytch/client";
+import { STYTCH_SESSION_TOKEN, stytchClient } from "./client";
 
-export async function requireUser({
-  request,
-}: LoaderFunctionArgs): Promise<{ session: Session; user: UserClient }> {
+export async function getAuthenticatedUser(
+  request: Request,
+): Promise<{ session: Session; user: UserClient }> {
   const sessionToken = await getCookieValue({
     key: STYTCH_SESSION_TOKEN,
     request,

@@ -6,7 +6,11 @@ import { Icon } from "./Icon";
 export function Logout() {
   return (
     <Form method="POST" action={appRoutes("/logout")} className="inline">
-      <button type="submit" className={twMerge("")} aria-label="Sign Out">
+      <button
+        type="submit"
+        className={twMerge(" cursor-pointer")}
+        aria-label="Sign Out"
+      >
         <Icon name="logout" />
       </button>
     </Form>

@@ -1,5 +1,10 @@
 {
-  "include": ["app/**/*", ".react-router/types/**/*", "app/.server/**/*"],
+  "include": [
+    "app/**/*",
+    ".react-router/types/**/*",
+    "app/.server/**/*",
+    "tmp/requireUser.ts"
+  ],
   "exclude": ["tmp"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
