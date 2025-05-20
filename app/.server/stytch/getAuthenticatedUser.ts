@@ -19,37 +19,44 @@ export async function getAuthenticatedUser(
     throw redirect(appRoutes("/login"));
   }
 
-  const resp = await stytchClient.sessions.authenticate({
-    session_token: sessionToken,
-  });
+  try {
+    const resp = await stytchClient.sessions.authenticate({
+      session_token: sessionToken,
+    });
 
-  const session = await getSession({ request });
+    const session = await getSession({ request });
 
-  if (resp.status_code !== 200) {
-    console.info("Session invalid or expired");
-    throw logout({
+    if (resp.status_code !== 200) {
+      console.info("Session invalid or expired");
+      throw await logout({
+        request,
+      });
+    }
+
+    if (!resp.user || !resp.user.user_id) {
+      console.error("No user found");
+      throw redirect(appRoutes("/login"));
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        stytchId: resp.user.user_id,
+      },
+    });
+
+    if (!user) {
+      console.error("No user in db");
+      throw redirect(appRoutes("/login"));
+    }
+
+    return {
+      session,
+      user: { email: resp.user.emails[0].email, publicId: user.publicId },
+    };
+  } catch (error) {
+    console.error("error: ", error);
+    throw await logout({
       request,
     });
   }
-
-  if (!resp.user || !resp.user.user_id) {
-    console.error("No user found");
-    throw redirect(appRoutes("/login"));
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      stytchId: resp.user.user_id,
-    },
-  });
-
-  if (!user) {
-    console.error("No user in db");
-    throw redirect(appRoutes("/login"));
-  }
-
-  return {
-    session,
-    user: { email: resp.user.emails[0].email, publicId: user.publicId },
-  };
 }

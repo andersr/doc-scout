@@ -17,7 +17,7 @@ export async function requireUser({
     request,
   });
   if (!sessionToken) {
-    throw logout({
+    throw await logout({
       request,
     });
   }
@@ -29,7 +29,7 @@ export async function requireUser({
 
   if (resp.status_code !== 200) {
     console.info("Session invalid or expired");
-    throw logout({
+    throw await logout({
       request,
     });
   }
