@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { AUTH_DEFAULT_REDIRECT, AUTH_SESSION_DURATION } from "~/config/auth";
 import { authSessionStore } from "./authSessionStore";
-import { getSessionCookie } from "./getSessionCookie";
+import { getSession } from "./getSession";
 
 export async function createSession({
   key,
@@ -16,12 +16,12 @@ export async function createSession({
   request: Request;
   token: string;
 }) {
-  const cookie = await getSessionCookie({ request });
-  cookie.set(key, token);
+  const session = await getSession({ request });
+  session.set(key, token);
 
   return redirect(redirectTo, {
     headers: {
-      "Set-Cookie": await authSessionStore.commitSession(cookie, {
+      "Set-Cookie": await authSessionStore.commitSession(session, {
         maxAge: maxAge ?? AUTH_SESSION_DURATION,
       }),
     },

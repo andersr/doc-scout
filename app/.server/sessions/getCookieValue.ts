@@ -1,4 +1,4 @@
-import { getSessionCookie } from "./getSessionCookie";
+import { getSession } from "./getSession";
 
 export async function getCookieValue({
   key,
@@ -7,6 +7,6 @@ export async function getCookieValue({
   key: string;
   request: Request;
 }): Promise<string | undefined> {
-  const cookie = await getSessionCookie({ request });
-  return cookie.get(key);
+  const session = await getSession({ request });
+  return session.get(key);
 }

@@ -1,12 +1,14 @@
-// import { getAuth } from "@clerk/react-router/ssr.server";
 import { type LoaderFunctionArgs, type Session } from "react-router";
+import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import type { UserClient } from "~/types/user";
 import { getCookieValue } from "../sessions/getCookieValue";
-import { getSessionCookie } from "../sessions/getSessionCookie";
+import { getSession } from "../sessions/getSession";
 import { logout } from "../sessions/logout";
-import { STYTCH_SESSION_TOKEN, stytchClient } from "../stytch/client";
+import { stytchClient } from "../stytch/client";
 
+// TODO:this is the same as getAuthenticatedUser
+// TODO: uninstall clerk packages
 export async function requireUser({
   request,
 }: LoaderFunctionArgs): Promise<{ session: Session; user: UserClient }> {
@@ -23,7 +25,7 @@ export async function requireUser({
   const resp = await stytchClient.sessions.authenticate({
     session_token: sessionToken,
   });
-  const session = await getSessionCookie({ request });
+  const session = await getSession({ request });
 
   if (resp.status_code !== 200) {
     console.info("Session invalid or expired");

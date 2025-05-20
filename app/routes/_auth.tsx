@@ -40,12 +40,6 @@ export default function AuthLayout() {
             <Link to={appRoutes("/login")}>Sign In</Link>
           </div>
         )}
-        {/* <SignedOut>
-          <SignInButton />
-        </SignedOut> */}
-        {/* <SignedIn>
-          <UserButton />
-        </SignedIn> */}
       </div>
       <main className="py-4 flex-1 flex flex-col">
         <Outlet />

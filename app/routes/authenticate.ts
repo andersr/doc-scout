@@ -1,7 +1,10 @@
-import console from "console";
 import { type LoaderFunctionArgs } from "react-router";
 import { createSession } from "~/.server/sessions/createSession";
-import { STYTCH_SESSION_TOKEN, stytchClient } from "~/.server/stytch/client";
+import { stytchClient } from "~/.server/stytch/client";
+import {
+  STYTCH_SESSION_DURATION_MINUTES,
+  STYTCH_SESSION_TOKEN,
+} from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 
@@ -10,11 +13,9 @@ export async function loader(args: LoaderFunctionArgs) {
   try {
     const searchParams = new URL(request.url).searchParams;
     const token = searchParams.get("token");
-    console.info("token: ", token);
     const tokenType = searchParams.get("stytch_token_type");
 
     if (!token) {
-      console.error(`Bad request`);
       console.error(`No token`);
       return new Response("Bad request", {
         status: 400,
@@ -28,11 +29,10 @@ export async function loader(args: LoaderFunctionArgs) {
     }
 
     const res = await stytchClient.magicLinks.authenticate({
-      session_duration_minutes: 60,
+      session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
       token,
     });
 
-    console.info("res: ", res);
     return createSession({
       key: STYTCH_SESSION_TOKEN,
       redirectTo: appRoutes("/"),

@@ -1,16 +1,15 @@
 import { redirect } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
 import { authSessionStore } from "./authSessionStore";
-import { getSessionCookie } from "./getSessionCookie";
+import { getSession } from "./getSession";
 
 export async function logout({ request }: { request: Request }) {
-  const cookie = await getSessionCookie({
+  const session = await getSession({
     request,
   });
-  console.info("LOGOUT cookie: ", cookie);
   throw redirect(appRoutes("/login"), {
     headers: {
-      "Set-Cookie": await authSessionStore.destroySession(cookie),
+      "Set-Cookie": await authSessionStore.destroySession(session),
     },
   });
 }
