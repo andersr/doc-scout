@@ -1,5 +1,6 @@
-import type { Session } from "react-router";
+import { redirect, type Session } from "react-router";
 import { prisma } from "~/lib/prisma";
+import { appRoutes } from "~/shared/appRoutes";
 import type { UserClient } from "~/types/user";
 import { getCookieValue } from "../sessions/getCookieValue";
 import { getSessionCookie } from "../sessions/getSessionCookie";
@@ -15,9 +16,10 @@ export async function getAuthenticatedUser(
   });
   console.info("sessionToken: ", sessionToken);
   if (!sessionToken) {
-    throw logout({
-      request,
-    });
+    throw redirect(appRoutes("/login"));
+    // throw logout({
+    //   request,
+    // });
   }
 
   const resp = await stytchClient.sessions.authenticate({
