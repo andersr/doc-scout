@@ -81,6 +81,10 @@ export async function action(args: ActionFunctionArgs) {
       email,
     });
 
+    if (!res || !res.user_id) {
+      throw new Error("bad stytch response");
+    }
+
     await upsertUser({ stytchId: res.user_id });
 
     return { email, ok: true };

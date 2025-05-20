@@ -38,16 +38,18 @@ export async function getAuthenticatedUser(
 
   if (!resp.user || !resp.user.user_id) {
     console.info("No user found");
-    throw logout({
-      request,
-    });
+    throw redirect(appRoutes("/login"));
   }
 
-  const user = await prisma.user.findUniqueOrThrow({
+  const user = await prisma.user.findUnique({
     where: {
       stytchId: resp.user.user_id,
     },
   });
+
+  if (!user) {
+    throw redirect(appRoutes("/login"));
+  }
 
   // TODO:   req.session.STYTCH_SESSION_TOKEN = resp.session_token;
   return {
