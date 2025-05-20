@@ -10,6 +10,7 @@ export async function loader(args: LoaderFunctionArgs) {
   try {
     const searchParams = new URL(request.url).searchParams;
     const token = searchParams.get("token");
+    console.info("token: ", token);
     const tokenType = searchParams.get("stytch_token_type");
 
     if (!token) {
@@ -31,6 +32,7 @@ export async function loader(args: LoaderFunctionArgs) {
       token,
     });
 
+    console.info("res: ", res);
     return createSession({
       key: STYTCH_SESSION_TOKEN,
       redirectTo: appRoutes("/"),
