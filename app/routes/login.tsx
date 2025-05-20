@@ -85,7 +85,8 @@ export async function action(args: ActionFunctionArgs) {
       throw new Error("bad stytch response");
     }
 
-    await upsertUser({ stytchId: res.user_id });
+    const user = await upsertUser({ stytchId: res.user_id });
+    console.info("upserted user: ", user);
 
     return { email, ok: true };
   } catch (error) {

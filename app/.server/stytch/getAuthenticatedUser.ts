@@ -14,7 +14,7 @@ export async function getAuthenticatedUser(
     key: STYTCH_SESSION_TOKEN,
     request,
   });
-  console.info("sessionToken: ", sessionToken);
+  // console.info("sessionToken: ", sessionToken);
   if (!sessionToken) {
     throw redirect(appRoutes("/login"));
     // throw logout({
@@ -25,7 +25,7 @@ export async function getAuthenticatedUser(
   const resp = await stytchClient.sessions.authenticate({
     session_token: sessionToken,
   });
-  console.info("resp: ", resp);
+  // console.info("resp: ", resp);
   const session = await getSessionCookie({ request });
   console.info("session: ", session);
 
@@ -48,6 +48,7 @@ export async function getAuthenticatedUser(
   });
 
   if (!user) {
+    console.info("No user in db");
     throw redirect(appRoutes("/login"));
   }
 
