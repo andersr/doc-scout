@@ -1,8 +1,3 @@
 {
-  "app/**/*.{ts,tsx}": [
-    "npm run type:gen",
-    "npm run format:fix",
-    "npm run lint:fix",
-    "npm run type:check"
-  ]
+  "app/**/*.{ts,tsx}": ["run-s type:gen format:fix lint:fix type:check"]
 }
