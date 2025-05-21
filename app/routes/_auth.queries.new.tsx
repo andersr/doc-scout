@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Form, redirect, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { requireUser } from "~/.server/users/requireUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";

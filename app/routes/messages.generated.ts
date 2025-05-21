@@ -2,7 +2,7 @@ import { MessageType } from "@prisma/client";
 import { getValidatedFormData } from "remix-hook-form";
 import { apiError } from "~/.server/api/apiError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
-import { requireUser } from "~/.server/users/requireUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { type AnswerFormTypes, answerSchemaResolver } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";

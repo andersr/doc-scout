@@ -10,9 +10,9 @@ export function getDomainHost({
     request.headers.get("X-Forwarded-Host") ??
     request.headers.get("host") ??
     new URL(request.url).host;
+
   if (withProtocol) {
-    const protocol = host.includes("localhost") ? "http" : "https";
-    return `${protocol}://${host}`;
+    return `${host.includes("localhost") ? "http" : "https"}://${host}`;
   }
   return host;
 }

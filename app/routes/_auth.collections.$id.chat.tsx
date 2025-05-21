@@ -9,7 +9,6 @@ import {
 } from "remix-hook-form";
 import { apiError } from "~/.server/api/apiError";
 import { requireUser } from "~/.server/users";
-import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -181,15 +180,16 @@ export async function action(args: Route.ActionArgs) {
       return { defaultValues, errors, ok: false };
     }
 
-    await prisma.message.create({
-      data: {
-        authorId: currentUser.id,
-        chatId: chat.id,
-        createdAt: new Date(),
-        publicId: generateId(),
-        text: data.message,
-      },
-    });
+    // TODO: fix
+    // await prisma.message.create({
+    //   data: {
+    //     authorId: currentUser.id,
+    //     chatId: chat.id,
+    //     createdAt: new Date(),
+    //     publicId: generateId(),
+    //     text: data.message,
+    //   },
+    // });
 
     return {
       ok: true,

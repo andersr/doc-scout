@@ -1,8 +1,8 @@
 import type { Prisma } from "@prisma/client";
 import { useState } from "react";
-import type { LoaderFunctionArgs } from "react-router";
+import type { ActionFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
-import { requireUser } from "~/.server/users/requireUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/FileUploader";
@@ -95,14 +95,15 @@ export default function NewCollection() {
   );
 }
 
-export async function action(args: LoaderFunctionArgs) {
+export async function action(args: ActionFunctionArgs) {
   const { request } = args;
   try {
     await requireUser(args);
 
     // Get form data
     const formData = await request.formData();
-    const collectionName = formData.get(PARAMS.COLLECTION_NAME) as string;
+    const collectionName = formData.get(PARAMS.COLLECTION_NAME)?.toString();
+    // TODO: fix assert
     const files = formData.getAll(PARAMS.FILE) as File[];
 
     // Validate collection name
