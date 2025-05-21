@@ -2,7 +2,9 @@ import { useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
+  type LoaderFunctionArgs,
   useActionData,
+  useLoaderData,
   useNavigation,
 } from "react-router";
 import { stytchClient } from "~/.server/stytch/client";
@@ -18,20 +20,27 @@ export function meta() {
   return [{ title: "Login" }];
 }
 
-// TODO: add a handler for if no user exists in the db
+export async function loader({ request }: LoaderFunctionArgs) {
+  const params = new URL(request.url).searchParams;
+  const error = params.get(PARAMS.ERROR);
 
+  return {
+    error,
+  };
+}
 export default function LoginRoute() {
+  const { error } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
 
-  // const submitDisabled =
-  //   navigation.state === "submitting" ||
-  //   nameValue.trim() === "" ||
-  //   selectedFiles.length === 0;
-
   return (
     <div>
+      {error && (
+        <div className="mt-4 text-center font-semibold text-red-400">
+          {INTENTIONALLY_GENERIC_ERROR_MESSAGE}
+        </div>
+      )}
       {actionData?.email && (
         <div className="my-4 p-2 rounded bg-amber-200">
           Please check the inbox for {actionData.email}

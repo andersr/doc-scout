@@ -2,6 +2,7 @@ export const PARAMS = {
   COLLECTION_IDS: "collectionIds",
   COLLECTION_NAME: "collectionName",
   EMAIL: "email",
+  ERROR: "error",
   FILE: "file",
   ID: "id",
   INTENT: "intent",
