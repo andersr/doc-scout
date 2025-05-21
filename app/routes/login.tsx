@@ -78,6 +78,7 @@ export async function action(args: ActionFunctionArgs) {
       };
     }
     const redirectUrl = `${getDomainHost({ request, withProtocol: true })}/authenticate`;
+    console.info("redirectUrl: ", redirectUrl);
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
       email,
