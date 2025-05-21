@@ -4,10 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "checks": "run-p lint typecheck",
+    "checks": "run-p lint typecheck format:check",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write",
     "lint": "eslint --fix",
     "start": "react-router-serve ./build/server/index.js",
     "start:dev": "dotenv -- npm start",
@@ -61,6 +63,7 @@
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@hookform/devtools": "^4.4.0",
+    "@playwright/test": "^1.52.0",
     "@react-router/dev": "^7.5.3",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.0",
