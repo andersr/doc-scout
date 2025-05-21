@@ -45,7 +45,9 @@ export async function requireUser({
 
     if (!user) {
       console.error("No user in db");
-      throw redirect(appRoutes("/login"));
+      throw await logout({
+        request,
+      });
     }
 
     const email =
@@ -53,7 +55,9 @@ export async function requireUser({
 
     if (!email) {
       console.error("No user email");
-      throw redirect(appRoutes("/login"));
+      throw await logout({
+        request,
+      });
     }
 
     return {
