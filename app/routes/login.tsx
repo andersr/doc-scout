@@ -7,6 +7,7 @@ import {
 } from "react-router";
 import { stytchClient } from "~/.server/stytch/client";
 import { upsertUser } from "~/.server/users/upsertUser";
+import { getDomainHost } from "~/.server/utils/getDomainHost";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -76,13 +77,13 @@ export async function action(args: ActionFunctionArgs) {
         ok: false,
       };
     }
-    // const redirectUrl = `${getDomainHost({ request, withProtocol: true })}/authenticate`;
-    // console.info("redirectUrl: ", redirectUrl);
+    const redirectUrl = `${getDomainHost({ request, withProtocol: true })}/authenticate`;
+    console.info("redirectUrl: ", redirectUrl);
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
       email,
-      // login_magic_link_url: redirectUrl,
-      // signup_magic_link_url: redirectUrl,
+      login_magic_link_url: redirectUrl,
+      signup_magic_link_url: redirectUrl,
     });
 
     if (!res || !res.user_id) {
