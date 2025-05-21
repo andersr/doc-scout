@@ -8,7 +8,7 @@ import { logout } from "../sessions/logout";
 import { stytchClient } from "../stytch/client";
 
 // TODO:this is the same as getAuthenticatedUser
-// TODO: uninstall clerk packages
+// TODO: uninstall clerk packages and merge this with the above
 export async function requireUser({
   request,
 }: LoaderFunctionArgs): Promise<{ session: Session; user: UserClient }> {

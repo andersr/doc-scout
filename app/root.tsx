@@ -1,5 +1,3 @@
-import { rootAuthLoader } from "@clerk/react-router/ssr.server";
-
 import "material-symbols/outlined.css";
 import {
   isRouteErrorResponse,
@@ -30,9 +28,8 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export async function loader(args: Route.LoaderArgs) {
-  return rootAuthLoader(args);
-}
+// export async function loader(args: Route.LoaderArgs) {
+// }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
