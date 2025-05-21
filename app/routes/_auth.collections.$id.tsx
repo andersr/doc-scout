@@ -44,15 +44,15 @@ export default function CollectionDetailsLayout() {
   const { collection } = useLoaderData<typeof loader>();
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="flex justify-between items-center">
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex items-center justify-between">
         <PageTitle>Collection: {collection.name}</PageTitle>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 w-full">
+      <div className="flex w-full flex-col gap-6 md:flex-row">
         <div className="">
           <ul className="space-y-2">
-            <li className={`cursor-pointer hover:text-blue-600 break-all`}>
+            <li className={`cursor-pointer break-all hover:text-blue-600`}>
               <Link
                 to={appRoutes("/collections/:id/sources", {
                   id: collection.publicId,
@@ -61,7 +61,7 @@ export default function CollectionDetailsLayout() {
                 Sources
               </Link>
             </li>
-            <li className={`cursor-pointer hover:text-blue-600 break-all`}>
+            <li className={`cursor-pointer break-all hover:text-blue-600`}>
               <Link
                 to={appRoutes("/collections/:id/chat", {
                   id: collection.publicId,

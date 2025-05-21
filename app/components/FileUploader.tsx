@@ -144,7 +144,7 @@ export function FileUploader({
 
   return (
     <div
-      className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center"
+      className="rounded-md border-2 border-dashed border-gray-300 p-6 text-center"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
@@ -158,8 +158,8 @@ export function FileUploader({
         onChange={handleFileChange}
         className="mt-2"
       />
-      <p className="text-sm text-gray-500 mt-2">{placeholder}</p>
-      <p className="text-xs text-gray-400 mt-1">
+      <p className="mt-2 text-sm text-gray-500">{placeholder}</p>
+      <p className="mt-1 text-xs text-gray-400">
         Only {allowedExtensions.join(", ")} files up to{" "}
         {maxSizeInBytes / 1024 / 1024}MB are allowed (maximum {maxFiles} files)
       </p>
@@ -178,7 +178,7 @@ export function FileUploader({
       {/* Display selected files */}
       {selectedFiles.length > 0 && (
         <div className="mt-4 text-left">
-          <h3 className="font-medium mb-2">Selected Files:</h3>
+          <h3 className="mb-2 font-medium">Selected Files:</h3>
           <ul className="space-y-1">
             {selectedFiles.map((file) => (
               <li key={file.name} className="flex items-center justify-between">
@@ -188,7 +188,7 @@ export function FileUploader({
                 <button
                   type="button"
                   onClick={() => removeFile(file.name)}
-                  className="text-red-500 text-sm hover:text-red-700"
+                  className="text-sm text-red-500 hover:text-red-700"
                 >
                   Remove
                 </button>

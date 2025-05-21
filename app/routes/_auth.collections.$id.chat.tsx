@@ -132,7 +132,7 @@ export default function CollectionChatRoute() {
           <textarea
             {...register("message")}
             rows={3}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-md border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
           ></textarea>
           {errors.message && <p>{errors.message.message}</p>}
         </div>

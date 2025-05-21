@@ -42,11 +42,11 @@ export default function LoginRoute() {
         </div>
       )}
       {actionData?.email && (
-        <div className="my-4 p-2 rounded bg-amber-200">
+        <div className="my-4 rounded bg-amber-200 p-2">
           Please check the inbox for {actionData.email}
         </div>
       )}
-      <h1 className="text-2xl font-bold mb-6">Login</h1>
+      <h1 className="mb-6 text-2xl font-bold">Login</h1>
       <Form method="POST" className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <Label htmlFor={PARAMS.COLLECTION_NAME}>Email</Label>
