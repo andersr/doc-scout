@@ -77,8 +77,11 @@ export async function action(args: ActionFunctionArgs) {
         ok: false,
       };
     }
-    const redirectUrl = `${getDomainHost({ request, withProtocol: true })}/authenticate`;
-    console.info("redirectUrl: ", redirectUrl);
+
+    const isPreviewEnv = process.env.VERCEL_ENV === "preview";
+    const redirectUrl = isPreviewEnv
+      ? `${getDomainHost({ request, withProtocol: true })}/authenticate`
+      : undefined;
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
       email,
