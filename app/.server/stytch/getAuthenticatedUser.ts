@@ -49,9 +49,17 @@ export async function getAuthenticatedUser(
       throw redirect(appRoutes("/login"));
     }
 
+    const email =
+      resp.user.emails.length > 0 ? resp.user.emails[0].email : null;
+
+    if (!email) {
+      console.error("No user email");
+      throw redirect(appRoutes("/login"));
+    }
+
     return {
       session,
-      user: { email: resp.user.emails[0].email, publicId: user.publicId },
+      user: { email, publicId: user.publicId },
     };
   } catch (error) {
     console.error("error: ", error);
