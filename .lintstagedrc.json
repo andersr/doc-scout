@@ -1,0 +1,8 @@
+{
+  "app/**/*.{ts,tsx}": [
+    "npm run type:gen",
+    "npm run format:fix",
+    "npm run lint:fix",
+    "npm run type:check"
+  ]
+}
