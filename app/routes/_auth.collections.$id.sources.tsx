@@ -58,12 +58,12 @@ export default function CollectionDetails() {
   }, [collection.sources, selectedSource]);
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold mb-4">Sources</h2>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h2 className="mb-4 text-xl font-semibold">Sources</h2>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 w-full">
+      <div className="flex w-full flex-col gap-6 md:flex-row">
         <div className="min-w-52">
           {collection.sources.length === 0 ? (
             <p className="text-gray-500">No sources in this collection</p>
@@ -72,7 +72,7 @@ export default function CollectionDetails() {
               {collection.sources.map((source) => (
                 <li
                   key={source.publicId}
-                  className={`cursor-pointer hover:text-blue-600 break-all ${
+                  className={`cursor-pointer break-all hover:text-blue-600 ${
                     selectedSource?.publicId === source.publicId
                       ? "font-bold"
                       : ""
@@ -93,8 +93,8 @@ export default function CollectionDetails() {
 
         {selectedSource && (
           <div className="flex-1">
-            <h2 className="text-xl mb-2">Source Content</h2>
-            <div className="border border-gray-300 rounded-md p-4 w-full h-[75vh] overflow-scroll prose !max-w-none">
+            <h2 className="mb-2 text-xl">Source Content</h2>
+            <div className="prose h-[75vh] w-full !max-w-none overflow-scroll rounded-md border border-gray-300 p-4">
               <Markdown>{selectedSource.text || ""}</Markdown>
             </div>
           </div>

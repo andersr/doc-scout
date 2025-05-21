@@ -26,7 +26,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
   return (
-    <div className="h-full p-4 flex flex-col">
+    <div className="flex h-full flex-col p-4">
       <div className="flex items-center gap-2">
         <AppNav />
         {user ? (
@@ -40,7 +40,7 @@ export default function AuthLayout() {
           </div>
         )}
       </div>
-      <main className="py-4 flex-1 flex flex-col">
+      <main className="flex flex-1 flex-col py-4">
         <Outlet />
       </main>
     </div>

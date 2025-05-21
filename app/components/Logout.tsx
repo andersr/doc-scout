@@ -8,7 +8,7 @@ export function Logout() {
     <Form method="POST" action={appRoutes("/logout")} className="inline">
       <button
         type="submit"
-        className={twMerge(" cursor-pointer")}
+        className={twMerge("cursor-pointer")}
         aria-label="Sign Out"
       >
         <Icon name="logout" />
