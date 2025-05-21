@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs } from "react-router";
+import { Link, type LoaderFunctionArgs, useLoaderData } from "react-router";
 import { createSession } from "~/.server/sessions/createSession";
 import { stytchClient } from "~/.server/stytch/client";
 import {
@@ -49,4 +49,20 @@ export async function loader(args: LoaderFunctionArgs) {
       ok: false,
     };
   }
+}
+
+export default function AuthenticateRoute() {
+  const { errorMessage } = useLoaderData<typeof loader>();
+  return (
+    <div>
+      {errorMessage && (
+        <div className="mt-4 text-center font-semibold text-red-400">
+          {errorMessage}
+        </div>
+      )}
+      <div>
+        <Link to={appRoutes("/login")}>Back to Loginn</Link>
+      </div>
+    </div>
+  );
 }
