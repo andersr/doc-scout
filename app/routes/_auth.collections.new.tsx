@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { useState } from "react";
 import type { ActionFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
-import { requireUser } from "~/.server/users/requireUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/FileUploader";

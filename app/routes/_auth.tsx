@@ -1,8 +1,7 @@
 import { data, Link, Outlet, useLoaderData } from "react-router";
 import { AppNav } from "~/components/AppNav";
 
-import { authSessionStore } from "~/.server/sessions/authSessionStore";
-import { getAuthenticatedUser } from "~/.server/stytch/getAuthenticatedUser";
+import { requireUser } from "~/.server/users";
 import { Logout } from "~/components/Logout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
@@ -11,15 +10,15 @@ export function meta() {
   return [{ title: "Dashboard" }, { content: "", name: "description" }];
 }
 
-export async function loader(args: Route.LoaderArgs) {
-  const { session, user } = await getAuthenticatedUser(args.request);
+export async function loader({ request }: Route.LoaderArgs) {
+  const { user } = await requireUser({ request });
 
   return data(
     { user },
     {
-      headers: {
-        "Set-Cookie": await authSessionStore.commitSession(session),
-      },
+      // headers: {
+      //   "Set-Cookie": await authSessionStore.commitSession(session),
+      // },
     },
   );
 }

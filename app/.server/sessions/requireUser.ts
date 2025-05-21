@@ -1,16 +1,17 @@
-import { redirect, type Session } from "react-router";
+import { redirect } from "react-router";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { UserClient } from "~/types/user";
-import { getCookieValue } from "../sessions/getCookieValue";
-import { getSession } from "../sessions/getSession";
-import { logout } from "../sessions/logout";
-import { stytchClient } from "./client";
+import { stytchClient } from "../stytch/client";
+import { getCookieValue } from "./getCookieValue";
+import { logout } from "./logout";
 
-export async function getAuthenticatedUser(
-  request: Request,
-): Promise<{ session: Session; user: UserClient }> {
+export async function requireUser({
+  request,
+}: {
+  request: Request;
+}): Promise<{ user: UserClient }> {
   const sessionToken = await getCookieValue({
     key: STYTCH_SESSION_TOKEN,
     request,
@@ -23,8 +24,6 @@ export async function getAuthenticatedUser(
     const resp = await stytchClient.sessions.authenticate({
       session_token: sessionToken,
     });
-
-    const session = await getSession({ request });
 
     if (resp.status_code !== 200) {
       console.info("Session invalid or expired");
@@ -58,7 +57,6 @@ export async function getAuthenticatedUser(
     }
 
     return {
-      session,
       user: { email, publicId: user.publicId },
     };
   } catch (error) {

@@ -1,1 +1,1 @@
-export * from "./requireUser";
+export * from "../sessions/requireUser";
