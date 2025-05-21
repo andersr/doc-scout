@@ -13,6 +13,7 @@ import { getDomainHost } from "~/.server/utils/getDomainHost";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 
@@ -47,7 +48,11 @@ export default function LoginRoute() {
         </div>
       )}
       <h1 className="mb-6 text-2xl font-bold">Login</h1>
-      <Form method="POST" className="flex flex-col gap-6">
+      <Form
+        method="POST"
+        className="flex flex-col gap-6"
+        action={appRoutes("/login")}
+      >
         <div className="flex flex-col gap-2">
           <Label htmlFor={PARAMS.COLLECTION_NAME}>Email</Label>
           <Input
@@ -74,8 +79,10 @@ export default function LoginRoute() {
   );
 }
 
-export async function action(args: ActionFunctionArgs) {
-  const { request } = args;
+export async function action({ request }: ActionFunctionArgs) {
+  // const params = new URL(request.url).searchParams;
+  // const error = params.get(PARAMS.ERROR);
+
   try {
     const formData = await request.formData();
     const email = formData.get(PARAMS.EMAIL)?.toString();
@@ -102,12 +109,11 @@ export async function action(args: ActionFunctionArgs) {
       throw new Error("bad stytch response");
     }
 
-    const user = await upsertUser({ stytchId: res.user_id });
-    console.info("upserted user: ", user);
+    await upsertUser({ stytchId: res.user_id });
 
     return { email, ok: true };
   } catch (error) {
-    console.error("Collection creation error: ", error);
+    console.error("error: ", error);
     return {
       email: null,
       errorMessage:

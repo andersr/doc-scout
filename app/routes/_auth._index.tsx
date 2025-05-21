@@ -10,9 +10,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-3xl">
         <PageTitle>Dashboard</PageTitle>
       </div>
-      <div className="">
-        TODO: Display recent updates, eg recent collections, recent chats,etc
-      </div>
+      <div className="">List recent updates</div>
     </>
   );
 }
