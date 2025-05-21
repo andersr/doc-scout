@@ -47,6 +47,26 @@ jobs:
 
       - name: 🔎 Type check
         run: npm run typecheck
+  formatting:
+    name: 💄 Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📥 Install deps
+        run: npm install
+
+      - name: 💄 Formatting Check
+        run: npm run format:check
+
   test:
     name: 🧪 E2E Testing
     timeout-minutes: 60

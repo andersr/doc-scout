@@ -4,10 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "checks": "run-p lint typecheck",
+    "checks": "run-p lint typecheck format:check",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write",
     "lint": "eslint --fix",
     "start": "react-router-serve ./build/server/index.js",
     "start:dev": "dotenv -- npm start",
