@@ -59,7 +59,19 @@ model Message {
 
   text String
   type MessageType @default(USER)
+
+  // sources MessageSource[]
 }
+
+// model MessageSource {
+//   id Int @id @default(autoincrement())
+
+//   source   Source? @relation(fields: [sourceId], references: [id])
+//   sourceId Int?
+
+//   message   Message? @relation(fields: [messageId], references: [id])
+//   messageId Int?
+// }
 
 enum MessageType {
   USER
@@ -141,6 +153,8 @@ model Source {
 
   collection   Collection? @relation(fields: [collectionId], references: [id])
   collectionId Int?
+
+  // messages MessageSource[]
 }
 
 model User {
