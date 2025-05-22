@@ -2,14 +2,13 @@ import type { Prisma } from "@prisma/client";
 import { useState } from "react";
 import type { ActionFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/FileUploader";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { MAX_FILE_SIZE } from "~/config/files";
+import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -17,7 +16,7 @@ import { PARAMS } from "~/shared/params";
 import type { LCDocument } from "~/types/document";
 import type { RouteData } from "~/types/routeData";
 
-const PAGE_TITLE = "New Collection";
+const PAGE_TITLE = "Add Docs";
 
 export const handle: RouteData = {
   pageTitle: PAGE_TITLE,
@@ -26,27 +25,25 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: PAGE_TITLE },
-    { content: "Create a new collection", name: "description" },
+    // { content: "Create a new collection", name: "description" },
   ];
 }
 
-export default function NewCollection() {
+export default function NewDocsRoute() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [nameValue, setNameValue] = useState("");
+  // const [nameValue, setNameValue] = useState("");
 
   const handleFilesChange = (files: File[]) => {
     setSelectedFiles(files);
-    if (nameValue === "" && files.length > 0) {
-      setNameValue(files[0].name);
-    }
+    // if (nameValue === "" && files.length > 0) {
+    //   setNameValue(files[0].name);
+    // }
   };
 
   const submitDisabled =
-    navigation.state === "submitting" ||
-    nameValue.trim() === "" ||
-    selectedFiles.length === 0;
+    navigation.state !== "idle" || selectedFiles.length === 0;
 
   return (
     <div>
@@ -56,7 +53,7 @@ export default function NewCollection() {
         encType="multipart/form-data"
         className="flex flex-col gap-6"
       >
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <Label htmlFor={PARAMS.COLLECTION_NAME}>Collection Name</Label>
           <Input
             id={PARAMS.COLLECTION_NAME}
@@ -66,23 +63,21 @@ export default function NewCollection() {
             placeholder="Enter collection name"
             required
           />
-        </div>
+        </div> */}
 
         <div className="flex flex-col gap-2">
-          <Label>Upload Files</Label>
+          {/* <Label>Add Files</Label> */}
           <FileUploader
             inputName={PARAMS.FILE}
             onFilesChange={handleFilesChange}
-            label="Upload Markdown Files"
-            placeholder="Drag and drop markdown files here, or click to select files"
+            label="Upload Files"
+            placeholder="Drag and drop files here, or click to select files"
             maxSizeInBytes={MAX_FILE_SIZE}
           />
         </div>
 
         <Button type="submit" disabled={submitDisabled}>
-          {navigation.state === "submitting"
-            ? "Creating..."
-            : "Create Collection"}
+          {navigation.state === "submitting" ? "Processing..." : "Continue"}
         </Button>
       </Form>
 
@@ -97,27 +92,18 @@ export default function NewCollection() {
 
 export async function action(args: ActionFunctionArgs) {
   const { request } = args;
+  const user = await requireInternalUser(args);
   try {
-    await requireUser(args);
-
     // Get form data
     const formData = await request.formData();
-    const collectionName = formData.get(PARAMS.COLLECTION_NAME)?.toString();
+    // const collectionName = formData.get(PARAMS.COLLECTION_NAME)?.toString();
     // TODO: fix assert
     const files = formData.getAll(PARAMS.FILE) as File[];
-
-    // Validate collection name
-    if (!collectionName || collectionName.trim() === "") {
-      return {
-        errorMessage: "Collection name is required",
-        ok: false,
-      };
-    }
 
     // Validate files
     if (!files || files.length === 0) {
       return {
-        errorMessage: "At least one file is required",
+        errorMessage: "At least one file is required.",
         ok: false,
       };
     }
@@ -134,7 +120,8 @@ export async function action(args: ActionFunctionArgs) {
 
         sourcesInput.push({
           createdAt: new Date(),
-          name: fileName,
+          fileName: fileName,
+          ownerId: user.id,
           publicId: sourcePublicId,
           text: fileContent,
         });
@@ -151,31 +138,21 @@ export async function action(args: ActionFunctionArgs) {
       }
     }
 
-    const collection = await prisma.collection.create({
-      data: {
-        chat: {
-          create: {
-            createdAt: new Date(),
-            publicId: generateId(),
-          },
-        },
-        createdAt: new Date(),
-        name: collectionName,
-        publicId: generateId(),
-        sources: {
-          createMany: {
-            data: sourcesInput,
-          },
-        },
-      },
+    const sources = await prisma.source.createManyAndReturn({
+      data: sourcesInput,
     });
 
     await addDocsToVectorStore({
       docs,
-      namespace: collection.publicId,
+      namespace: getNameSpace("USER", user.publicId), //`${NAMESPACE_TYPES.USER}_${user.publicId}`,
     });
 
-    return redirect(appRoutes("/collections/:id", { id: collection.publicId }));
+    if (sources.length === 1) {
+      return redirect(appRoutes("/docs/:id", { id: sources[0].publicId }));
+    }
+
+    // TODO: display confirmation alert
+    return redirect(appRoutes("/docs"));
   } catch (error) {
     console.error("Collection creation error: ", error);
     return {

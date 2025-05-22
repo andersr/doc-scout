@@ -45,6 +45,13 @@ model Chat {
   chatCollections CollectionChat[]
 
   collections Collection[]
+
+  sources ChatSource[]
+
+  owner   User? @relation(fields: [ownerId], references: [id])
+  ownerId Int?
+  // User   User? @relation(fields: [userId], references: [id])
+  // userId Int?
 }
 
 model Message {
@@ -61,6 +68,16 @@ model Message {
   type MessageType @default(USER)
 
   // sources MessageSource[]
+}
+
+model ChatSource {
+  id Int @id @default(autoincrement())
+
+  source   Source? @relation(fields: [sourceId], references: [id])
+  sourceId Int?
+
+  chat   Chat? @relation(fields: [chatId], references: [id])
+  chatId Int?
 }
 
 // model MessageSource {
@@ -143,6 +160,7 @@ model Source {
   updatedAt DateTime?
 
   name        String?
+  fileName    String?
   url         String?
   storagePath String?
   text        String?
@@ -155,6 +173,10 @@ model Source {
   collectionId Int?
 
   // messages MessageSource[]
+  owner   User? @relation(fields: [ownerId], references: [id])
+  ownerId Int?
+
+  chats ChatSource[]
 }
 
 model User {
@@ -173,4 +195,8 @@ model User {
 
   projectMemberships ProjectUser[]
   messages           Message[]
+
+  sources Source[]
+
+  chats Chat[]
 }

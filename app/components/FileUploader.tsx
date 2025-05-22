@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -32,6 +33,7 @@ export function FileUploader({
 }: FileUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -72,10 +74,10 @@ export function FileUploader({
     onFilesChange(newSelectedFiles);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
+  // const handleDragOver = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  // };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -126,6 +128,8 @@ export function FileUploader({
       newSelectedFiles.forEach((file) => dataTransfer.items.add(file));
       fileInput.files = dataTransfer.files;
     }
+
+    setIsDraggingOver(false);
   };
 
   const removeFile = (fileName: string) => {
@@ -144,11 +148,19 @@ export function FileUploader({
 
   return (
     <div
-      className="rounded-md border-2 border-dashed border-gray-300 p-6 text-center"
-      onDragOver={handleDragOver}
+      className={twMerge(
+        "rounded-md border-2 border-dashed border-gray-300 p-6 text-center",
+        isDraggingOver && "border-gray-500 bg-gray-100",
+      )}
+      // onDragOver={handleDragOver}
+      onDragEnter={() => setIsDraggingOver(true)}
+      onDragLeave={() => setIsDraggingOver(false)}
+      onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      <Label htmlFor={inputName}>{label}</Label>
+      <Label className="pointer-events-none" htmlFor={inputName}>
+        {label}
+      </Label>
       <Input
         id={inputName}
         name={inputName}
@@ -156,14 +168,15 @@ export function FileUploader({
         accept={allowedExtensions.join(",")}
         multiple
         onChange={handleFileChange}
-        className="mt-2"
+        className="pointer-events-none mt-2"
       />
-      <p className="mt-2 text-sm text-gray-500">{placeholder}</p>
-      <p className="mt-1 text-xs text-gray-400">
-        Only {allowedExtensions.join(", ")} files up to{" "}
-        {maxSizeInBytes / 1024 / 1024}MB are allowed (maximum {maxFiles} files)
+      <p className="pointer-events-none mt-2 text-sm text-gray-500">
+        {placeholder}
       </p>
-
+      <p className="pointer-events-none mt-1 text-xs text-gray-400">
+        Only {allowedExtensions.join(", ")} files up to{" "}
+        {maxSizeInBytes / 1024 / 1024}MB are allowed (max {maxFiles} files)
+      </p>
       {/* Display errors */}
       {Object.keys(fileErrors).length > 0 && (
         <div className="mt-2">
@@ -174,7 +187,6 @@ export function FileUploader({
           ))}
         </div>
       )}
-
       {/* Display selected files */}
       {selectedFiles.length > 0 && (
         <div className="mt-4 text-left">

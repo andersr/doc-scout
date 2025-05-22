@@ -4,8 +4,8 @@ import { apiError } from "~/.server/api/apiError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
-import { type AnswerFormTypes, answerSchemaResolver } from "~/lib/formSchemas";
 import { prisma } from "~/lib/prisma";
+import { type BotReply, botReplyResolver } from "~/lib/schemas/botReply";
 import type { Route } from "../+types/root";
 
 export async function action(args: Route.ActionArgs) {
@@ -15,10 +15,7 @@ export async function action(args: Route.ActionArgs) {
       data,
       errors,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<AnswerFormTypes>(
-      args.request,
-      answerSchemaResolver,
-    );
+    } = await getValidatedFormData<BotReply>(args.request, botReplyResolver);
 
     if (errors) {
       return { defaultValues, errors, ok: false };

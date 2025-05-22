@@ -1,19 +1,13 @@
 import type { Prisma, User } from "@prisma/client";
-import { PROJECT_SELECT_INTERNAL } from "./project";
 
-export const USER_INCLUDE = {
-  projectMemberships: {
-    include: {
-      project: {
-        select: PROJECT_SELECT_INTERNAL,
-      },
-    },
-  },
+export const USER_INTERNAL_INCLUDE = {
+  messages: true,
+  sources: true,
 } as const;
 
 // TODO: same as in requireUser
 export type UserInternal = Prisma.UserGetPayload<{
-  include: typeof USER_INCLUDE;
+  include: typeof USER_INTERNAL_INCLUDE;
 }>;
 
 // export type UserClient = Prisma.UserGetPayload<{
