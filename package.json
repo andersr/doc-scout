@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "checks": "run-p type:gen format:fix lint:fix type:check",
+    "checks": "run-s type:gen format:fix lint:fix type:check",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
@@ -12,10 +12,11 @@
     "format:fix": "prettier . --write",
     "lint": "eslint",
     "lint:fix": "eslint --cache --fix",
+    "lint:staged": "npx lint-staged",
     "start": "react-router-serve ./build/server/index.js",
     "start:dev": "dotenv -- npm start",
     "type:gen": "react-router typegen",
-    "type:check": "tsc",
+    "type:check": "tsc --noEmit",
     "postinstall": "prisma generate",
     "prepare": "husky"
   },

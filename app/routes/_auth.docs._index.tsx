@@ -1,13 +1,13 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { RouteData } from "~/types/routeData";
 import { formatDateTime } from "~/utils/formatDateTime";
 
-const SECTION_NAME = "Collections";
+const SECTION_NAME = "Documents";
 
 export const handle: RouteData = {
   pageTitle: SECTION_NAME,
@@ -16,40 +16,56 @@ export const handle: RouteData = {
 export function meta() {
   return [
     { title: SECTION_NAME },
-    { content: "Manage your collections", name: "description" },
+    { content: "My Documents", name: "description" },
   ];
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  await requireUser(args);
+  const user = await requireInternalUser(args);
 
-  const collections = await prisma.collection.findMany({
-    include: {
-      sources: true,
+  const docs = await prisma.source.findMany({
+    where: {
+      ownerId: user.id,
     },
   });
 
   return {
-    collections,
+    docs,
   };
 }
 
-export default function CollectionsList() {
-  const { collections } = useLoaderData<typeof loader>();
+export default function DocsList() {
+  const { docs } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <PageTitle>{SECTION_NAME}</PageTitle>
         <Link
-          to={appRoutes("/collections/new")}
+          to={appRoutes("/docs/new")}
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
-          New Collection
+          Add Docs
         </Link>
       </div>
-
-      {collections.length === 0 ? (
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {docs.map((d) => (
+          <Link
+            key={d.publicId}
+            to={appRoutes("/docs/:id", { id: d.publicId })}
+            className="rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
+          >
+            <h2 className="text-lg font-medium">{d.name ?? d.fileName}</h2>
+            <div className="mt-2 text-xs text-gray-400">
+              Created:{" "}
+              {d.createdAt
+                ? formatDateTime({ d: d.createdAt, withTime: true })
+                : "N/A"}
+            </div>
+          </Link>
+        ))}
+      </ul>
+      {/* {collections.length === 0 ? (
         <div className="py-8 text-center">
           <p className="text-gray-500">No collections found</p>
           <p className="mt-2">
@@ -83,7 +99,7 @@ export default function CollectionsList() {
             </Link>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

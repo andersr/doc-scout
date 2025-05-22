@@ -7,7 +7,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
 export function meta() {
-  return [{ title: "Dashboard" }, { content: "", name: "description" }];
+  return [{ title: "Doc Scout" }, { content: "", name: "description" }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {

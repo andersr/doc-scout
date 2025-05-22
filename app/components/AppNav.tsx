@@ -8,7 +8,7 @@ export function AppNav() {
         <Link to={appRoutes("/")}>Home</Link>
       </li>
       <li>
-        <Link to={appRoutes("/collections")}>Collections</Link>
+        <Link to={appRoutes("/docs")}>Docs</Link>
       </li>
     </ul>
   );
