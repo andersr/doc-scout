@@ -207,6 +207,7 @@ export async function action(args: Route.ActionArgs) {
       return { defaultValues, errors, ok: false };
     }
 
+    // TODO: update chat updatedAt
     await prisma.message.create({
       data: {
         authorId: currentUser.id,
