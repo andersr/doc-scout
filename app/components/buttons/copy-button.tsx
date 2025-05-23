@@ -1,4 +1,4 @@
-import { Icon } from "../Icon";
+import { Icon } from "../icon";
 import { Button } from "../ui/button";
 
 interface Props {
@@ -9,8 +9,7 @@ interface Props {
 export function CopyButton({ copyDone, onClick }: Props) {
   return (
     <Button variant={"outline"} onClick={onClick}>
-      <Icon name={copyDone ? "done" : "content_copy"} />{" "}
-      {copyDone ? "Copied" : "Copy"}
+      <Icon name={copyDone ? "DONE" : "COPY"} /> {copyDone ? "Copied" : "Copy"}
     </Button>
   );
 }

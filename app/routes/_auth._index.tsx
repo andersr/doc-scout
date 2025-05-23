@@ -1,4 +1,4 @@
-import { PageTitle } from "~/components/PageTitle";
+import { PageTitle } from "~/components/page-title";
 
 export function meta() {
   return [{ title: "Dashboard" }, { content: "", name: "description" }];

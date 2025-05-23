@@ -11,7 +11,7 @@ import { apiError } from "~/.server/api/apiError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
-import { PageTitle } from "~/components/PageTitle";
+import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { getNameSpace } from "~/config/namespaces";
@@ -21,7 +21,7 @@ import { type NewChat, newChatSchema } from "~/lib/schemas/newChat";
 import { appRoutes } from "~/shared/appRoutes";
 import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
-import type { Route } from "./+types/_auth.chat.$id";
+import type { Route } from "./+types/_auth.chats.$id";
 
 export const handle: RouteData = {
   pageTitle: "Chat Details",
@@ -207,6 +207,7 @@ export async function action(args: Route.ActionArgs) {
       return { defaultValues, errors, ok: false };
     }
 
+    // TODO: update chat updatedAt
     await prisma.message.create({
       data: {
         authorId: currentUser.id,

@@ -1,8 +1,9 @@
-import { Icon } from "../Icon";
+import type { APP_ICONS } from "~/config/icons";
+import { Icon } from "../icon";
 
 interface Props {
   children?: React.ReactNode;
-  name: string;
+  name: keyof typeof APP_ICONS;
   onClick: () => void;
 }
 export function IconButton({ children, name, onClick }: Props) {

@@ -1,8 +1,8 @@
 import { data, Link, Outlet, useLoaderData } from "react-router";
-import { AppNav } from "~/components/AppNav";
+import { AppNav } from "~/components/app-nav";
 
 import { requireUser } from "~/.server/users";
-import { Logout } from "~/components/Logout";
+import { Logout } from "~/components/logout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
@@ -28,7 +28,9 @@ export default function AuthLayout() {
   return (
     <div className="flex h-full flex-col p-4">
       <div className="flex items-center gap-2">
-        <AppNav />
+        <div className="flex-1">
+          <AppNav />
+        </div>
         {user ? (
           <div className="flex gap-2">
             <div>{user.email}</div>

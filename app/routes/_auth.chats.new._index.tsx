@@ -1,13 +1,17 @@
 import type { Prisma } from "@prisma/client";
 import { useState } from "react";
-import type { ActionFunctionArgs } from "react-router";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
-import { FileUploader } from "~/components/file-uploader";
 import { Button } from "~/components/ui/button";
-import { MAX_FILE_SIZE } from "~/config/files";
 import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
@@ -16,7 +20,7 @@ import { PARAMS } from "~/shared/params";
 import type { LCDocument } from "~/types/document";
 import type { RouteData } from "~/types/routeData";
 
-const PAGE_TITLE = "Add Docs";
+const PAGE_TITLE = "New Chat";
 
 export const handle: RouteData = {
   pageTitle: PAGE_TITLE,
@@ -29,7 +33,23 @@ export function meta() {
   ];
 }
 
+export async function loader(args: LoaderFunctionArgs) {
+  const user = await requireInternalUser(args);
+
+  const docs = await prisma.source.findMany({
+    where: {
+      ownerId: user.id,
+    },
+  });
+
+  return {
+    docs,
+  };
+}
+
 export default function NewDocsRoute() {
+  const { docs } = useLoaderData<typeof loader>();
+
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -53,28 +73,7 @@ export default function NewDocsRoute() {
         encType="multipart/form-data"
         className="flex flex-col gap-6"
       >
-        {/* <div className="flex flex-col gap-2">
-          <Label htmlFor={PARAMS.COLLECTION_NAME}>Collection Name</Label>
-          <Input
-            id={PARAMS.COLLECTION_NAME}
-            name={PARAMS.COLLECTION_NAME}
-            value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
-            placeholder="Enter collection name"
-            required
-          />
-        </div> */}
-
-        <div className="flex flex-col gap-2">
-          {/* <Label>Add Files</Label> */}
-          <FileUploader
-            inputName={PARAMS.FILE}
-            onFilesChange={handleFilesChange}
-            label="Upload Files"
-            placeholder="Drag and drop files here, or click to select files"
-            maxSizeInBytes={MAX_FILE_SIZE}
-          />
-        </div>
+        <div className="flex flex-col gap-2">Select docs, continue</div>
 
         <Button type="submit" disabled={submitDisabled}>
           {navigation.state === "submitting" ? "Processing..." : "Continue"}

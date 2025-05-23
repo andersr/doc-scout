@@ -1,7 +1,7 @@
 import { Form } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
-import { Icon } from "./Icon";
+import { Icon } from "./icon";
 
 export function Logout() {
   return (
@@ -11,7 +11,7 @@ export function Logout() {
         className={twMerge("cursor-pointer")}
         aria-label="Sign Out"
       >
-        <Icon name="logout" />
+        <Icon name="LOGOUT" />
       </button>
     </Form>
   );
