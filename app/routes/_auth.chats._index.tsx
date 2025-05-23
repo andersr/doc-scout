@@ -1,8 +1,9 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
-import { Icon } from "~/components/Icon";
-import { PageTitle } from "~/components/PageTitle";
+import { Icon } from "~/components/icon";
+import { PageTitle } from "~/components/page-title";
+
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import type { RouteData } from "~/types/routeData";

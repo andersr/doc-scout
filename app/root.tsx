@@ -9,7 +9,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { PageTitle } from "./components/PageTitle";
+import { PageTitle } from "./components/page-title";
 
 export function meta() {
   return [{ title: "Muni Admin" }, { content: "", name: "description" }];

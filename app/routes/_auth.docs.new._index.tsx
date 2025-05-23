@@ -5,7 +5,7 @@ import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
-import { FileUploader } from "~/components/FileUploader";
+import { FileUploader } from "~/components/file-uploader";
 import { Button } from "~/components/ui/button";
 import { MAX_FILE_SIZE } from "~/config/files";
 import { getNameSpace } from "~/config/namespaces";

@@ -11,7 +11,7 @@ import { apiError } from "~/.server/api/apiError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
-import { PageTitle } from "~/components/PageTitle";
+import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { getNameSpace } from "~/config/namespaces";

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
-import { Icon } from "./Icon";
-import { DocScoutLogo } from "./Logo";
+import { Icon } from "./icon";
+import { DocScoutLogo } from "./logo";
 
 export function AppNav() {
   return (

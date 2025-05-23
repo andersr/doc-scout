@@ -1,7 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import { useState } from "react";
-import type { ActionFunctionArgs } from "react-router";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
@@ -27,7 +33,23 @@ export function meta() {
   ];
 }
 
+export async function loader(args: LoaderFunctionArgs) {
+  const user = await requireInternalUser(args);
+
+  const docs = await prisma.source.findMany({
+    where: {
+      ownerId: user.id,
+    },
+  });
+
+  return {
+    docs,
+  };
+}
+
 export default function NewDocsRoute() {
+  const { docs } = useLoaderData<typeof loader>();
+
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);

@@ -1,8 +1,8 @@
 import { data, Link, Outlet, useLoaderData } from "react-router";
-import { AppNav } from "~/components/AppNav";
+import { AppNav } from "~/components/app-nav";
 
 import { requireUser } from "~/.server/users";
-import { Logout } from "~/components/Logout";
+import { Logout } from "~/components/renamed/logout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
