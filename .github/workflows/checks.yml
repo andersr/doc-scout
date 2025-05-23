@@ -46,7 +46,7 @@ jobs:
         run: npm install
 
       - name: 🔎 Type check
-        run: npm run type:gen && npm run type:check
+        run: npm run typecheck
   formatting:
     name: 💄 Formatting
     runs-on: ubuntu-latest

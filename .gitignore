@@ -9,6 +9,9 @@
 .env
 tmp
 
+# TS
+tsconfig.tsbuildinfo
+
 # Playwright
 node_modules/
 /test-results/

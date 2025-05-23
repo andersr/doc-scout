@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "checks": "run-s type:gen format:fix lint:fix type:check",
+    "checks": "run-s format:fix lint:fix typecheck",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
@@ -15,8 +15,7 @@
     "lint:staged": "npx lint-staged",
     "start": "react-router-serve ./build/server/index.js",
     "start:dev": "dotenv -- npm start",
-    "type:gen": "react-router typegen",
-    "type:check": "tsc --noEmit",
+    "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit",
     "postinstall": "prisma generate",
     "prepare": "husky"
   },
