@@ -5,9 +5,7 @@ import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
-import { FileUploader } from "~/components/FileUploader";
 import { Button } from "~/components/ui/button";
-import { MAX_FILE_SIZE } from "~/config/files";
 import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
@@ -53,28 +51,7 @@ export default function NewDocsRoute() {
         encType="multipart/form-data"
         className="flex flex-col gap-6"
       >
-        {/* <div className="flex flex-col gap-2">
-          <Label htmlFor={PARAMS.COLLECTION_NAME}>Collection Name</Label>
-          <Input
-            id={PARAMS.COLLECTION_NAME}
-            name={PARAMS.COLLECTION_NAME}
-            value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
-            placeholder="Enter collection name"
-            required
-          />
-        </div> */}
-
-        <div className="flex flex-col gap-2">
-          {/* <Label>Add Files</Label> */}
-          <FileUploader
-            inputName={PARAMS.FILE}
-            onFilesChange={handleFilesChange}
-            label="Upload Files"
-            placeholder="Drag and drop files here, or click to select files"
-            maxSizeInBytes={MAX_FILE_SIZE}
-          />
-        </div>
+        <div className="flex flex-col gap-2">Select docs, continue</div>
 
         <Button type="submit" disabled={submitDisabled}>
           {navigation.state === "submitting" ? "Processing..." : "Continue"}
