@@ -17,7 +17,7 @@ import { Label } from "~/components/ui/label";
 import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import type { BotReply } from "~/lib/schemas/botReply";
-import { type NewChat, newChatSchema } from "~/lib/schemas/newChat";
+import { type NewQuery, newQuerySchema } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
 import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
@@ -117,10 +117,10 @@ export default function ChatDetails() {
     register,
     reset,
     setValue,
-  } = useRemixForm<NewChat>({
+  } = useRemixForm<NewQuery>({
     fetcher: queryFetcher,
     mode: "onSubmit",
-    resolver: newChatSchema.resolver,
+    resolver: newQuerySchema.resolver,
     stringifyAllValues: false,
   });
 
@@ -198,9 +198,9 @@ export async function action(args: Route.ActionArgs) {
       data,
       errors,
       receivedValues: defaultValues,
-    } = await getValidatedFormData<NewChat>(
+    } = await getValidatedFormData<NewQuery>(
       args.request,
-      newChatSchema.resolver,
+      newQuerySchema.resolver,
     );
 
     if (errors) {

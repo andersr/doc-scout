@@ -5,6 +5,7 @@ export const PARAMS = {
   ERROR: "error",
   FILE: "file",
   ID: "id",
+  IDS: "ids",
   INTENT: "intent",
   MESSAGE: "message",
   NAME: "name",
