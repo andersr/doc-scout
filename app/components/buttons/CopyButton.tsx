@@ -1,4 +1,4 @@
-import { Icon } from "../icon";
+import { Icon } from "../renamed/icon";
 import { Button } from "../ui/button";
 
 interface Props {

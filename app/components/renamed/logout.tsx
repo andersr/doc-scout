@@ -1,7 +1,7 @@
 import { Form } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
-import { Icon } from "../icon";
+import { Icon } from "./icon";
 
 export function Logout() {
   return (
