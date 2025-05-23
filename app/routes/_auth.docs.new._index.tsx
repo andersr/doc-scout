@@ -1,5 +1,4 @@
 import type { Prisma } from "@prisma/client";
-import { useState } from "react";
 import type { ActionFunctionArgs } from "react-router";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
@@ -7,8 +6,8 @@ import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/file-uploader";
 import { Button } from "~/components/ui/button";
-import { MAX_FILE_SIZE } from "~/config/files";
 import { getNameSpace } from "~/config/namespaces";
+import { useFileUploader } from "~/hooks/useFileUploader";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -32,15 +31,21 @@ export function meta() {
 export default function NewDocsRoute() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const fileUploader = useFileUploader({
+    inputName: PARAMS.FILE,
+  });
+
+  const { selectedFiles } = fileUploader;
+  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   // const [nameValue, setNameValue] = useState("");
 
-  const handleFilesChange = (files: File[]) => {
-    setSelectedFiles(files);
-    // if (nameValue === "" && files.length > 0) {
-    //   setNameValue(files[0].name);
-    // }
-  };
+  // const handleFilesChange = (files: File[]) => {
+  //   setSelectedFiles([...selectedFiles, ...files]);
+  //   // if (nameValue === "" && files.length > 0) {
+  //   //   setNameValue(files[0].name);
+  //   // }
+  // };
 
   const submitDisabled =
     navigation.state !== "idle" || selectedFiles.length === 0;
@@ -55,11 +60,9 @@ export default function NewDocsRoute() {
       >
         <div className="flex flex-col gap-2">
           <FileUploader
-            inputName={PARAMS.FILE}
-            onFilesChange={handleFilesChange}
+            {...fileUploader}
             label="Upload Files"
             placeholder="Drag and drop files here, or click to select files"
-            maxSizeInBytes={MAX_FILE_SIZE}
           />
         </div>
 
