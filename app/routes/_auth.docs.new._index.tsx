@@ -53,20 +53,7 @@ export default function NewDocsRoute() {
         encType="multipart/form-data"
         className="flex flex-col gap-6"
       >
-        {/* <div className="flex flex-col gap-2">
-          <Label htmlFor={PARAMS.COLLECTION_NAME}>Collection Name</Label>
-          <Input
-            id={PARAMS.COLLECTION_NAME}
-            name={PARAMS.COLLECTION_NAME}
-            value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
-            placeholder="Enter collection name"
-            required
-          />
-        </div> */}
-
         <div className="flex flex-col gap-2">
-          {/* <Label>Add Files</Label> */}
           <FileUploader
             inputName={PARAMS.FILE}
             onFilesChange={handleFilesChange}

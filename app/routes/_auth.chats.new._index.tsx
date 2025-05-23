@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import {
@@ -10,14 +9,12 @@ import {
 } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
-import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
+import { Checkbox } from "~/components/checkbox";
 import { Button } from "~/components/ui/button";
-import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
-import type { LCDocument } from "~/types/document";
 import type { RouteData } from "~/types/routeData";
 
 const PAGE_TITLE = "New Chat";
@@ -52,28 +49,38 @@ export default function NewDocsRoute() {
 
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  // const [nameValue, setNameValue] = useState("");
-
-  const handleFilesChange = (files: File[]) => {
-    setSelectedFiles(files);
-    // if (nameValue === "" && files.length > 0) {
-    //   setNameValue(files[0].name);
-    // }
-  };
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const submitDisabled =
-    navigation.state !== "idle" || selectedFiles.length === 0;
+    navigation.state !== "idle" || selectedItems.length === 0;
 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold">{PAGE_TITLE}</h1>
-      <Form
-        method="POST"
-        encType="multipart/form-data"
-        className="flex flex-col gap-6"
-      >
-        <div className="flex flex-col gap-2">Select docs, continue</div>
+      <Form method="POST" className="flex flex-col gap-6">
+        <ul>
+          {docs.map((item) => (
+            <li key={item.publicId}>
+              <Checkbox
+                name={PARAMS.IDS}
+                checked={selectedItems.includes(item.publicId)}
+                value={item.publicId}
+                onChange={() => {
+                  if (selectedItems.includes(item.publicId)) {
+                    const removed = selectedItems.filter(
+                      (i) => i !== item.publicId,
+                    );
+                    setSelectedItems([...removed]);
+                  } else {
+                    setSelectedItems([...selectedItems, item.publicId]);
+                  }
+                }}
+              >
+                {item.name ?? item.fileName}
+              </Checkbox>
+            </li>
+          ))}
+        </ul>
 
         <Button type="submit" disabled={submitDisabled}>
           {navigation.state === "submitting" ? "Processing..." : "Continue"}
@@ -93,67 +100,46 @@ export async function action(args: ActionFunctionArgs) {
   const { request } = args;
   const user = await requireInternalUser(args);
   try {
-    // Get form data
     const formData = await request.formData();
-    // const collectionName = formData.get(PARAMS.COLLECTION_NAME)?.toString();
-    // TODO: fix assert
-    const files = formData.getAll(PARAMS.FILE) as File[];
+    const ids = formData.getAll(PARAMS.IDS).map((id) => id.toString());
 
-    // Validate files
-    if (!files || files.length === 0) {
+    if (!ids || ids.length === 0) {
       return {
-        errorMessage: "At least one file is required.",
+        errorMessage: "At least one doc is required.",
         ok: false,
       };
     }
 
-    const docs: LCDocument[] = [];
+    const sources = await prisma.source.findMany({
+      where: {
+        publicId: {
+          in: ids,
+        },
+      },
+    });
 
-    const sourcesInput: Prisma.SourceCreateManyInput[] = [];
-
-    for (const file of files) {
-      try {
-        const fileContent = await file.text();
-        const fileName = file.name;
-        const sourcePublicId = generateId();
-
-        sourcesInput.push({
-          createdAt: new Date(),
-          fileName: fileName,
-          ownerId: user.id,
-          publicId: sourcePublicId,
-          text: fileContent,
-        });
-
-        docs.push({
-          metadata: {
-            sourceId: sourcePublicId,
-            title: fileName,
+    const chat = await prisma.chat.create({
+      data: {
+        createdAt: new Date(),
+        ownerId: user.id,
+        publicId: generateId(),
+        sources: {
+          createMany: {
+            data: sources.map((s) => ({
+              sourceId: s.id,
+            })),
           },
-          pageContent: fileContent,
-        });
-      } catch (err) {
-        console.error(`Error processing file ${file.name}:`, err);
-      }
-    }
-
-    const sources = await prisma.source.createManyAndReturn({
-      data: sourcesInput,
+        },
+      },
     });
 
-    await addDocsToVectorStore({
-      docs,
-      namespace: getNameSpace("USER", user.publicId), //`${NAMESPACE_TYPES.USER}_${user.publicId}`,
-    });
-
-    if (sources.length === 1) {
-      return redirect(appRoutes("/docs/:id", { id: sources[0].publicId }));
-    }
-
-    // TODO: display confirmation alert
-    return redirect(appRoutes("/docs"));
+    return redirect(
+      appRoutes("/chats/:id", {
+        id: chat.publicId,
+      }),
+    );
   } catch (error) {
-    console.error("Collection creation error: ", error);
+    console.error("create error: ", error);
     return {
       errorMessage:
         error instanceof Error && error.message
