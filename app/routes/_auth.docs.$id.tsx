@@ -90,7 +90,7 @@ export default function DocDetailsLayout() {
           {source.chats?.map((c) => (
             <li key={c.chat?.publicId}>
               {c.chat?.publicId && (
-                <Link to={appRoutes("/chat/:id", { id: c.chat?.publicId })}>
+                <Link to={appRoutes("/chats/:id", { id: c.chat?.publicId })}>
                   {c.chat?.messages && c.chat?.messages?.length > 0
                     ? c.chat?.messages[0].text
                     : "No messages"}{" "}
@@ -132,7 +132,7 @@ export async function action(args: Route.ActionArgs) {
       },
     });
 
-    return redirect(appRoutes("/chat/:id", { id: chat.publicId }));
+    return redirect(appRoutes("/chats/:id", { id: chat.publicId }));
   } catch (error) {
     console.error("error: ", error);
     return apiError(error);

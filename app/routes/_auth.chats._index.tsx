@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { Icon } from "~/components/Icon";
 import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
@@ -42,13 +43,10 @@ export default function DocsList() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
         <PageTitle>{SECTION_NAME}</PageTitle>
-        <Link
-          to={appRoutes("/chats/new")}
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          New Chat
+        <Link to={appRoutes("/chats/new")} className="">
+          <Icon name="ADD" label="New Chat" fontSize="38px" />
         </Link>
       </div>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

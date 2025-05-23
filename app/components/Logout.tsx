@@ -11,7 +11,7 @@ export function Logout() {
         className={twMerge("cursor-pointer")}
         aria-label="Sign Out"
       >
-        <Icon name="logout" />
+        <Icon name="LOGOUT" />
       </button>
     </Form>
   );

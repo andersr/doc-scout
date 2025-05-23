@@ -21,7 +21,7 @@ import { type NewChat, newChatSchema } from "~/lib/schemas/newChat";
 import { appRoutes } from "~/shared/appRoutes";
 import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
-import type { Route } from "./+types/_auth.chat.$id";
+import type { Route } from "./+types/_auth.chats.$id";
 
 export const handle: RouteData = {
   pageTitle: "Chat Details",
