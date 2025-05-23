@@ -14,7 +14,7 @@
     "lint:fix": "eslint --cache --fix",
     "lint:staged": "npx lint-staged",
     "start": "react-router-serve ./build/server/index.js",
-    "start:dev": "dotenv -- npm start",
+    "start:dev": "PORT=4000  dotenv -- npm start",
     "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit",
     "postinstall": "prisma generate",
     "prepare": "husky"
