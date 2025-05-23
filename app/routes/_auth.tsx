@@ -28,7 +28,9 @@ export default function AuthLayout() {
   return (
     <div className="flex h-full flex-col p-4">
       <div className="flex items-center gap-2">
-        <AppNav />
+        <div className="flex-1">
+          <AppNav />
+        </div>
         {user ? (
           <div className="flex gap-2">
             <div>{user.email}</div>
