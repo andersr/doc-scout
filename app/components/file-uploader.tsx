@@ -84,7 +84,7 @@ export function FileUploader({
                 <button
                   type="button"
                   onClick={() => removeFile(file.name)}
-                  className="text-sm text-red-500 hover:text-red-700"
+                  className="cursor-pointer text-sm text-red-500 hover:text-red-700"
                 >
                   Remove
                 </button>

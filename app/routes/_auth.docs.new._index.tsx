@@ -22,10 +22,7 @@ export const handle: RouteData = {
 };
 
 export function meta() {
-  return [
-    { title: PAGE_TITLE },
-    // { content: "Create a new collection", name: "description" },
-  ];
+  return [{ title: PAGE_TITLE }];
 }
 
 export default function NewDocsRoute() {
@@ -37,15 +34,6 @@ export default function NewDocsRoute() {
   });
 
   const { selectedFiles } = fileUploader;
-  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  // const [nameValue, setNameValue] = useState("");
-
-  // const handleFilesChange = (files: File[]) => {
-  //   setSelectedFiles([...selectedFiles, ...files]);
-  //   // if (nameValue === "" && files.length > 0) {
-  //   //   setNameValue(files[0].name);
-  //   // }
-  // };
 
   const submitDisabled =
     navigation.state !== "idle" || selectedFiles.length === 0;
@@ -84,9 +72,7 @@ export async function action(args: ActionFunctionArgs) {
   const { request } = args;
   const user = await requireInternalUser(args);
   try {
-    // Get form data
     const formData = await request.formData();
-    // const collectionName = formData.get(PARAMS.COLLECTION_NAME)?.toString();
     // TODO: fix assert
     const files = formData.getAll(PARAMS.FILE) as File[];
 
@@ -137,6 +123,7 @@ export async function action(args: ActionFunctionArgs) {
       namespace: getNameSpace("USER", user.publicId), //`${NAMESPACE_TYPES.USER}_${user.publicId}`,
     });
 
+    // TODO: this redirecting to here even with multiple docs added
     if (sources.length === 1) {
       return redirect(appRoutes("/docs/:id", { id: sources[0].publicId }));
     }
