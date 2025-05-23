@@ -26,8 +26,7 @@ export function useFileUploader({
   const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFileChange = (files: FileList | null) => {
     if (!files || files.length === 0) {
       setSelectedFiles([]);
       setFileErrors({});
@@ -60,52 +59,15 @@ export function useFileUploader({
     setFileErrors(newFileErrors);
   };
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileChange(e.target.files);
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const files = e.dataTransfer.files;
-    if (!files || files.length === 0) {
-      setSelectedFiles([]);
-      setFileErrors({});
-      return;
-    }
-
-    if (files.length > maxFiles) {
-      setFileErrors({ tooMany: `Maximum ${maxFiles} files allowed` });
-      setSelectedFiles([]);
-      return;
-    }
-
-    const newSelectedFiles: File[] = [];
-    const newFileErrors: { [key: string]: string } = {};
-
-    // Validate each file
-    Array.from(files).forEach((file) => {
-      const error = validateFile(file, {
-        allowedExtensions,
-        allowedFileTypes,
-        maxSizeInBytes,
-      });
-      if (error) {
-        newFileErrors[file.name] = error;
-      } else {
-        newSelectedFiles.push(file);
-      }
-    });
-
-    setSelectedFiles(newSelectedFiles);
-    setFileErrors(newFileErrors);
-    // onFilesChange(newSelectedFiles);
-
-    // Update the file input element to reflect the dropped files
-    const fileInput = document.getElementById(inputName) as HTMLInputElement;
-    if (fileInput && newSelectedFiles.length > 0) {
-      // Create a new DataTransfer object and add our files
-      const dataTransfer = new DataTransfer();
-      newSelectedFiles.forEach((file) => dataTransfer.items.add(file));
-      fileInput.files = dataTransfer.files;
-    }
+    handleFileChange(e.dataTransfer.files);
 
     setIsDraggingOver(false);
   };
@@ -127,7 +89,8 @@ export function useFileUploader({
     allowedExtensions,
     fileErrors,
     handleDrop,
-    handleFileChange,
+    handleOnChange,
+    // handleFileChange,
     inputName,
     isDraggingOver,
     maxFiles,
