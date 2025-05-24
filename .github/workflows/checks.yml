@@ -8,6 +8,31 @@ env:
   NODE_VERSION: 22
 
 jobs:
+  commitlint:
+    name: ✍️ Commit Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📥 Install deps
+        run: npm install
+
+      - name: 👀 Validate current commit (last commit) with commitlint
+        if: github.event_name == 'push'
+        run: npx commitlint --last --verbose
+
+      - name: 👀 Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
   unit_testing:
     name: 🧪 Unit Testing
     runs-on: ubuntu-latest
