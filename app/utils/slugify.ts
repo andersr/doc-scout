@@ -8,7 +8,7 @@ export const slugify = (
   },
 ) =>
   slugifyModule(str, {
-    lower: options.lower,
+    ...options,
     strict: true,
     trim: true,
   });
