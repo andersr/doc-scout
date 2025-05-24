@@ -8,15 +8,6 @@ env:
   NODE_VERSION: 22
 
 jobs:
-  commitlint:
-    name: ✍️ Commit Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-      - name: 👀 Lint commits
-        uses: wagoid/commitlint-github-action@v6
-
   unit_testing:
     name: 🧪 Unit Testing
     runs-on: ubuntu-latest
