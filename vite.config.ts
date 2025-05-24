@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { safeRoutes } from "safe-routes/vite";
@@ -9,5 +10,8 @@ export default defineConfig({
   server: {
     port: 3000,
     ...(process.env.DEV_HOST && { allowedHosts: [process.env.DEV_HOST] }),
+  },
+  test: {
+    exclude: ["node_modules", "e2e", "tmp"],
   },
 });
