@@ -6,6 +6,8 @@ import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploader } from "~/components/file-uploader";
 import { Button } from "~/components/ui/button";
+import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
+import { Textarea } from "~/components/ui/textarea";
 import { getNameSpace } from "~/config/namespaces";
 import { useFileUploader } from "~/hooks/useFileUploader";
 import { prisma } from "~/lib/prisma";
@@ -35,29 +37,67 @@ export default function NewDocsRoute() {
 
   const { selectedFiles } = fileUploader;
 
-  const submitDisabled =
+  const filesSubmitDisabled =
     navigation.state !== "idle" || selectedFiles.length === 0;
 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold">{PAGE_TITLE}</h1>
-      <Form
-        method="POST"
-        encType="multipart/form-data"
-        className="flex flex-col gap-6"
-      >
-        <div className="flex flex-col gap-2">
-          <FileUploader
-            {...fileUploader}
-            label="Upload Files"
-            placeholder="Drag and drop files here, or click to select files"
-          />
-        </div>
 
-        <Button type="submit" disabled={submitDisabled}>
-          {navigation.state === "submitting" ? "Processing..." : "Continue"}
-        </Button>
-      </Form>
+      <Tabs defaultValue={PARAMS.FILES}>
+        <TabsList>
+          <TabButton value={PARAMS.FILES}>Files</TabButton>
+          <TabButton value={PARAMS.URLS}>Via URL</TabButton>
+        </TabsList>
+
+        <TabContent value={PARAMS.FILES}>
+          <Form
+            method="POST"
+            encType="multipart/form-data"
+            className="flex flex-col gap-6"
+          >
+            <input type="hidden" name={PARAMS.INTENT} value={PARAMS.FILES} />
+
+            <div className="flex flex-col gap-2">
+              <FileUploader
+                {...fileUploader}
+                label="Upload Files"
+                placeholder="Drag and drop files here, or click to select files"
+              />
+            </div>
+
+            <Button type="submit" disabled={filesSubmitDisabled}>
+              {navigation.state === "submitting" ? "Processing..." : "Continue"}
+            </Button>
+          </Form>
+        </TabContent>
+
+        <TabContent value={PARAMS.URLS}>
+          <Form method="POST" className="flex flex-col gap-6">
+            <input type="hidden" name={PARAMS.INTENT} value={PARAMS.URLS} />
+
+            <div className="flex flex-col gap-2">
+              <label htmlFor="urls" className="text-sm font-medium">
+                URLs
+              </label>
+              <Textarea
+                id="urls"
+                name={PARAMS.URLS}
+                placeholder="Enter URLs, one per line or comma-separated&#10;https://example.com/doc1&#10;https://example.com/doc2"
+                rows={6}
+                required
+              />
+              <p className="text-muted-foreground text-sm">
+                Enter URLs one per line or comma-separated
+              </p>
+            </div>
+
+            <Button type="submit" disabled={navigation.state !== "idle"}>
+              {navigation.state === "submitting" ? "Processing..." : "Continue"}
+            </Button>
+          </Form>
+        </TabContent>
+      </Tabs>
 
       {actionData?.errorMessage && (
         <div className="mt-4 text-center font-semibold text-red-400">
@@ -73,10 +113,34 @@ export async function action(args: ActionFunctionArgs) {
   const user = await requireInternalUser(args);
   try {
     const formData = await request.formData();
-    // TODO: fix assert
+    const intent = String(formData.get(PARAMS.INTENT) || "");
+
+    if (intent === PARAMS.URLS) {
+      const urlsInput = String(formData.get(PARAMS.URLS) || "");
+
+      if (!urlsInput || urlsInput.trim() === "") {
+        return {
+          errorMessage: "At least one URL is required.",
+          ok: false,
+        };
+      }
+
+      const urls = urlsInput
+        .split(/[,\n]/)
+        .map((url) => url.trim())
+        .filter((url) => url.length > 0);
+
+      console.info("Submitted URLs:", urls);
+
+      return {
+        message: `Received ${urls.length} URLs for processing`,
+        ok: true,
+      };
+    }
+
+    // Handle files intent (existing logic)
     const files = formData.getAll(PARAMS.FILE) as File[];
 
-    // Validate files
     if (!files || files.length === 0) {
       return {
         errorMessage: "At least one file is required.",
@@ -85,7 +149,6 @@ export async function action(args: ActionFunctionArgs) {
     }
 
     const docs: LCDocument[] = [];
-
     const sourcesInput: Prisma.SourceCreateManyInput[] = [];
 
     for (const file of files) {
@@ -120,15 +183,13 @@ export async function action(args: ActionFunctionArgs) {
 
     await addDocsToVectorStore({
       docs,
-      namespace: getNameSpace("USER", user.publicId), //`${NAMESPACE_TYPES.USER}_${user.publicId}`,
+      namespace: getNameSpace("USER", user.publicId),
     });
 
-    // TODO: this redirecting to here even with multiple docs added
     if (sources.length === 1) {
       return redirect(appRoutes("/docs/:id", { id: sources[0].publicId }));
     }
 
-    // TODO: display confirmation alert
     return redirect(appRoutes("/docs"));
   } catch (error) {
     console.error("Collection creation error: ", error);

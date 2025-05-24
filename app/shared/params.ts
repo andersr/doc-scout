@@ -4,6 +4,7 @@ export const PARAMS = {
   EMAIL: "email",
   ERROR: "error",
   FILE: "file",
+  FILES: "files",
   ID: "id",
   IDS: "ids",
   INTENT: "intent",
