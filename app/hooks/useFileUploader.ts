@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 import {
   DEFAULT_ALLOWED_EXTENSIONS,
   DEFAULT_ALLOWED_FILE_TYPES,
@@ -25,9 +26,8 @@ export function useFileUploader({
 }: UseFileUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  const handleFileChange = (files: FileList | null) => {
+  const handleFileChange = (files: File[]) => {
     if (!files || files.length === 0) {
       setSelectedFiles([]);
       setFileErrors({});
@@ -43,7 +43,7 @@ export function useFileUploader({
     const newSelectedFiles: File[] = [];
     const newFileErrors: { [key: string]: string } = {};
 
-    Array.from(files).forEach((file) => {
+    files.forEach((file) => {
       const error = validateFile(file, {
         allowedExtensions,
         allowedFileTypes,
@@ -60,18 +60,25 @@ export function useFileUploader({
     setFileErrors(newFileErrors);
   };
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFileChange(e.target.files);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    handleFileChange(e.dataTransfer.files);
-
-    setIsDraggingOver(false);
-  };
+  const {
+    getInputProps,
+    getRootProps,
+    isDragAccept,
+    isDragActive,
+    isDragReject,
+  } = useDropzone({
+    accept: allowedFileTypes.reduce(
+      (acc, type) => {
+        acc[type] = allowedExtensions;
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    ),
+    maxFiles,
+    maxSize: maxSizeInBytes,
+    multiple: true,
+    onDrop: handleFileChange,
+  });
 
   const removeFile = (fileName: string) => {
     const updatedFiles = selectedFiles.filter((file) => file.name !== fileName);
@@ -89,15 +96,15 @@ export function useFileUploader({
   return {
     allowedExtensions,
     fileErrors,
-    handleDrop,
-    handleOnChange,
-    // handleFileChange,
+    getInputProps,
+    getRootProps,
     inputId,
-    isDraggingOver,
+    isDragAccept,
+    isDragActive,
+    isDragReject,
     maxFiles,
     maxSizeInBytes,
     removeFile,
     selectedFiles,
-    setIsDraggingOver,
   };
 }

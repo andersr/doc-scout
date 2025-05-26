@@ -1,61 +1,53 @@
 import { twMerge } from "tailwind-merge";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 interface FileUploaderProps {
   allowedExtensions: string[];
   fileErrors: { [key: string]: string };
-  handleDrop: (e: React.DragEvent) => void;
-  handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
+  getRootProps: () => React.HTMLAttributes<HTMLDivElement>;
   inputId: string;
-  isDraggingOver: boolean;
+  isDragAccept: boolean;
+  isDragActive: boolean;
+  isDragReject: boolean;
   label?: string;
   maxFiles: number;
   maxSizeInBytes: number;
   placeholder?: string;
   removeFile: (fileName: string) => void;
   selectedFiles: File[];
-  setIsDraggingOver: (isDragging: boolean) => void;
 }
 
 export function FileUploader({
   allowedExtensions,
   fileErrors,
-  handleDrop,
-  handleOnChange,
+  getInputProps,
+  getRootProps,
   inputId,
-  isDraggingOver,
+  isDragAccept,
+  isDragActive,
+  isDragReject,
   label = "Upload Files",
   maxFiles,
   maxSizeInBytes,
   placeholder = "Drag and drop files here, or click to select files",
   removeFile,
   selectedFiles,
-  setIsDraggingOver,
 }: FileUploaderProps) {
   return (
     <div
+      {...getRootProps()}
       className={twMerge(
-        "rounded-md border-2 border-dashed border-gray-300 p-6 text-center",
-        isDraggingOver && "border-gray-500 bg-gray-100",
+        "cursor-pointer rounded-md border-2 border-dashed border-gray-300 p-6 text-center transition-colors",
+        isDragActive && "border-gray-500 bg-gray-100",
+        isDragAccept && "border-green-500 bg-green-50",
+        isDragReject && "border-red-500 bg-red-50",
       )}
-      onDragEnter={() => setIsDraggingOver(true)}
-      onDragLeave={() => setIsDraggingOver(false)}
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={handleDrop}
     >
       <Label className="pointer-events-none" htmlFor={inputId}>
         {label}
       </Label>
-      <Input
-        id={inputId}
-        name={inputId}
-        type="file"
-        accept={allowedExtensions.join(",")}
-        multiple
-        onChange={handleOnChange}
-        className="pointer-events-none mt-2"
-      />
+      <input {...getInputProps()} id={inputId} />
       <p className="pointer-events-none mt-2 text-sm text-gray-500">
         {placeholder}
       </p>
