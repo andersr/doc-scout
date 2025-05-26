@@ -1,13 +1,13 @@
 import { Form, useNavigation } from "react-router";
 import { FileUploader } from "~/components/file-uploader";
 import { Button } from "~/components/ui/button";
-import { useFileUploader } from "~/hooks/useFileUploader";
+import { useFileUpload } from "~/hooks/useFileUpload";
 import { PARAMS } from "~/shared/params";
 
 export function FileUploadForm() {
   const navigation = useNavigation();
 
-  const fileUploader = useFileUploader({
+  const fileUploader = useFileUpload({
     inputId: "file_list",
   });
 

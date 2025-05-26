@@ -5,13 +5,13 @@ import { FILE_UPLOAD_DEFAULT_CONFIG } from "~/config/files";
 import type { AppParam } from "~/shared/params";
 import type { FileUploadOptions } from "~/types/files";
 
-interface UseFileUploaderProps {
+interface useFileUploadProps {
   inputId: AppParam;
 }
 
-export function useFileUploader({
+export function useFileUpload({
   inputId,
-}: UseFileUploaderProps & Partial<FileUploadOptions>) {
+}: useFileUploadProps & Partial<FileUploadOptions>) {
   const config: FileUploadOptions = {
     ...FILE_UPLOAD_DEFAULT_CONFIG,
   };
