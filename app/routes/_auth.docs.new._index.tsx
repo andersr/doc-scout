@@ -1,15 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import type { ActionFunctionArgs } from "react-router";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import { redirect, useActionData } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
-import { FileUploader } from "~/components/file-uploader";
-import { Button } from "~/components/ui/button";
+import { FileUploadForm } from "~/components/forms/FileUploadForm";
+import { UrlForm } from "~/components/forms/UrlForm";
 import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
-import { Textarea } from "~/components/ui/textarea";
 import { getNameSpace } from "~/config/namespaces";
-import { useFileUploader } from "~/hooks/useFileUploader";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -29,16 +27,6 @@ export function meta() {
 
 export default function NewDocsRoute() {
   const actionData = useActionData<typeof action>();
-  const navigation = useNavigation();
-
-  const fileUploader = useFileUploader({
-    inputName: PARAMS.FILE,
-  });
-
-  const { selectedFiles } = fileUploader;
-
-  const filesSubmitDisabled =
-    navigation.state !== "idle" || selectedFiles.length === 0;
 
   return (
     <div>
@@ -51,51 +39,11 @@ export default function NewDocsRoute() {
         </TabsList>
 
         <TabContent value={PARAMS.FILES}>
-          <Form
-            method="POST"
-            encType="multipart/form-data"
-            className="flex flex-col gap-6"
-          >
-            <input type="hidden" name={PARAMS.INTENT} value={PARAMS.FILES} />
-
-            <div className="flex flex-col gap-2">
-              <FileUploader
-                {...fileUploader}
-                label="Upload Files"
-                placeholder="Drag and drop files here, or click to select files"
-              />
-            </div>
-
-            <Button type="submit" disabled={filesSubmitDisabled}>
-              {navigation.state === "submitting" ? "Processing..." : "Continue"}
-            </Button>
-          </Form>
+          <FileUploadForm />
         </TabContent>
 
         <TabContent value={PARAMS.URLS}>
-          <Form method="POST" className="flex flex-col gap-6">
-            <input type="hidden" name={PARAMS.INTENT} value={PARAMS.URLS} />
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="urls" className="text-sm font-medium">
-                URLs
-              </label>
-              <Textarea
-                id="urls"
-                name={PARAMS.URLS}
-                placeholder="Enter URLs, one per line or comma-separated&#10;https://example.com/doc1&#10;https://example.com/doc2"
-                rows={6}
-                required
-              />
-              <p className="text-muted-foreground text-sm">
-                Enter URLs one per line or comma-separated
-              </p>
-            </div>
-
-            <Button type="submit" disabled={navigation.state !== "idle"}>
-              {navigation.state === "submitting" ? "Processing..." : "Continue"}
-            </Button>
-          </Form>
+          <UrlForm />
         </TabContent>
       </Tabs>
 
