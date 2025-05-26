@@ -35,10 +35,8 @@ export default function NewDocsRoute() {
     inputId: "file_list",
   });
 
-  const { selectedFiles } = fileUploader;
-
   const filesSubmitDisabled =
-    navigation.state !== "idle" || selectedFiles.length === 0;
+    navigation.state !== "idle" || fileUploader.selectedFiles.length === 0;
 
   return (
     <div>
