@@ -32,7 +32,7 @@ export default function NewDocsRoute() {
   const navigation = useNavigation();
 
   const fileUploader = useFileUploader({
-    inputName: PARAMS.FILE,
+    inputId: "file_list",
   });
 
   const { selectedFiles } = fileUploader;

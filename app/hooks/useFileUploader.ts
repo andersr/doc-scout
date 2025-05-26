@@ -5,12 +5,13 @@ import {
   DEFAULT_MAX_FILE_SIZE,
   DEFAULT_MAX_FILES,
 } from "~/config/files";
+import type { AppParam } from "~/shared/params";
 import { validateFile } from "~/utils/validateFile";
 
 interface UseFileUploaderProps {
   allowedExtensions?: string[];
   allowedFileTypes?: string[];
-  inputName: string;
+  inputId: AppParam;
   maxFiles?: number;
   maxSizeInBytes?: number;
 }
@@ -18,7 +19,7 @@ interface UseFileUploaderProps {
 export function useFileUploader({
   allowedExtensions = DEFAULT_ALLOWED_EXTENSIONS,
   allowedFileTypes = DEFAULT_ALLOWED_FILE_TYPES,
-  inputName,
+  inputId,
   maxFiles = DEFAULT_MAX_FILES,
   maxSizeInBytes = DEFAULT_MAX_FILE_SIZE,
 }: UseFileUploaderProps) {
@@ -77,7 +78,7 @@ export function useFileUploader({
     setSelectedFiles(updatedFiles);
 
     // Update the file input element to reflect the removed file
-    const fileInput = document.getElementById(inputName) as HTMLInputElement;
+    const fileInput = document.getElementById(inputId) as HTMLInputElement;
     if (fileInput && updatedFiles.length > 0) {
       const dataTransfer = new DataTransfer();
       updatedFiles.forEach((file) => dataTransfer.items.add(file));
@@ -91,7 +92,7 @@ export function useFileUploader({
     handleDrop,
     handleOnChange,
     // handleFileChange,
-    inputName,
+    inputId,
     isDraggingOver,
     maxFiles,
     maxSizeInBytes,

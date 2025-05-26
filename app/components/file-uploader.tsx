@@ -7,7 +7,7 @@ interface FileUploaderProps {
   fileErrors: { [key: string]: string };
   handleDrop: (e: React.DragEvent) => void;
   handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  inputName: string;
+  inputId: string;
   isDraggingOver: boolean;
   label?: string;
   maxFiles: number;
@@ -23,7 +23,7 @@ export function FileUploader({
   fileErrors,
   handleDrop,
   handleOnChange,
-  inputName,
+  inputId,
   isDraggingOver,
   label = "Upload Files",
   maxFiles,
@@ -44,12 +44,12 @@ export function FileUploader({
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      <Label className="pointer-events-none" htmlFor={inputName}>
+      <Label className="pointer-events-none" htmlFor={inputId}>
         {label}
       </Label>
       <Input
-        id={inputName}
-        name={inputName}
+        id={inputId}
+        name={inputId}
         type="file"
         accept={allowedExtensions.join(",")}
         multiple

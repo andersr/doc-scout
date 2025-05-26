@@ -1,3 +1,6 @@
+/**
+ * Deprecated, use AppParams instead
+ */
 export const PARAMS = {
   COLLECTION_IDS: "collectionIds",
   COLLECTION_NAME: "collectionName",
@@ -16,3 +19,7 @@ export const PARAMS = {
   URL: "url",
   URLS: "urls",
 };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const APP_PARAMS = ["file_list"] as const;
+export type AppParam = (typeof APP_PARAMS)[number];
