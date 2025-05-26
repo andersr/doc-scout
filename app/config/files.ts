@@ -1,9 +1,8 @@
-export const MAX_FILE_SIZE = 4718592; // 4.5mb, max allowed file size for Vercel direct file upload
+import type { FileUploadOptions } from "~/types/files";
 
-/**
- * Constants for file validation
- */
-export const DEFAULT_MAX_FILE_SIZE = 1048576; // 1MB
-export const DEFAULT_MAX_FILES = 10;
-export const DEFAULT_ALLOWED_EXTENSIONS = [".md", ".txt"];
-export const DEFAULT_ALLOWED_FILE_TYPES = ["text/markdown", "text/plain"];
+export const FILE_UPLOAD_DEFAULT_CONFIG: FileUploadOptions = {
+  allowedExtensions: ["md", "txt"], // TODO: prevent these from getting out of sync with allowedFileTypes
+  allowedFileTypes: ["text/markdown", "text/plain"],
+  maxFiles: 10,
+  maxSizeInBytes: 4.5 * 1024 * 1024, // 4.5mb, max allowed file size for Vercel direct file upload
+};
