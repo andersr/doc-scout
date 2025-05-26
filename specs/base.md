@@ -85,6 +85,7 @@ Follow these guidelines for all development tasks to ensure code quality, mainta
 - Import React without default alias: `import React from "react"`
 - Use named imports when importing specific functions or components
 - Avoid wildcard imports unless necessary
+- Add files in folders to index files to allow for cleaner "barrel" imports. Only do this for folders that contain a small number of files.
 
 ### Dependency Management
 
@@ -154,6 +155,7 @@ Follow these guidelines for all development tasks to ensure code quality, mainta
 ### Data Handling
 
 - Validate all user inputs on both client and server
+- Use Zod schemas for validation whenever possible
 - Sanitize data before displaying or storing
 - Use parameterized queries to prevent SQL injection
 - Implement proper authentication and authorization
