@@ -24,6 +24,7 @@ Follow these guidelines for all development tasks to ensure code quality, mainta
 
 - Avoid type assertions (`as` keyword) unless absolutely necessary
 - When type assertions are required, add a comment explaining the reasoning
+- Avoid use of the "any" type. Try to use "unknown" instead. If using any is unavoidable, add a comment explaining why it is needed and also add a eslint disable no-explicit-any for that line
 - Prefer type guards and runtime validation over type assertions
 - Use strict TypeScript configuration
 
@@ -76,6 +77,8 @@ Follow these guidelines for all development tasks to ensure code quality, mainta
 - Test across different browsers and devices
 
 ## Imports and Dependencies
+
+- import modules and make the corresponding updates at the same time
 
 ### Import Organization
 
