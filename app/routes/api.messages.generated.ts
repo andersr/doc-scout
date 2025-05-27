@@ -1,6 +1,6 @@
 import { MessageType } from "@prisma/client";
 import { getValidatedFormData } from "remix-hook-form";
-import { apiError } from "~/.server/api/apiError";
+import { serverError } from "~/.server/api/serverError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
@@ -52,6 +52,6 @@ export async function action(args: Route.ActionArgs) {
     };
   } catch (error) {
     console.error("error: ", error);
-    return apiError(error);
+    return serverError(error);
   }
 }

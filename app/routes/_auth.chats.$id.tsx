@@ -7,7 +7,7 @@ import {
   getValidatedFormData,
   useRemixForm,
 } from "remix-hook-form";
-import { apiError } from "~/.server/api/apiError";
+import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
@@ -70,7 +70,7 @@ export async function loader(args: LoaderFunctionArgs) {
     throw new Error("no chat owner found");
   }
 
-  const namespace = getNameSpace("USER", owner.publicId);
+  const namespace = getNameSpace("user", owner.publicId);
 
   const sources = chat.sources.map((s) => s.source).filter((s) => s !== null);
 
@@ -223,6 +223,6 @@ export async function action(args: Route.ActionArgs) {
     };
   } catch (error) {
     console.error("new chat message error: ", error);
-    return apiError(error);
+    return serverError(error);
   }
 }
