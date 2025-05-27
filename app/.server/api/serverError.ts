@@ -8,7 +8,7 @@ const errorData: ApiResponse = {
   ok: false,
 };
 
-export function apiError(error: unknown) {
+export function serverError(error: unknown) {
   if (error instanceof ZodError) {
     // TODO: return actual Zod error
     return new Response(JSON.stringify(errorData), {
@@ -29,6 +29,8 @@ export function apiError(error: unknown) {
           : ReasonPhrases.INTERNAL_SERVER_ERROR,
     });
   }
+
+  // TODO: also return error instanceOf Error
 
   console.error("unknown error: ", error);
   return new Response(JSON.stringify(errorData), {
