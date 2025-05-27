@@ -1,38 +1,72 @@
-import { Form, useNavigation } from "react-router";
-import { FileUploader } from "~/components/file-uploader";
+import { useCallback, useState } from "react";
+// import Dropzone from "react-dropzone";
+import { useNavigation, useSubmit } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useFileUpload } from "~/hooks/useFileUpload";
 import { PARAMS } from "~/shared/params";
-
+import { Dropzone } from "../Dropzone";
 export function FileUploadForm() {
   const navigation = useNavigation();
-
-  const fileUploader = useFileUpload({
-    inputId: "file_list",
-  });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const submit = useSubmit();
 
   const filesSubmitDisabled =
-    navigation.state !== "idle" || fileUploader.selectedFiles.length === 0;
+    navigation.state !== "idle" || selectedFiles.length === 0;
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setSelectedFiles(acceptedFiles);
+  }, []);
+
+  const handleSubmit = () => {
+    const formData = new FormData();
+    formData.append(PARAMS.INTENT, PARAMS.FILES);
+    for (const file of selectedFiles) {
+      formData.append(
+        PARAMS.FILES,
+        new Blob([file], { type: file.type }), // needs to be explicitly set to prevent generic binary type being submitted ('application/octet-stream')
+        file.name,
+      );
+    }
+    submit(formData, {
+      encType: "multipart/form-data",
+      method: "post",
+    });
+  };
 
   return (
-    <Form
-      method="POST"
-      encType="multipart/form-data"
-      className="flex flex-col gap-6"
-    >
-      <input type="hidden" name={PARAMS.INTENT} value={PARAMS.FILES} />
-
+    <div>
       <div className="flex flex-col gap-2">
-        <FileUploader
-          {...fileUploader}
-          label="Upload Files"
-          placeholder="Drag and drop files here, or click to select files"
-        />
+        <Dropzone onDrop={onDrop} />
+        <ul className="p-4 text-green-400">
+          {selectedFiles.map((f) => (
+            <li key={f.name}>
+              {f.name} |{" "}
+              <button
+                onClick={() => {
+                  const updated = [...selectedFiles];
+                  const index = selectedFiles.findIndex(
+                    (selectedFile) => f.name == selectedFile.name,
+                  );
+                  if (index !== -1) {
+                    updated.splice(index, 1);
+                    setSelectedFiles(updated);
+                  }
+                }}
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <Button type="submit" disabled={filesSubmitDisabled}>
-        {navigation.state === "submitting" ? "Processing..." : "Continue"}
+      <Button
+        type="button"
+        onClick={handleSubmit}
+        disabled={filesSubmitDisabled}
+      >
+        {navigation.state === "submitting" ? "Processing..." : "Add Docs"}
       </Button>
-    </Form>
+    </div>
   );
 }
+//

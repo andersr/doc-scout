@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { apiError } from "~/.server/api/apiError";
+import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireParam } from "~/.server/utils/requireParam";
@@ -135,6 +135,6 @@ export async function action(args: Route.ActionArgs) {
     return redirect(appRoutes("/chats/:id", { id: chat.publicId }));
   } catch (error) {
     console.error("error: ", error);
-    return apiError(error);
+    return serverError(error);
   }
 }

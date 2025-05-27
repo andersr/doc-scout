@@ -1,19 +1,19 @@
-import type { Prisma } from "@prisma/client";
 import type { ActionFunctionArgs } from "react-router";
 import { redirect, useActionData } from "react-router";
+import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
-import { generateId } from "~/.server/utils/generateId";
+import { addSourceFromFiles } from "~/.server/sources/addSourcesFromFiles";
 import { addDocsToVectorStore } from "~/.server/vectorStore/addDocsToVectorStore";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";
 import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
 import { getNameSpace } from "~/config/namespaces";
-import { prisma } from "~/lib/prisma";
+import { fileListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
-import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { PARAMS } from "~/shared/params";
 import type { LCDocument } from "~/types/document";
 import type { RouteData } from "~/types/routeData";
+import { splitCsvText } from "~/utils/splitCsvText";
 
 const PAGE_TITLE = "Add Docs";
 
@@ -62,6 +62,42 @@ export async function action(args: ActionFunctionArgs) {
   try {
     const formData = await request.formData();
     const intent = String(formData.get(PARAMS.INTENT) || "");
+    const vectorDocs: LCDocument[] = [];
+
+    if (intent === PARAMS.FILES) {
+      const submittedFiles = formData
+        .getAll(PARAMS.FILES)
+        .filter((f) => f instanceof File);
+
+      const files = fileListSchema.parse(submittedFiles);
+
+      const sources = await addSourceFromFiles({ files, userId: user.id });
+
+      sources.forEach((s) => {
+        vectorDocs.push({
+          metadata: {
+            sourceId: s.publicId,
+            title: s.fileName,
+          },
+          pageContent: s.text ?? "",
+        });
+      });
+
+      // this is somewhat expensive, so let's be sure
+      if (vectorDocs.length > 0) {
+        await addDocsToVectorStore({
+          docs: vectorDocs,
+          namespace: getNameSpace("user", user.publicId),
+        });
+      }
+
+      const redirectRoute =
+        sources.length === 1
+          ? appRoutes("/docs/:id", { id: sources[0].publicId })
+          : appRoutes("/docs");
+
+      return redirect(redirectRoute);
+    }
 
     if (intent === PARAMS.URLS) {
       const urlsInput = String(formData.get(PARAMS.URLS) || "");
@@ -73,80 +109,13 @@ export async function action(args: ActionFunctionArgs) {
         };
       }
 
-      const urls = urlsInput
-        .split(/[,\n]/)
-        .map((url) => url.trim())
-        .filter((url) => url.length > 0);
+      const urls = splitCsvText(urlsInput);
 
-      console.info("Submitted URLs:", urls);
+      // TODO: process urls
 
-      return {
-        message: `Received ${urls.length} URLs for processing`,
-        ok: true,
-      };
+      return null;
     }
-
-    // Handle files intent (existing logic)
-    const files = formData.getAll(PARAMS.FILE) as File[];
-
-    if (!files || files.length === 0) {
-      return {
-        errorMessage: "At least one file is required.",
-        ok: false,
-      };
-    }
-
-    const docs: LCDocument[] = [];
-    const sourcesInput: Prisma.SourceCreateManyInput[] = [];
-
-    for (const file of files) {
-      try {
-        const fileContent = await file.text();
-        const fileName = file.name;
-        const sourcePublicId = generateId();
-
-        sourcesInput.push({
-          createdAt: new Date(),
-          fileName: fileName,
-          ownerId: user.id,
-          publicId: sourcePublicId,
-          text: fileContent,
-        });
-
-        docs.push({
-          metadata: {
-            sourceId: sourcePublicId,
-            title: fileName,
-          },
-          pageContent: fileContent,
-        });
-      } catch (err) {
-        console.error(`Error processing file ${file.name}:`, err);
-      }
-    }
-
-    const sources = await prisma.source.createManyAndReturn({
-      data: sourcesInput,
-    });
-
-    await addDocsToVectorStore({
-      docs,
-      namespace: getNameSpace("USER", user.publicId),
-    });
-
-    if (sources.length === 1) {
-      return redirect(appRoutes("/docs/:id", { id: sources[0].publicId }));
-    }
-
-    return redirect(appRoutes("/docs"));
   } catch (error) {
-    console.error("Collection creation error: ", error);
-    return {
-      errorMessage:
-        error instanceof Error && error.message
-          ? error.message
-          : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-      ok: false,
-    };
+    return serverError(error);
   }
 }
