@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-// import Dropzone from "react-dropzone";
 import { useNavigation, useSubmit } from "react-router";
 import { Button } from "~/components/ui/button";
 import { PARAMS } from "~/shared/params";
@@ -22,7 +21,7 @@ export function FileUploadForm() {
     for (const file of selectedFiles) {
       formData.append(
         PARAMS.FILES,
-        new Blob([file], { type: file.type }), // needs to be explicitly set to prevent generic binary type being submitted ('application/octet-stream')
+        new Blob([file], { type: file.type }), // needs to be explicitly set to prevent generic binary type
         file.name,
       );
     }
