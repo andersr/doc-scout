@@ -1,9 +1,9 @@
 import { MessageType } from "@prisma/client";
 import { getValidatedFormData } from "remix-hook-form";
-import { serverError } from "~/.server/api/serverError";
 import { generateGraph } from "~/.server/langchain/generateGraph";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
+import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
 import { type BotReply, botReplyResolver } from "~/lib/schemas/botReply";
 import type { Route } from "../+types/root";

@@ -6,10 +6,10 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
-import { requireParam } from "~/.server/utils/requireParam";
+import { requireRouteParam } from "~/.server/utils/requireRouteParam";
+import { serverError } from "~/.server/utils/serverError";
 import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
@@ -31,7 +31,7 @@ export function meta({ data }: { data: { collection: { name: string } } }) {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  const publicId = requireParam({
+  const publicId = requireRouteParam({
     key: KEYS.id,
     params: args.params,
   });
@@ -108,7 +108,7 @@ export default function DocDetailsLayout() {
 export async function action(args: Route.ActionArgs) {
   const user = await requireInternalUser(args);
   try {
-    const sourcePublicId = requireParam({
+    const sourcePublicId = requireRouteParam({
       key: KEYS.id,
       params: args.params,
     });

@@ -7,10 +7,10 @@ import {
   getValidatedFormData,
   useRemixForm,
 } from "remix-hook-form";
-import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
-import { requireParam } from "~/.server/utils/requireParam";
+import { requireRouteParam } from "~/.server/utils/requireRouteParam";
+import { serverError } from "~/.server/utils/serverError";
 import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -35,7 +35,7 @@ export function meta({ data }: { data: { collection: { name: string } } }) {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  const publicId = requireParam({
+  const publicId = requireRouteParam({
     key: KEYS.id,
     params: args.params,
   });
@@ -186,7 +186,10 @@ export default function ChatDetails() {
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireInternalUser(args);
   try {
-    const chatPublicId = requireParam({ key: KEYS.id, params: args.params });
+    const chatPublicId = requireRouteParam({
+      key: KEYS.id,
+      params: args.params,
+    });
 
     const chat = await prisma.chat.findFirstOrThrow({
       where: {
