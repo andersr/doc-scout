@@ -1,12 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { AppKeys, KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
+import { isAppKey } from "../utils/isAppKey";
 import { requireFormValue } from "../utils/requireFormValue";
 import { serverError } from "../utils/serverError";
-
-function isAppKey(str: string): str is AppKeys {
-  return AppKeys.includes(str as AppKeys);
-}
 
 export type ActionHandler = ({
   formData,
