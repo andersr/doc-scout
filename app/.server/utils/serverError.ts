@@ -1,14 +1,26 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { ZodError } from "zod";
 import { APIError, type ApiResponse } from "~/types/api";
+import { ServerError } from "~/types/server";
 
+// TODO: outdated
 const errorData: ApiResponse = {
   data: null,
   errors: null,
   ok: false,
 };
 
+// TODO: outdated, change to apiError
+
+// TODO: NEEDS TO BE TESTED
 export function serverError(error: unknown) {
+  if (error instanceof ServerError) {
+    return new Response(JSON.stringify(error), {
+      status: error.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR,
+      statusText: error.message,
+    });
+  }
+
   if (error instanceof ZodError) {
     // TODO: return actual Zod error
     return new Response(JSON.stringify(errorData), {

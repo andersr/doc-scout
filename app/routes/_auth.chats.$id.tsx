@@ -7,10 +7,10 @@ import {
   getValidatedFormData,
   useRemixForm,
 } from "remix-hook-form";
-import { serverError } from "~/.server/api/serverError";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
+import { serverError } from "~/.server/utils/serverError";
 import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
