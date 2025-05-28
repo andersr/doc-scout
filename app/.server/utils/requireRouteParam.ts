@@ -1,10 +1,11 @@
 import type { LoaderFunctionArgs } from "react-router";
+import type { AppKeys } from "~/shared/keys";
 
-export function requireParam({
+export function requireRouteParam({
   key,
   params,
 }: {
-  key: string;
+  key: AppKeys;
   params: LoaderFunctionArgs["params"];
 }): string {
   const param = params[key];
