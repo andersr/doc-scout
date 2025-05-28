@@ -14,8 +14,8 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { appRoutes } from "~/shared/appRoutes";
+import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { PARAMS } from "~/shared/params";
 
 export function meta() {
   return [{ title: "Login" }];
@@ -23,7 +23,7 @@ export function meta() {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const params = new URL(request.url).searchParams;
-  const error = params.get(PARAMS.ERROR);
+  const error = params.get(KEYS.error);
 
   return {
     error,
@@ -54,10 +54,10 @@ export default function LoginRoute() {
         action={appRoutes("/login")}
       >
         <div className="flex flex-col gap-2">
-          <Label htmlFor={PARAMS.COLLECTION_NAME}>Email</Label>
+          <Label htmlFor={KEYS.email}>Email</Label>
           <Input
-            id={PARAMS.EMAIL}
-            name={PARAMS.EMAIL}
+            id={KEYS.email}
+            name={KEYS.email}
             value={nameValue}
             onChange={(e) => setNameValue(e.target.value)}
             placeholder="Email"
@@ -85,7 +85,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   try {
     const formData = await request.formData();
-    const email = formData.get(PARAMS.EMAIL)?.toString();
+    const email = formData.get(KEYS.email)?.toString();
 
     if (!email || email.trim() === "") {
       return {

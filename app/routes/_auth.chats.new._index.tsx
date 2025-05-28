@@ -13,8 +13,8 @@ import { Checkbox } from "~/components/checkbox";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
+import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { PARAMS } from "~/shared/params";
 import type { RouteData } from "~/types/routeData";
 
 const PAGE_TITLE = "New Chat";
@@ -62,7 +62,7 @@ export default function NewDocsRoute() {
           {docs.map((item) => (
             <li key={item.publicId}>
               <Checkbox
-                name={PARAMS.IDS}
+                name={KEYS.ids}
                 checked={selectedItems.includes(item.publicId)}
                 value={item.publicId}
                 onChange={() => {
@@ -101,7 +101,7 @@ export async function action(args: ActionFunctionArgs) {
   const user = await requireInternalUser(args);
   try {
     const formData = await request.formData();
-    const ids = formData.getAll(PARAMS.IDS).map((id) => id.toString());
+    const ids = formData.getAll(KEYS.ids).map((id) => id.toString());
 
     if (!ids || ids.length === 0) {
       return {

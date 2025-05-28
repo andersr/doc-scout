@@ -14,7 +14,7 @@ import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
-import { PARAMS } from "~/shared/params";
+import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
 import { formatDateTime } from "~/utils/formatDateTime";
 import type { Route } from "./+types/_auth.docs.$id";
@@ -32,7 +32,7 @@ export function meta({ data }: { data: { collection: { name: string } } }) {
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireParam({
-    key: PARAMS.ID,
+    key: KEYS.id,
     params: args.params,
   });
 
@@ -109,7 +109,7 @@ export async function action(args: Route.ActionArgs) {
   const user = await requireInternalUser(args);
   try {
     const sourcePublicId = requireParam({
-      key: PARAMS.ID,
+      key: KEYS.id,
       params: args.params,
     });
 

@@ -10,7 +10,7 @@ import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
 import { getNameSpace } from "~/config/namespaces";
 import { fileListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
-import { PARAMS } from "~/shared/params";
+import { KEYS } from "~/shared/keys";
 import type { LCDocument } from "~/types/document";
 import type { RouteData } from "~/types/routeData";
 import { splitCsvText } from "~/utils/splitCsvText";
@@ -32,17 +32,17 @@ export default function NewDocsRoute() {
     <div>
       <h1 className="mb-6 text-2xl font-bold">{PAGE_TITLE}</h1>
 
-      <Tabs defaultValue={PARAMS.FILES}>
+      <Tabs defaultValue={KEYS.files}>
         <TabsList>
-          <TabButton value={PARAMS.FILES}>Files</TabButton>
-          <TabButton value={PARAMS.URLS}>Via URL</TabButton>
+          <TabButton value={KEYS.files}>Files</TabButton>
+          <TabButton value={KEYS.urls}>Via URL</TabButton>
         </TabsList>
 
-        <TabContent value={PARAMS.FILES}>
+        <TabContent value={KEYS.files}>
           <FileUploadForm />
         </TabContent>
 
-        <TabContent value={PARAMS.URLS}>
+        <TabContent value={KEYS.urls}>
           <UrlForm />
         </TabContent>
       </Tabs>
@@ -61,12 +61,12 @@ export async function action(args: ActionFunctionArgs) {
   const user = await requireInternalUser(args);
   try {
     const formData = await request.formData();
-    const intent = String(formData.get(PARAMS.INTENT) || "");
+    const intent = String(formData.get(KEYS.intent) || "");
     const vectorDocs: LCDocument[] = [];
 
-    if (intent === PARAMS.FILES) {
+    if (intent === KEYS.files) {
       const submittedFiles = formData
-        .getAll(PARAMS.FILES)
+        .getAll(KEYS.files)
         .filter((f) => f instanceof File);
 
       const files = fileListSchema.parse(submittedFiles);
@@ -99,8 +99,8 @@ export async function action(args: ActionFunctionArgs) {
       return redirect(redirectRoute);
     }
 
-    if (intent === PARAMS.URLS) {
-      const urlsInput = String(formData.get(PARAMS.URLS) || "");
+    if (intent === KEYS.urls) {
+      const urlsInput = String(formData.get(KEYS.urls) || "");
 
       if (!urlsInput || urlsInput.trim() === "") {
         return {

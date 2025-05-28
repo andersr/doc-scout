@@ -19,7 +19,7 @@ import { prisma } from "~/lib/prisma";
 import type { BotReply } from "~/lib/schemas/botReply";
 import { type NewQuery, newQuerySchema } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
-import { PARAMS } from "~/shared/params";
+import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
 import type { Route } from "./+types/_auth.chats.$id";
 
@@ -36,7 +36,7 @@ export function meta({ data }: { data: { collection: { name: string } } }) {
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireParam({
-    key: PARAMS.ID,
+    key: KEYS.id,
     params: args.params,
   });
 
@@ -136,7 +136,7 @@ export default function ChatDetails() {
   }, [setValue, sources]);
 
   const optimisticQuery = queryFetcher.formData
-    ? queryFetcher.formData.get(PARAMS.MESSAGE)
+    ? queryFetcher.formData.get(KEYS.message)
     : null;
 
   return (
@@ -186,7 +186,7 @@ export default function ChatDetails() {
 export async function action(args: Route.ActionArgs) {
   const currentUser = await requireInternalUser(args);
   try {
-    const chatPublicId = requireParam({ key: PARAMS.ID, params: args.params });
+    const chatPublicId = requireParam({ key: KEYS.id, params: args.params });
 
     const chat = await prisma.chat.findFirstOrThrow({
       where: {
