@@ -2,6 +2,7 @@ import type { ActionFunctionArgs } from "react-router";
 import { useActionData } from "react-router";
 import { handleActionIntent } from "~/.server/actions/handleActionIntent";
 import { newDocActions } from "~/.server/docs/newDocActions";
+import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";
 import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
@@ -50,6 +51,7 @@ export default function NewDocsRoute() {
 }
 
 export async function action(args: ActionFunctionArgs) {
+  await requireInternalUser(args);
   return await handleActionIntent({
     handlers: newDocActions,
     request: args.request,
