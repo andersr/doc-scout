@@ -1,13 +1,14 @@
 import type { ActionFunctionArgs } from "react-router";
 import { useActionData } from "react-router";
 import { handleActionIntent } from "~/.server/actions/handleActionIntent";
-import { newDocActions } from "~/.server/docs/newDocActions";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";
 import { TabButton, TabContent, Tabs, TabsList } from "~/components/ui/tabs";
 import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
+import { filesAction } from "./actions/filesAction";
+import { urlsAction } from "./actions/urlsAction";
 
 const PAGE_TITLE = "Add Docs";
 
@@ -53,7 +54,10 @@ export default function NewDocsRoute() {
 export async function action(args: ActionFunctionArgs) {
   await requireInternalUser(args);
   return await handleActionIntent({
-    handlers: newDocActions,
+    handlers: {
+      files: filesAction,
+      urls: urlsAction,
+    },
     request: args.request,
   });
 }

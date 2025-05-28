@@ -5,7 +5,7 @@ import { isAppKey } from "../utils/isAppKey";
 import { requireFormValue } from "../utils/requireFormValue";
 import { serverError } from "../utils/serverError";
 
-export type ActionHandler = ({
+export type ActionHandlerFn = ({
   formData,
   request,
 }: {
@@ -13,7 +13,7 @@ export type ActionHandler = ({
   request: Request;
 }) => Promise<Response | null>;
 
-export type ActionHandlers = { [k in AppKeys]?: ActionHandler };
+export type ActionHandlers = { [k in AppKeys]?: ActionHandlerFn };
 
 export async function handleActionIntent({
   handlers,
