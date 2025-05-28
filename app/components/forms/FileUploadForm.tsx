@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { useNavigation, useSubmit } from "react-router";
 import { Button } from "~/components/ui/button";
-import { PARAMS } from "~/shared/params";
+import { KEYS } from "~/shared/keys";
 import { Dropzone } from "../Dropzone";
+
 export function FileUploadForm() {
   const navigation = useNavigation();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -17,10 +18,10 @@ export function FileUploadForm() {
 
   const handleSubmit = () => {
     const formData = new FormData();
-    formData.append(PARAMS.INTENT, PARAMS.FILES);
+    formData.append(KEYS.intent, KEYS.files);
     for (const file of selectedFiles) {
       formData.append(
-        PARAMS.FILES,
+        KEYS.files,
         new Blob([file], { type: file.type }), // needs to be explicitly set to prevent generic binary type
         file.name,
       );
