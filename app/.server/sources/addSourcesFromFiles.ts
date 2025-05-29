@@ -5,9 +5,11 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { generateId } from "../utils/generateId";
 
 export async function addSourceFromFiles({
+  fileDataMap,
   files,
   userId,
 }: {
+  fileDataMap?: Map<string, { publicId: string; storagePath: string }>;
   files: File[];
   userId: number;
 }) {
@@ -16,11 +18,15 @@ export async function addSourceFromFiles({
   try {
     for await (const file of files) {
       const fileContent = await file.text();
+      const fileData = fileDataMap?.get(file.name);
+      const sourcePublicId = fileData?.publicId || generateId();
+
       data.push({
         createdAt: new Date(),
         fileName: file.name,
         ownerId: userId,
-        publicId: generateId(),
+        publicId: sourcePublicId,
+        storagePath: fileData?.storagePath,
         text: fileContent,
       });
     }
