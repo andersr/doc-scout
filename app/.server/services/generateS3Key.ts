@@ -8,9 +8,19 @@ export function generateS3Key({
   userPublicId: string;
 }): string {
   const timestamp = Date.now();
-  const nameWithoutExt =
-    fileName.substring(0, fileName.lastIndexOf(".")) || fileName;
-  const extension = fileName.substring(fileName.lastIndexOf(".") + 1) || "";
+  const lastDotIndex = fileName.lastIndexOf(".");
+
+  let nameWithoutExt: string;
+  let extension: string;
+
+  if (lastDotIndex === -1 || lastDotIndex === 0) {
+    // No extension or file starts with dot (like .gitignore)
+    nameWithoutExt = fileName;
+    extension = "";
+  } else {
+    nameWithoutExt = fileName.substring(0, lastDotIndex);
+    extension = fileName.substring(lastDotIndex + 1);
+  }
 
   return `users/${userPublicId}/sources/${sourcePublicId}/${nameWithoutExt}-${timestamp}${extension ? `.${extension}` : ""}`;
 }
