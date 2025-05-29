@@ -38,6 +38,7 @@ npm run test:e2e       # Run Playwright e2e tests (when available)
 ## Architecture Overview
 
 ### Tech Stack
+
 - **Framework**: React Router v7 with file-based routing
 - **Database**: PostgreSQL with Prisma ORM
 - **Auth**: Stytch passwordless authentication (magic links)
@@ -50,17 +51,20 @@ npm run test:e2e       # Run Playwright e2e tests (when available)
 
 **Authentication Flow**: Email → Magic Link → `/authenticate` → User lookup/creation → Session cookie
 
-**Route Structure**: 
+**Route Structure**:
+
 - `_auth.tsx` layout wraps all authenticated routes
 - Nested routes: `_auth.docs.new/` has actions for file/URL processing
 - Route actions handle form submissions with `handleActionIntent` pattern
 
 **Data Models**:
+
 - Users own Sources (documents) and Chats
 - Collections group Sources with many-to-many relationships
 - Vector storage is user-namespaced (`user_{publicId}`)
 
 **Document Processing Pipeline**:
+
 1. File upload → Text extraction (in-memory)
 2. Source record creation with full text
 3. LangChain text splitting and OpenAI embedding
@@ -78,6 +82,7 @@ npm run test:e2e       # Run Playwright e2e tests (when available)
 ### Environment Setup
 
 Copy `.env.example` to `.env` and fill required variables:
+
 - Stytch auth keys (not Clerk - README is outdated)
 - OpenAI API key for embeddings/chat
 - Pinecone credentials for vector storage
