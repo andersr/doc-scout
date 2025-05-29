@@ -1,49 +1,49 @@
 import React from "react";
 import { cn } from "~/lib/utils";
 
-interface TabsContextValue {
-  onValueChange: (value: string) => void;
-  value: string;
-}
-
-const TabsContext = React.createContext<TabsContextValue | undefined>(
-  undefined,
-);
-
-function useTabsContext() {
-  const context = React.useContext(TabsContext);
-  if (!context) {
-    throw new Error("Tabs components must be used within a Tabs provider");
-  }
-  return context;
-}
-
-interface TabsProps {
-  children: React.ReactNode;
-  className?: string;
+interface UseTabsOptions {
   defaultValue: string;
   onValueChange?: (value: string) => void;
   value?: string;
 }
 
-function Tabs({
-  children,
-  className,
+interface UseTabsReturn {
+  onValueChange: (value: string) => void;
+  value: string;
+}
+
+function useTabs({
   defaultValue,
   onValueChange,
   value,
-}: TabsProps) {
+}: UseTabsOptions): UseTabsReturn {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
 
   const currentValue = value ?? internalValue;
   const handleValueChange = onValueChange ?? setInternalValue;
 
+  return {
+    onValueChange: handleValueChange,
+    value: currentValue,
+  };
+}
+
+interface TabsProps {
+  children: React.ReactNode;
+  className?: string;
+  onValueChange: (value: string) => void;
+  value: string;
+}
+
+function Tabs({ children, className, onValueChange, value }: TabsProps) {
   return (
-    <TabsContext.Provider
-      value={{ onValueChange: handleValueChange, value: currentValue }}
+    <div
+      className={cn("w-full", className)}
+      data-tabs-value={value}
+      data-tabs-onchange={onValueChange.toString()}
     >
-      <div className={cn("w-full", className)}>{children}</div>
-    </TabsContext.Provider>
+      {children}
+    </div>
   );
 }
 
@@ -69,11 +69,18 @@ function TabsList({ children, className }: TabsListProps) {
 interface TabButtonProps {
   children: React.ReactNode;
   className?: string;
+  currentValue: string;
+  onValueChange: (value: string) => void;
   value: string;
 }
 
-function TabButton({ children, className, value }: TabButtonProps) {
-  const { onValueChange, value: currentValue } = useTabsContext();
+function TabButton({
+  children,
+  className,
+  currentValue,
+  onValueChange,
+  value,
+}: TabButtonProps) {
   const isSelected = currentValue === value;
 
   return (
@@ -98,12 +105,16 @@ function TabButton({ children, className, value }: TabButtonProps) {
 interface TabContentProps {
   children: React.ReactNode;
   className?: string;
+  currentValue: string;
   value: string;
 }
 
-function TabContent({ children, className, value }: TabContentProps) {
-  const { value: currentValue } = useTabsContext();
-
+function TabContent({
+  children,
+  className,
+  currentValue,
+  value,
+}: TabContentProps) {
   if (currentValue !== value) {
     return null;
   }
@@ -121,4 +132,4 @@ function TabContent({ children, className, value }: TabContentProps) {
   );
 }
 
-export { TabButton, TabContent, Tabs, TabsList };
+export { TabButton, TabContent, Tabs, TabsList, useTabs };
