@@ -1,35 +1,49 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { TabButton, TabContent, Tabs, TabsList } from "./tabs";
+import { TabButton, TabContent, Tabs, TabsList, useTabs } from "./tabs";
+
+// Test component that uses the useTabs hook
+function TestTabs({ defaultValue }: { defaultValue: string }) {
+  const { onValueChange, value } = useTabs({ defaultValue });
+
+  return (
+    <Tabs value={value} onValueChange={onValueChange}>
+      <TabsList>
+        <TabButton
+          value="tab1"
+          currentValue={value}
+          onValueChange={onValueChange}
+        >
+          Tab 1
+        </TabButton>
+        <TabButton
+          value="tab2"
+          currentValue={value}
+          onValueChange={onValueChange}
+        >
+          Tab 2
+        </TabButton>
+      </TabsList>
+      <TabContent value="tab1" currentValue={value}>
+        Content 1
+      </TabContent>
+      <TabContent value="tab2" currentValue={value}>
+        Content 2
+      </TabContent>
+    </Tabs>
+  );
+}
 
 describe("Tabs", () => {
   it("renders tabs with correct default value", () => {
-    render(
-      <Tabs defaultValue="tab1">
-        <TabsList>
-          <TabButton value="tab1">Tab 1</TabButton>
-          <TabButton value="tab2">Tab 2</TabButton>
-        </TabsList>
-        <TabContent value="tab1">Content 1</TabContent>
-        <TabContent value="tab2">Content 2</TabContent>
-      </Tabs>,
-    );
+    render(<TestTabs defaultValue="tab1" />);
 
     expect(screen.getByText("Content 1")).toBeInTheDocument();
     expect(screen.queryByText("Content 2")).not.toBeInTheDocument();
   });
 
   it("switches tabs when tab button is clicked", () => {
-    render(
-      <Tabs defaultValue="tab1">
-        <TabsList>
-          <TabButton value="tab1">Tab 1</TabButton>
-          <TabButton value="tab2">Tab 2</TabButton>
-        </TabsList>
-        <TabContent value="tab1">Content 1</TabContent>
-        <TabContent value="tab2">Content 2</TabContent>
-      </Tabs>,
-    );
+    render(<TestTabs defaultValue="tab1" />);
 
     fireEvent.click(screen.getByText("Tab 2"));
 
@@ -38,16 +52,7 @@ describe("Tabs", () => {
   });
 
   it("applies correct aria attributes", () => {
-    render(
-      <Tabs defaultValue="tab1">
-        <TabsList>
-          <TabButton value="tab1">Tab 1</TabButton>
-          <TabButton value="tab2">Tab 2</TabButton>
-        </TabsList>
-        <TabContent value="tab1">Content 1</TabContent>
-        <TabContent value="tab2">Content 2</TabContent>
-      </Tabs>,
-    );
+    render(<TestTabs defaultValue="tab1" />);
 
     const selectedTab = screen.getByRole("tab", { name: "Tab 1" });
     const unselectedTab = screen.getByRole("tab", { name: "Tab 2" });
@@ -57,27 +62,13 @@ describe("Tabs", () => {
   });
 
   it("renders tablist with correct role", () => {
-    render(
-      <Tabs defaultValue="tab1">
-        <TabsList>
-          <TabButton value="tab1">Tab 1</TabButton>
-        </TabsList>
-        <TabContent value="tab1">Content 1</TabContent>
-      </Tabs>,
-    );
+    render(<TestTabs defaultValue="tab1" />);
 
     expect(screen.getByRole("tablist")).toBeInTheDocument();
   });
 
   it("renders tabpanel with correct role", () => {
-    render(
-      <Tabs defaultValue="tab1">
-        <TabsList>
-          <TabButton value="tab1">Tab 1</TabButton>
-        </TabsList>
-        <TabContent value="tab1">Content 1</TabContent>
-      </Tabs>,
-    );
+    render(<TestTabs defaultValue="tab1" />);
 
     expect(screen.getByRole("tabpanel")).toBeInTheDocument();
   });
