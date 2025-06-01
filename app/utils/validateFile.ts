@@ -1,3 +1,4 @@
+import { INVALID_FILE_ERROR } from "~/config/files";
 import type { FileUploadOptions } from "~/types/files";
 
 export const validateFile = (
@@ -5,14 +6,14 @@ export const validateFile = (
   { allowedExtensions, allowedFileTypes, maxSizeInBytes }: FileUploadOptions,
 ): string | null => {
   // Check file extension
-  const fileExtension = `.${file.name.split(".").pop()?.toLowerCase()}`;
+  const fileExtension = `${file.name.split(".").pop()?.toLowerCase()}`;
   if (!allowedExtensions.includes(fileExtension)) {
     return `Only ${allowedExtensions.join(", ")} files are allowed`;
   }
 
   // Check MIME type
   if (!allowedFileTypes.includes(file.type)) {
-    return `Invalid file type. Only ${allowedExtensions.join(", ")} files are allowed`;
+    return INVALID_FILE_ERROR;
   }
 
   // Check file size
