@@ -3,6 +3,7 @@ import console from "console";
 import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { generateId } from "../utils/generateId";
+import { extractTextFromFile } from "../services/extractTextFromFile";
 
 export async function addSourceFromFiles({
   fileDataMap,
@@ -17,7 +18,7 @@ export async function addSourceFromFiles({
 
   try {
     for await (const file of files) {
-      const fileContent = await file.text();
+      const fileContent = await extractTextFromFile(file);
       const fileData = fileDataMap?.get(file.name);
       const sourcePublicId = fileData?.publicId || generateId();
 

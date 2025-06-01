@@ -1,5 +1,4 @@
 import type { ActionFunctionArgs } from "react-router";
-import { useActionData } from "react-router";
 import { handleActionIntent } from "~/.server/actions/handleActionIntent";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
@@ -27,7 +26,7 @@ export function meta() {
 }
 
 export default function NewDocsRoute() {
-  const actionData = useActionData<typeof action>();
+  // const actionData = useActionData<typeof action>();
   const { onValueChange, value } = useTabs({ defaultValue: KEYS.files });
 
   return (
