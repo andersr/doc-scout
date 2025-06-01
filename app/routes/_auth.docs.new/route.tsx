@@ -26,7 +26,6 @@ export function meta() {
 }
 
 export default function NewDocsRoute() {
-  // const actionData = useActionData<typeof action>();
   const { onValueChange, value } = useTabs({ defaultValue: KEYS.files });
 
   return (

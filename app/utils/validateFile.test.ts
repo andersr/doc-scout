@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { FILE_UPLOAD_DEFAULT_CONFIG, INVALID_FILE_ERROR } from "~/config/files";
 import { validateFile } from "./validateFile";
-import { FILE_UPLOAD_DEFAULT_CONFIG } from "~/config/files";
 
 function createMockFile({
   name,
@@ -60,7 +60,7 @@ describe("validateFile", () => {
     });
 
     const result = validateFile(file, defaultConfig);
-    expect(result).toContain("Only .md, .txt, .pdf files are allowed");
+    expect(result).toContain(INVALID_FILE_ERROR);
   });
 
   it("should reject files with invalid MIME types", () => {
@@ -72,7 +72,7 @@ describe("validateFile", () => {
 
     const result = validateFile(file, defaultConfig);
     expect(result).toBeTruthy();
-    expect(result).toContain("Invalid file type");
+    expect(result).toContain(INVALID_FILE_ERROR);
   });
 
   it("should reject files that exceed size limit", () => {
@@ -95,7 +95,8 @@ describe("validateFile", () => {
     });
 
     const result = validateFile(file, defaultConfig);
-    expect(result).toContain("Only .md, .txt, .pdf files are allowed");
+
+    expect(result).toContain(INVALID_FILE_ERROR);
   });
 
   it("should handle case-insensitive extensions", () => {
