@@ -21,15 +21,12 @@ function createMockFile({
   name: string;
   type: string;
 }): File {
-  // Create a proper File instance with arrayBuffer method
   const file = new File([content], name, { type });
 
-  // Mock the text() method for text files
   if (type.startsWith("text/")) {
     file.text = vi.fn().mockResolvedValue(content);
   }
 
-  // Mock the arrayBuffer() method for PDF files
   if (type === "application/pdf") {
     file.arrayBuffer = vi
       .fn()
@@ -42,7 +39,6 @@ function createMockFile({
 describe("extractTextFromFile", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Setup default mock behavior for unpdf
     mockExtractText.mockResolvedValue({
       text: "default extracted text",
     });

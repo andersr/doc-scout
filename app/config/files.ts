@@ -1,7 +1,7 @@
 import type { FileUploadOptions } from "~/types/files";
 
 export const FILE_UPLOAD_DEFAULT_CONFIG: FileUploadOptions = {
-  allowedExtensions: ["md", "txt", "pdf"], // Updated to remove leading dots for consistency
+  allowedExtensions: ["md", "txt", "pdf"],
   allowedFileTypes: ["application/pdf", "text/markdown", "text/plain"],
   maxFiles: 10,
   maxSizeInBytes: 4.5 * 1024 * 1024, // 4.5mb, max allowed file size for Vercel direct file upload
