@@ -78,7 +78,7 @@ describe("validateFile", () => {
   it("should reject files that exceed size limit", () => {
     const file = createMockFile({
       name: "large.pdf",
-      size: 5 * 1024 * 1024, // 5MB (over limit)
+      size: FILE_UPLOAD_DEFAULT_CONFIG.maxSizeInBytes + 1,
       type: "application/pdf",
     });
 
