@@ -4,7 +4,10 @@ import { requireUser } from "~/.server/users";
 import { Avatar } from "~/components/Avatar";
 import { BaseLayout } from "~/components/BaseLayout";
 import { FoldedDoc } from "~/components/brand/FoldedDoc";
+// import { DropdownMenu } from "~/components/DropdownMenu";
+import { DropdownMenu } from "~/components/DropdownMenu";
 import { Icon } from "~/components/icon";
+import { Logout } from "~/components/logout";
 import { POMPADOUR_PURPLE } from "~/config/theme";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
@@ -58,11 +61,16 @@ export default function AuthLayout() {
             />
           </Link>
           {user ? (
-            <div className="flex items-center gap-2">
-              <div>
-                <Avatar email={user.email} />
-              </div>
-            </div>
+            <DropdownMenu
+              items={[
+                <div className="truncate" key={user.email}>
+                  {user.email}
+                </div>,
+                <Logout key="logout" />,
+              ]}
+            >
+              <Avatar email={user.email} />
+            </DropdownMenu>
           ) : (
             <div>
               <Link to={appRoutes("/login")}>Sign In</Link>
