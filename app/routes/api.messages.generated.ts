@@ -6,7 +6,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
 import { type BotReply, botReplyResolver } from "~/lib/schemas/botReply";
-import type { Route } from "../+types/root";
+import type { Route } from "./+types/api.messages.generated";
 
 export async function action(args: Route.ActionArgs) {
   await requireUser(args);
