@@ -22,7 +22,7 @@ export function ActionButton(
   return (
     <button
       {...rest}
-      className="bg-navy-blue/70 rounded px-6 py-2 text-xl font-light text-white"
+      className="bg-navy-blue/70 cursor-pointer rounded px-6 py-2 text-xl font-light text-white"
     >
       {children}
     </button>
