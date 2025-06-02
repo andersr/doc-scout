@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { PageTitle } from "./components/page-title";
@@ -55,7 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className={twMerge("h-full", "bg-background")}>
         {children}
         <ScrollRestoration />
         <Scripts />
