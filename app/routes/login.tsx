@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
@@ -37,8 +37,14 @@ export default function LoginRoute() {
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
 
+  useEffect(() => {
+    if (actionData?.ok && nameValue.trim() !== "") {
+      setNameValue("");
+    }
+  }, [actionData?.ok, nameValue]);
+
   return (
-    <BaseLayout>
+    <BaseLayout className="relative">
       <AppHeader />
       {actionData?.email && (
         <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2">
@@ -73,7 +79,7 @@ export default function LoginRoute() {
             />
           </div>
           <ActionButton type="submit">
-            {navigation.state === "submitting" ? "Sending..." : "Continue"}
+            {navigation.state === "submitting" ? "Sending..." : "Sign In"}
           </ActionButton>
         </Form>
 
