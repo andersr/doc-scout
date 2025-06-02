@@ -162,7 +162,9 @@ export default function ChatDetails() {
         </div>
         <queryFetcher.Form method="POST" onSubmit={handleSubmit}>
           <div className="mb-2">
-            <Label className="pb-2">Message</Label>
+            <Label htmlFor="message" className="pb-2">
+              Message
+            </Label>
             <textarea
               {...register("message")}
               rows={3}

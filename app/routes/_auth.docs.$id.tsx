@@ -1,17 +1,9 @@
 import type { LoaderFunctionArgs } from "react-router";
-import {
-  Form,
-  Link,
-  redirect,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import { Link, redirect, useLoaderData, useNavigation } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
-import { PageTitle } from "~/components/page-title";
-import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
@@ -24,10 +16,7 @@ export const handle: RouteData = {
 };
 
 export function meta({ data }: { data: { collection: { name: string } } }) {
-  return [
-    { title: `Collection: ${data?.collection?.name || "Not Found"}` },
-    // { content: "Collection details", name: "description" },
-  ];
+  return [{ title: `Collection: ${data?.collection?.name || "Not Found"}` }];
 }
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -68,7 +57,7 @@ export default function DocDetailsLayout() {
   const navigation = useNavigation();
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
         <Form method="POST">
           <Button
@@ -79,7 +68,7 @@ export default function DocDetailsLayout() {
             {navigation.state !== "idle" ? "Loading..." : "New Doc Chat"}
           </Button>
         </Form>
-      </div>
+      </div> */}
 
       <div className="">
         <p>Insert link to view doc - open in new tab</p>

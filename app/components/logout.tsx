@@ -5,7 +5,11 @@ import { Icon } from "./icon";
 
 export function Logout() {
   return (
-    <Form method="POST" action={appRoutes("/logout")} className="inline">
+    <Form
+      method="POST"
+      action={appRoutes("/logout")}
+      className="flex-block items-center"
+    >
       <button
         type="submit"
         className={twMerge("cursor-pointer")}
