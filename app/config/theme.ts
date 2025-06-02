@@ -1,7 +1,8 @@
-// TODO: this needs to more directly reuse colors defined in tw theme
-export const POMPADOUR_PURPLE = "#6e0051";
+/**
+ * See theme in app.css
+ */
 
-export const BASE_BACKGROUND = "bg-stone-100";
+export const POMPADOUR_PURPLE = "text-pompadour";
 
 export const ICON_COLORS = [
   "bg-indigo-400", // yellow-500

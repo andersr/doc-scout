@@ -4,11 +4,9 @@ import { requireUser } from "~/.server/users";
 import { Avatar } from "~/components/Avatar";
 import { BaseLayout } from "~/components/BaseLayout";
 import { FoldedDoc } from "~/components/brand/FoldedDoc";
-// import { DropdownMenu } from "~/components/DropdownMenu";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Icon } from "~/components/icon";
 import { Logout } from "~/components/logout";
-import { POMPADOUR_PURPLE } from "~/config/theme";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
@@ -39,7 +37,7 @@ export default function AuthLayout() {
             className="text-pompadour/70 flex items-center"
             to={appRoutes("/")}
           >
-            <FoldedDoc size={24} color={POMPADOUR_PURPLE} />
+            <FoldedDoc size={24} />
             <div className="pl-2 text-3xl font-stretch-50%">Doc Scout</div>
           </Link>
         </div>
@@ -84,4 +82,3 @@ export default function AuthLayout() {
     </BaseLayout>
   );
 }
-// {/* <Logout /> */}

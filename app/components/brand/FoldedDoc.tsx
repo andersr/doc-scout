@@ -1,4 +1,6 @@
-export function FoldedDoc({ color, size }: { color: string; size: number }) {
+import { POMPADOUR_PURPLE } from "~/config/theme";
+
+export function FoldedDoc({ size }: { size: number }) {
   const sizePx = `${size}px`;
   return (
     <svg
@@ -8,7 +10,7 @@ export function FoldedDoc({ color, size }: { color: string; size: number }) {
       x="0px"
       y="0px"
       xmlSpace="preserve"
-      fill={color}
+      fill={POMPADOUR_PURPLE}
       fillOpacity={0.6}
       viewBox="19.87 5 59.5 88.63"
     >

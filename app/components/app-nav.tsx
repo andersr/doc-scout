@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { POMPADOUR_PURPLE } from "~/config/theme";
 import { appRoutes } from "~/shared/appRoutes";
 import { FoldedDoc } from "./brand/FoldedDoc";
 import { Icon } from "./icon";
@@ -12,7 +11,7 @@ export function AppNav() {
           className="text-pompadour/70 flex items-center"
           to={appRoutes("/")}
         >
-          <FoldedDoc size={24} color={POMPADOUR_PURPLE} />{" "}
+          <FoldedDoc size={24} />{" "}
           <div className="pl-2 text-3xl font-stretch-50%">Doc Scout</div>
         </Link>
       </li>
