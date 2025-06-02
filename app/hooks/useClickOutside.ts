@@ -7,7 +7,6 @@ export function useClickOutside({
 }) {
   const componentRef = useRef<HTMLDivElement | null>(null);
 
-  // Listen for clicks outside the component
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
