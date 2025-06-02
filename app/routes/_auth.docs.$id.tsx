@@ -80,6 +80,9 @@ export default function DocDetailsLayout() {
       <div className="">
         <p>Insert link to view doc - open in new tab</p>
       </div>
+      <div className="">
+        <p>{source.summary}</p>
+      </div>
       <div>
         <h2>Recent Chats</h2>
         <ul>

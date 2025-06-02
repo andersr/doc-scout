@@ -2,8 +2,8 @@ import type { Prisma } from "@prisma/client";
 import console from "console";
 import { prisma } from "~/lib/prisma";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import { generateId } from "../utils/generateId";
 import { extractTextFromFile } from "../services/extractTextFromFile";
+import { generateId } from "../utils/generateId";
 
 export async function addSourceFromFiles({
   fileDataMap,
