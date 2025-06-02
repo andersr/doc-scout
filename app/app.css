@@ -8,4 +8,5 @@
   --color-bronze: #6f3d06;
   --color-danger: var(--color-red-500);
   --color-success: var(--color-green-200);
+  --color-background: var(--color-stone-100);
 }

@@ -11,7 +11,6 @@ import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { PageTitle } from "./components/page-title";
-import { BASE_BACKGROUND } from "./config/theme";
 
 export function meta() {
   return [{ title: "Muni Admin" }, { content: "", name: "description" }];
@@ -57,7 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className={twMerge("h-full", BASE_BACKGROUND)}>
+      <body className={twMerge("h-full", "bg-background")}>
         {children}
         <ScrollRestoration />
         <Scripts />
