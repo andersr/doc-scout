@@ -25,7 +25,6 @@
     "http-status-codes": "^2.3.0",
     "isbot": "^5.1.17",
     "langchain": "^0.3.27",
-    "lucide-react": "^0.508.0",
     "material-symbols": "^0.31.2",
     "nanoid": "^5.1.5",
     "openai": "^5.0.1",
