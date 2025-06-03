@@ -1,6 +1,6 @@
 import type { FileUploadOptions } from "~/types/files";
 
-export const FILE_UPLOAD_DEFAULT_CONFIG: FileUploadOptions = {
+export const FILE_CONFIG: FileUploadOptions = {
   allowedExtensions: ["md", "txt", "pdf"],
   allowedFileTypes: ["application/pdf", "text/markdown", "text/plain"],
   maxFiles: 10,
@@ -14,4 +14,4 @@ export const FILETYPES_ACCEPTED = {
   "text/plain": [".txt"],
 };
 
-export const INVALID_FILE_ERROR = `Only ${FILE_UPLOAD_DEFAULT_CONFIG.allowedExtensions.join(", ")} files are allowed`;
+export const INVALID_FILE_ERROR = `Only ${FILE_CONFIG.allowedExtensions.join(", ")} files are allowed`;
