@@ -11,6 +11,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
 import { PageTitle } from "~/components/page-title";
+import { ActionButton } from "~/components/ui/ActionLink";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
@@ -64,16 +65,12 @@ export default function DocDetailsLayout() {
   const navigation = useNavigation();
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
         <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
-        <Form method="POST">
-          <button
-            type="submit"
-            disabled={navigation.state !== "idle"}
-            className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-          >
+        <Form method="POST" className="">
+          <ActionButton type="submit" disabled={navigation.state !== "idle"}>
             {navigation.state !== "idle" ? "Loading..." : "New Doc Chat"}
-          </button>
+          </ActionButton>
         </Form>
       </div>
 
