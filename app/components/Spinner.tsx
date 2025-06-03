@@ -1,6 +1,4 @@
-// { color, size }: { color: string; size: number }
 export function Spinner() {
-  // const sizePx = `${size}px`;
   return (
     <div role="status">
       <svg
