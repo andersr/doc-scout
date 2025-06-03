@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
 import { openAiClient } from "~/.server/openai/client";
-import { CREATE_BLURB_INSTRUCTIONS } from "~/data/prompts/createBlurb";
+import { CREATE_ABSTRACT_INSTRUCTIONS } from "~/data/prompts/createAbstract";
 import { prisma } from "~/lib/prisma";
 import { fileListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
@@ -50,10 +50,10 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
 
   for await (const source of sources) {
     const response = await openAiClient.responses.create({
-      input: `Create a blurb for the following content:
+      input: `Create an abstract for the following content:
       
       ${source.text}`,
-      instructions: CREATE_BLURB_INSTRUCTIONS,
+      instructions: CREATE_ABSTRACT_INSTRUCTIONS,
       model: "gpt-4.1-mini",
     });
 
