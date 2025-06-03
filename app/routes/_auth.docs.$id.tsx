@@ -1,11 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import {
-  Form,
-  Link,
-  redirect,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import { Link, redirect, useFetcher, useLoaderData } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
@@ -62,16 +56,18 @@ export async function loader(args: LoaderFunctionArgs) {
 
 export default function DocDetailsLayout() {
   const { source } = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
+
+  const fetcher = useFetcher();
+
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
         <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
-        <Form method="POST" className="">
-          <ActionButton type="submit" disabled={navigation.state !== "idle"}>
-            {navigation.state !== "idle" ? "Loading..." : "New Doc Chat"}
+        <fetcher.Form method="POST" className="">
+          <ActionButton type="submit" disabled={fetcher.state !== "idle"}>
+            {fetcher.state !== "idle" ? "Loading..." : "New Doc Chat"}
           </ActionButton>
-        </Form>
+        </fetcher.Form>
       </div>
 
       <div className="">
