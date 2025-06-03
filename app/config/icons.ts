@@ -10,4 +10,5 @@ export const APP_ICONS = {
   DOCUMENTS: "library_books",
   DONE: "done",
   LOGOUT: "logout",
+  NEW_WINDOW: "open_in_new",
 };

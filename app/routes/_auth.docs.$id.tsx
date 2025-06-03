@@ -1,9 +1,11 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, redirect, useFetcher, useLoaderData } from "react-router";
+import { ENV } from "~/.server/ENV";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
+import { Icon } from "~/components/icon";
 import { PageTitle } from "~/components/page-title";
 import { ActionButton } from "~/components/ui/ActionLink";
 import { prisma } from "~/lib/prisma";
@@ -51,11 +53,11 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // todo: get chat with required public id AND filter by USER messages
 
-  return { source };
+  return { cdn: ENV.CDN_HOST, source };
 }
 
 export default function DocDetailsLayout() {
-  const { source } = useLoaderData<typeof loader>();
+  const { cdn, source } = useLoaderData<typeof loader>();
 
   const fetcher = useFetcher();
 
@@ -69,9 +71,18 @@ export default function DocDetailsLayout() {
           </ActionButton>
         </fetcher.Form>
       </div>
-
       <div className="">
-        <p>Insert link to view doc - open in new tab</p>
+        {source.storagePath && (
+          <a
+            href={`${cdn}/${source.storagePath}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-blue-500"
+          >
+            <div className="underline">{source.fileName}</div>{" "}
+            <Icon name="NEW_WINDOW" fontSize="20px" />
+          </a>
+        )}
       </div>
       <div className="">
         <p>{source.summary}</p>

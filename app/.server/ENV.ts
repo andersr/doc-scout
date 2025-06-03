@@ -7,6 +7,7 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(3),
   AWS_S3_ACCESS_KEY: z.string().min(3),
   AWS_S3_SECRET: z.string().min(3),
+  CDN_HOST: z.string().url(),
   CLERK_SECRET_KEY: z.string().min(3),
   CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(3),
   FIRECRAWL_API_KEY: z.string().min(3),
