@@ -2,7 +2,7 @@
  * See theme in app.css
  */
 
-export const POMPADOUR_PURPLE = "text-pompadour";
+export const POMPADOUR_PURPLE = "#6e0051";
 
 export const ICON_COLORS = [
   "bg-indigo-400", // yellow-500
