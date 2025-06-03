@@ -9,8 +9,8 @@ import {
 } from "react-router";
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
-import "./app.css";
 import { PageTitle } from "./components/page-title";
+import "./styles/app.css";
 
 export function meta() {
   return [{ title: "Muni Admin" }, { content: "", name: "description" }];
