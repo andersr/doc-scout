@@ -51,7 +51,7 @@ export default function DocsList() {
         {chats.map((c) => (
           <Link
             key={c.publicId}
-            to={appRoutes("/docs/:id", { id: c.publicId })}
+            to={appRoutes("/chats/:id", { id: c.publicId })}
             className="rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
           >
             <h2 className="text-lg font-medium">
