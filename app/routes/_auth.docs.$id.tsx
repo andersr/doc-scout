@@ -1,9 +1,16 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { Link, redirect, useLoaderData, useNavigation } from "react-router";
+import {
+  Form,
+  Link,
+  redirect,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
+import { PageTitle } from "~/components/page-title";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
@@ -57,21 +64,24 @@ export default function DocDetailsLayout() {
   const navigation = useNavigation();
   return (
     <div className="flex w-full flex-col gap-6">
-      {/* <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
         <Form method="POST">
-          <Button
+          <button
             type="submit"
             disabled={navigation.state !== "idle"}
-            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
           >
             {navigation.state !== "idle" ? "Loading..." : "New Doc Chat"}
-          </Button>
+          </button>
         </Form>
-      </div> */}
+      </div>
 
       <div className="">
         <p>Insert link to view doc - open in new tab</p>
+      </div>
+      <div className="">
+        <p>{source.summary}</p>
       </div>
       <div>
         <h2>Recent Chats</h2>

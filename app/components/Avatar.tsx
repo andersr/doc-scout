@@ -5,34 +5,27 @@ interface Props {
   email: string;
   imageUrl?: string | null;
   name?: string | null;
-  size?: string;
 }
 
-const DEFAULT_AVATAR_SIZE = "size-10";
-
-export function Avatar({
-  email,
-  imageUrl,
-  name,
-  size = DEFAULT_AVATAR_SIZE,
-}: Props) {
+export function Avatar({ email, imageUrl, name }: Props) {
   const userNameOrEmail = name || email;
   const initials = getInitialsFromString(userNameOrEmail);
-
+  const textSize = initials.length > 1 ? "text-xl" : "text-xl md:text-2xl";
   return imageUrl ? (
     <img
       src={imageUrl}
-      className={twMerge("rounded-full", size)}
+      className={twMerge("rounded-full", textSize)}
       alt={userNameOrEmail}
       title={userNameOrEmail}
     />
   ) : (
     <div
       className={twMerge(
-        "flex items-center justify-center rounded-full p-1 leading-none uppercase",
-        "bg-stone-300 text-xl text-stone-600",
+        "flex items-center justify-center rounded-full px-1 pt-0.5 pb-1 leading-none uppercase",
+        "bg-stone-300 text-stone-600",
 
-        size,
+        "size-10",
+        textSize,
       )}
       aria-label={userNameOrEmail}
       title={userNameOrEmail}

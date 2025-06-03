@@ -1,11 +1,10 @@
 import { data, Link, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/users";
+import { AppContainer } from "~/components/AppContainer";
 import { Avatar } from "~/components/Avatar";
-import { BaseLayout } from "~/components/BaseLayout";
 import { FoldedDoc } from "~/components/brand/FoldedDoc";
 import { DropdownMenu } from "~/components/DropdownMenu";
-import { Icon } from "~/components/icon";
 import { Logout } from "~/components/logout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
@@ -27,37 +26,33 @@ export async function loader({ request }: Route.LoaderArgs) {
   );
 }
 
+const NAV_LINKS: { label: string; route: string }[] = [
+  { label: "Docs", route: appRoutes("/docs") },
+  { label: "Chats", route: appRoutes("/chats") },
+];
+
 export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
   return (
-    <BaseLayout>
-      <div className="flex items-center gap-2">
+    <AppContainer>
+      <div className="flex place-items-baseline gap-2 leading-0 md:gap-4">
         <div className="flex-1">
           <Link
-            className="text-pompadour/70 flex items-center"
+            className="text-pompadour/70 flex items-baseline"
             to={appRoutes("/")}
           >
-            <FoldedDoc size={24} />
-            <div className="pl-2 text-3xl font-stretch-50%">Doc Scout</div>
+            <FoldedDoc size={28} />
+            <div className="pl-2 text-3xl font-stretch-50% md:pl-3 md:text-4xl">
+              Doc Scout
+            </div>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <Link className="flex items-center" to={appRoutes("/docs")}>
-            <Icon
-              name="DOCUMENTS"
-              fontSize="34px"
-              customStyles="text-stone-500"
-              label="documents"
-            />
+        {NAV_LINKS.map((l) => (
+          <Link className="md:text-2xl" key={l.label} to={l.route}>
+            {l.label}
           </Link>
-          <Link className="flex items-center" to={appRoutes("/chats")}>
-            <Icon
-              name="CHATS"
-              fontSize="34px"
-              customStyles="text-stone-500"
-              label="chats"
-            />
-          </Link>
+        ))}
+        <div className="pl-1">
           {user ? (
             <DropdownMenu
               items={[
@@ -79,6 +74,6 @@ export default function AuthLayout() {
       <main className="flex flex-1 flex-col py-4">
         <Outlet />
       </main>
-    </BaseLayout>
+    </AppContainer>
   );
 }

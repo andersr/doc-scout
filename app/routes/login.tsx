@@ -10,8 +10,8 @@ import {
 import { stytchClient } from "~/.server/stytch/client";
 import { upsertUser } from "~/.server/users/upsertUser";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
-import { BaseLayout } from "~/components/BaseLayout";
 import { PageTitle } from "~/components/page-title";
 import { ActionButton } from "~/components/ui/ActionLink";
 import { Label } from "~/components/ui/label";
@@ -44,7 +44,7 @@ export default function LoginRoute() {
   }, [actionData?.ok, nameValue]);
 
   return (
-    <BaseLayout className="relative">
+    <AppContainer className="relative">
       <AppHeader />
       {actionData?.email && (
         <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2">
@@ -89,7 +89,7 @@ export default function LoginRoute() {
           </div>
         )}
       </div>
-    </BaseLayout>
+    </AppContainer>
   );
 }
 

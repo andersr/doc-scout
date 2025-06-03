@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FILE_UPLOAD_DEFAULT_CONFIG as CONFIG } from "~/config/files";
+import { FILE_CONFIG as CONFIG } from "~/config/files";
 import { formatBytes } from "~/utils/formatBytes";
 
 export const fileSchema = z

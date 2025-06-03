@@ -1,14 +1,17 @@
 import { redirect } from "react-router";
+import { openAiClient } from "~/.server/openai/client";
+import { CREATE_ABSTRACT_INSTRUCTIONS } from "~/data/prompts/createAbstract";
+import { prisma } from "~/lib/prisma";
 import { fileListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
+import { generateS3Key } from "../../../.server/services/generateS3Key";
+import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
 import { requireInternalUser } from "../../../.server/sessions/requireInternalUser";
 import { addSourceFromFiles } from "../../../.server/sources/addSourcesFromFiles";
-import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
-import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
-import { generateS3Key } from "../../../.server/services/generateS3Key";
 import { generateId } from "../../../.server/utils/generateId";
+import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
 
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const user = await requireInternalUser({ request });
@@ -44,6 +47,25 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
     files,
     userId: user.id,
   });
+
+  for await (const source of sources) {
+    const response = await openAiClient.responses.create({
+      input: `Create an abstract for the following content:
+      
+      ${source.text}`,
+      instructions: CREATE_ABSTRACT_INSTRUCTIONS,
+      model: "gpt-4.1-mini",
+    });
+
+    await prisma.source.update({
+      data: {
+        summary: response.output_text,
+      },
+      where: {
+        id: source.id,
+      },
+    });
+  }
 
   await addSourcesToVectorStore({ sources, userPublicId: user.publicId });
 

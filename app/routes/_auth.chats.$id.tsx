@@ -1,6 +1,6 @@
-import { MessageType } from "@prisma/client";
+import { type Message, MessageType } from "@prisma/client";
 import { useEffect } from "react";
-import type { LoaderFunctionArgs } from "react-router";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { redirect, useFetcher, useLoaderData } from "react-router";
 import {
   createFormData,
@@ -12,6 +12,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
 import { PageTitle } from "~/components/page-title";
+import { Spinner } from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { getNameSpace } from "~/config/namespaces";
@@ -21,7 +22,6 @@ import { type NewQuery, newQuerySchema } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
-import type { Route } from "./+types/_auth.chats.$id";
 
 export const handle: RouteData = {
   pageTitle: "Chat Details",
@@ -74,10 +74,15 @@ export async function loader(args: LoaderFunctionArgs) {
 
   const sources = chat.sources.map((s) => s.source).filter((s) => s !== null);
 
-  const messages = chat.messages;
+  const chatMessages = chat.messages;
 
   const mostRecentMessage =
-    messages.length > 0 ? messages[messages.length - 1] : null;
+    chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : null;
+
+  const messages: (Message & { isBot: boolean })[] = chatMessages.map((m) => ({
+    ...m,
+    isBot: m.type === MessageType.BOT,
+  }));
 
   return {
     chat,
@@ -153,10 +158,19 @@ export default function ChatDetails() {
             <h2>Messages</h2>
             <ul>
               {messages.map((m) => (
-                <li key={m.id.toString()}>{m.text}</li>
+                <li
+                  key={m.id.toString()}
+                  className={"pb-2 whitespace-pre-wrap"}
+                >
+                  {m.text}
+                </li>
               ))}
               {optimisticQuery && <li>{optimisticQuery.toString()}</li>}
-              {responseFetcher.state !== "idle" && <li>BOT message Loading</li>}
+              {responseFetcher.state !== "idle" && (
+                <li className="flex w-full justify-center p-4">
+                  <Spinner />
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -185,7 +199,7 @@ export default function ChatDetails() {
   );
 }
 
-export async function action(args: Route.ActionArgs) {
+export async function action(args: ActionFunctionArgs) {
   const currentUser = await requireInternalUser(args);
   try {
     const chatPublicId = requireRouteParam({

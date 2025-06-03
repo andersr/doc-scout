@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FILE_UPLOAD_DEFAULT_CONFIG, INVALID_FILE_ERROR } from "~/config/files";
+import { FILE_CONFIG, INVALID_FILE_ERROR } from "~/config/files";
 import { validateFile } from "./validateFile";
 
 function createMockFile({
@@ -17,7 +17,7 @@ function createMockFile({
 }
 
 describe("validateFile", () => {
-  const defaultConfig = FILE_UPLOAD_DEFAULT_CONFIG;
+  const defaultConfig = FILE_CONFIG;
 
   it("should accept valid markdown files", () => {
     const file = createMockFile({
@@ -78,7 +78,7 @@ describe("validateFile", () => {
   it("should reject files that exceed size limit", () => {
     const file = createMockFile({
       name: "large.pdf",
-      size: FILE_UPLOAD_DEFAULT_CONFIG.maxSizeInBytes + 1,
+      size: FILE_CONFIG.maxSizeInBytes + 1,
       type: "application/pdf",
     });
 

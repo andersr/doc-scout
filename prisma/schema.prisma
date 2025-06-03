@@ -159,12 +159,15 @@ model Source {
   createdAt DateTime?
   updatedAt DateTime?
 
-  name        String?
+  title       String?
   fileName    String?
   url         String?
   storagePath String?
   text        String?
+  summary     String?
 
+  //legacy
+  name      String?
   // legacy
   project   Project? @relation(fields: [projectId], references: [id])
   projectId Int?
