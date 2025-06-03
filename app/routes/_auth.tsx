@@ -75,7 +75,7 @@ export default function AuthLayout() {
           )}
         </div>
       </div>
-      <main className="mx-auto flex max-w-6xl flex-1 flex-col gap-6 py-6 md:py-12">
+      <main className="mx-auto flex w-full flex-1 flex-col gap-6 py-6 md:max-w-5xl md:min-w-3xl md:py-12">
         <Outlet />
       </main>
     </AppContainer>

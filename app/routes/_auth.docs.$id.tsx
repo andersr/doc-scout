@@ -6,8 +6,8 @@ import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
 import { Icon } from "~/components/icon";
-import { PageTitle } from "~/components/page-title";
 import { ActionButton } from "~/components/ui/ActionLink";
+import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
@@ -18,10 +18,6 @@ import type { Route } from "./+types/_auth.docs.$id";
 export const handle: RouteData = {
   pageTitle: "Doc Details",
 };
-
-export function meta({ data }: { data: { collection: { name: string } } }) {
-  return [{ title: `Collection: ${data?.collection?.name || "Not Found"}` }];
-}
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -53,24 +49,28 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // todo: get chat with required public id AND filter by USER messages
 
-  return { cdn: ENV.CDN_HOST, source };
+  return {
+    cdn: ENV.CDN_HOST,
+    source,
+    title: source.title ?? source.name ?? source.fileName ?? "untitled",
+  };
 }
 
 export default function DocDetailsLayout() {
-  const { cdn, source } = useLoaderData<typeof loader>();
+  const { cdn, source, title } = useLoaderData<typeof loader>();
 
   const fetcher = useFetcher();
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
-        <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
+    <>
+      <title>{title}</title>
+      <PageHeading pageTitle={title}>
         <fetcher.Form method="POST" className="">
           <ActionButton type="submit" disabled={fetcher.state !== "idle"}>
             {fetcher.state !== "idle" ? "Loading..." : "New Doc Chat"}
           </ActionButton>
         </fetcher.Form>
-      </div>
+      </PageHeading>
       <div className="">
         {source.storagePath && (
           <a
@@ -104,7 +104,7 @@ export default function DocDetailsLayout() {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 
