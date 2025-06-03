@@ -35,7 +35,7 @@ export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
   return (
     <AppContainer>
-      <div className="flex place-items-baseline gap-2 leading-0 md:gap-4">
+      <div className="flex place-items-baseline gap-2 md:gap-4">
         <div className="flex-1">
           <Link
             className="text-pompadour/70 flex items-baseline"
@@ -56,7 +56,7 @@ export default function AuthLayout() {
           {user ? (
             <DropdownMenu
               items={[
-                <div className="truncate" key={user.email}>
+                <div className="truncate p-2" key={user.email}>
                   {user.email}
                 </div>,
                 <Logout key="logout" />,

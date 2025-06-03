@@ -16,6 +16,7 @@ export function Logout() {
           "flex w-full items-center",
           "hover:bg-stone-100",
           "transition-all duration-200 ease-in-out",
+          "p-2",
         )}
         aria-label="Sign Out"
       >
