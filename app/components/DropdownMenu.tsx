@@ -28,12 +28,12 @@ export function DropdownMenu({ children, items }: Props) {
       </button>
       <div
         className={twMerge(
-          "absolute top-12 right-0 z-20 flex w-36 flex-col justify-around gap-1 rounded bg-white px-2 py-1 shadow",
+          "absolute top-12 right-0 z-20 flex w-44 flex-col justify-around rounded bg-white shadow",
           isMenuOpen ? "flex flex-col" : "hidden",
         )}
       >
         {items.map((item, index) => (
-          <React.Fragment key={index}>{item}</React.Fragment>
+          <div key={index}>{item}</div>
         ))}
       </div>
     </div>

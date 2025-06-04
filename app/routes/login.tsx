@@ -7,6 +7,7 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
+import { requireAnon } from "~/.server/sessions/requireAnon";
 import { stytchClient } from "~/.server/stytch/client";
 import { upsertUser } from "~/.server/users/upsertUser";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
@@ -24,6 +25,8 @@ export function meta() {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await requireAnon({ request });
+
   const params = new URL(request.url).searchParams;
   const error = params.get(KEYS.error);
 

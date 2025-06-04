@@ -65,11 +65,12 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
   const sourcesInput: Prisma.SourceCreateManyInput[] = [];
 
   for (let index = 0; index < scrapeBatchResponse.data.length; index++) {
-    const name = scrapeBatchResponse.data[index].metadata?.title ?? "";
-    if (!name) {
+    const title = scrapeBatchResponse.data[index].metadata?.title ?? "";
+    if (!title) {
       console.warn(
         `no title found for: ${scrapeBatchResponse.data[index].metadata}`,
       );
+      // TODO: generate a title
     }
     const text = scrapeBatchResponse.data[index].markdown;
     if (!text) {
@@ -88,10 +89,11 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
 
     sourcesInput.push({
       createdAt: new Date(),
-      name,
+      name: title, // legacy
       ownerId: user.id,
       publicId: generateId(),
       text,
+      title,
       url,
     });
   }

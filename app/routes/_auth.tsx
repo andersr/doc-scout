@@ -1,4 +1,4 @@
-import { data, Link, Outlet, useLoaderData } from "react-router";
+import { data, Link, Outlet, useLoaderData, useLocation } from "react-router";
 
 import { requireUser } from "~/.server/users";
 import { AppContainer } from "~/components/AppContainer";
@@ -33,19 +33,23 @@ const NAV_LINKS: { label: string; route: string }[] = [
 
 export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
+  const { pathname } = useLocation();
+
+  const isHome = pathname === "/";
+
+  const brand = (
+    <div className="text-pompadour/70 flex items-baseline">
+      <FoldedDoc size={28} />
+      <div className="pl-2 text-3xl font-stretch-50% md:pl-3 md:text-4xl">
+        Doc Scout
+      </div>
+    </div>
+  );
   return (
     <AppContainer>
-      <div className="flex place-items-baseline gap-2 leading-0 md:gap-4">
+      <div className="flex place-items-baseline gap-2 md:gap-4">
         <div className="flex-1">
-          <Link
-            className="text-pompadour/70 flex items-baseline"
-            to={appRoutes("/")}
-          >
-            <FoldedDoc size={28} />
-            <div className="pl-2 text-3xl font-stretch-50% md:pl-3 md:text-4xl">
-              Doc Scout
-            </div>
-          </Link>
+          {isHome ? brand : <Link to={appRoutes("/")}>{brand}</Link>}
         </div>
         {NAV_LINKS.map((l) => (
           <Link className="md:text-2xl" key={l.label} to={l.route}>
@@ -56,7 +60,7 @@ export default function AuthLayout() {
           {user ? (
             <DropdownMenu
               items={[
-                <div className="truncate" key={user.email}>
+                <div className="truncate p-2" key={user.email}>
                   {user.email}
                 </div>,
                 <Logout key="logout" />,
@@ -71,7 +75,7 @@ export default function AuthLayout() {
           )}
         </div>
       </div>
-      <main className="flex flex-1 flex-col py-4">
+      <main className="mx-auto flex w-full flex-1 flex-col gap-6 py-6 md:max-w-5xl md:min-w-3xl md:py-12">
         <Outlet />
       </main>
     </AppContainer>

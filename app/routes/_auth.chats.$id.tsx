@@ -1,4 +1,4 @@
-import { type Message, MessageType } from "@prisma/client";
+import { MessageType } from "@prisma/client";
 import { useEffect } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { redirect, useFetcher, useLoaderData } from "react-router";
@@ -7,32 +7,38 @@ import {
   getValidatedFormData,
   useRemixForm,
 } from "remix-hook-form";
+import { twMerge } from "tailwind-merge";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
+import { ChatListItem } from "~/components/ChatListItem";
+import { ListContainer } from "~/components/containers/ListContainer";
+import { ScrollContainer } from "~/components/containers/ScrollContainer";
+import { Icon } from "~/components/icon";
 import { PageTitle } from "~/components/page-title";
 import { Spinner } from "~/components/Spinner";
-import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import { getNameSpace } from "~/config/namespaces";
+import { FALLBACK_TITLE } from "~/config/sources";
+import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { prisma } from "~/lib/prisma";
 import type { BotReply } from "~/lib/schemas/botReply";
 import { type NewQuery, newQuerySchema } from "~/lib/schemas/newQuery";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
+import { HOVER_TRANSITION } from "~/styles/animations";
+import { INPUT_STYLES } from "~/styles/inputs";
+import { type ClientMessage, MESSAGE_INCLUDE } from "~/types/message";
 import type { RouteData } from "~/types/routeData";
+import type { ServerResponse } from "~/types/server";
+import { setSourceTitle } from "~/utils/setSourceTitle";
+
+// temporary until user name is added
+const AUTHOR_NAME_PLACEHOLDER = "AUTHOR NAME";
 
 export const handle: RouteData = {
   pageTitle: "Chat Details",
 };
-
-export function meta({ data }: { data: { collection: { name: string } } }) {
-  return [
-    { title: `Collection: ${data?.collection?.name || "Not Found"}` },
-    // { content: "Collection details", name: "description" },
-  ];
-}
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -43,6 +49,7 @@ export async function loader(args: LoaderFunctionArgs) {
   const chat = await prisma.chat.findUnique({
     include: {
       messages: {
+        include: MESSAGE_INCLUDE,
         orderBy: {
           createdAt: "asc",
         },
@@ -72,14 +79,18 @@ export async function loader(args: LoaderFunctionArgs) {
 
   const namespace = getNameSpace("user", owner.publicId);
 
+  // TODO: currently only chatting with a single source, only current purpose is to display a title
   const sources = chat.sources.map((s) => s.source).filter((s) => s !== null);
+
+  const title =
+    sources.length > 0 ? setSourceTitle(sources[0]) : FALLBACK_TITLE;
 
   const chatMessages = chat.messages;
 
   const mostRecentMessage =
     chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : null;
 
-  const messages: (Message & { isBot: boolean })[] = chatMessages.map((m) => ({
+  const messages: ClientMessage[] = chatMessages.map((m) => ({
     ...m,
     isBot: m.type === MessageType.BOT,
   }));
@@ -88,21 +99,42 @@ export async function loader(args: LoaderFunctionArgs) {
     chat,
     messages,
     namespace,
+    newBotMessage: mostRecentMessage?.type === MessageType.BOT,
     pendingQuery:
       mostRecentMessage?.type === MessageType.USER ? mostRecentMessage : null,
-    sources,
+    title: `Chat with "${title}"`,
   };
 }
 
 export default function ChatDetails() {
-  const { chat, messages, namespace, pendingQuery, sources } =
+  const { chat, messages, namespace, newBotMessage, pendingQuery, title } =
     useLoaderData<typeof loader>();
 
   const queryFetcher = useFetcher();
-  const responseFetcher = useFetcher();
+  const responseFetcher = useFetcher<ServerResponse>();
+  // const { handleResizeTextArea } = useTextArea(KEYS.message);
+
+  const hasPendingQuery =
+    responseFetcher.data?.errors === null &&
+    responseFetcher.state !== "idle" &&
+    !!pendingQuery;
+
+  const botResponded =
+    responseFetcher.data?.errors === null &&
+    responseFetcher.state === "idle" &&
+    newBotMessage;
+
+  const listBottomRef = useScrollIntoView({
+    onAnyTrue: [hasPendingQuery, botResponded],
+    onLoad: true,
+  });
 
   useEffect(() => {
-    if (pendingQuery && responseFetcher.state === "idle") {
+    if (
+      !responseFetcher.data?.errors &&
+      pendingQuery &&
+      responseFetcher.state === "idle"
+    ) {
       const formData = createFormData<BotReply>({
         chatPublicId: chat.publicId,
         namespace,
@@ -113,87 +145,98 @@ export default function ChatDetails() {
         action: appRoutes("/api/messages/generated"),
         method: "POST",
       });
+      listBottomRef.current?.scrollIntoView(false);
     }
-  }, [chat.publicId, namespace, pendingQuery, responseFetcher]);
+  }, [chat.publicId, listBottomRef, namespace, pendingQuery, responseFetcher]);
 
-  const {
-    formState: { errors, isSubmitSuccessful, isValid },
-    handleSubmit,
-    register,
-    reset,
-    setValue,
-  } = useRemixForm<NewQuery>({
+  const methods = useRemixForm<NewQuery>({
     fetcher: queryFetcher,
     mode: "onSubmit",
     resolver: newQuerySchema.resolver,
     stringifyAllValues: false,
   });
 
+  const {
+    formState: { errors, isSubmitSuccessful, isValid },
+    handleSubmit,
+    register,
+    reset,
+  } = methods;
+
   useEffect(() => {
     reset({ message: "" });
   }, [reset, isSubmitSuccessful]);
-
-  useEffect(() => {
-    setValue(
-      "sources",
-      sources.map((s) => s.publicId),
-    );
-  }, [setValue, sources]);
 
   const optimisticQuery = queryFetcher.formData
     ? queryFetcher.formData.get(KEYS.message)
     : null;
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-6">
+    <div className="relative flex w-full flex-1 flex-col gap-6">
+      <title>{title}</title>
       <div className="flex items-center justify-between">
-        <PageTitle>
-          Chat with{" "}
-          {sources.length > 0 ? (sources[0].name ?? sources[0].fileName) : ""}
-        </PageTitle>
+        <PageTitle>{title}</PageTitle>
       </div>
       <div className="flex flex-1 flex-col">
-        <div className="flex-1">
-          <div className="my-2">
-            <h2>Messages</h2>
-            <ul>
-              {messages.map((m) => (
-                <li
-                  key={m.id.toString()}
-                  className={"pb-2 whitespace-pre-wrap"}
+        <ScrollContainer
+          listBottomRef={listBottomRef}
+          height="h-[calc(100vh-300px)]"
+          marginBottom="mb-12"
+        >
+          <ListContainer>
+            {messages.map((m) => (
+              <ChatListItem
+                key={m.publicId}
+                isBot={m.isBot}
+                createdAt={m.createdAt}
+                text={m.text}
+                authorName={AUTHOR_NAME_PLACEHOLDER}
+              />
+            ))}
+            {optimisticQuery && (
+              <ChatListItem
+                createdAt={new Date()}
+                text={optimisticQuery.toString()}
+                authorName={AUTHOR_NAME_PLACEHOLDER}
+              />
+            )}
+            {responseFetcher.state !== "idle" && <ChatListItem isBot loading />}
+          </ListContainer>
+        </ScrollContainer>
+        <div
+          className={twMerge(
+            "fixed bottom-0 z-10 h-24 p-2 md:w-5xl",
+            "bg-background",
+          )}
+        >
+          <queryFetcher.Form method="POST" onSubmit={handleSubmit}>
+            <div className="flex w-full items-end gap-2 md:gap-4">
+              <textarea
+                {...register("message")}
+                className={twMerge(INPUT_STYLES, "bg-white")}
+                placeholder={"Message"}
+                rows={1}
+              />
+              <div className="flex items-center py-1 md:py-0">
+                <button
+                  type="submit"
+                  className={twMerge(
+                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-full p-1 text-white disabled:text-stone-100 md:rounded-lg md:p-3",
+                    HOVER_TRANSITION,
+                  )}
+                  disabled={!isValid}
                 >
-                  {m.text}
-                </li>
-              ))}
-              {optimisticQuery && <li>{optimisticQuery.toString()}</li>}
-              {responseFetcher.state !== "idle" && (
-                <li className="flex w-full justify-center p-4">
-                  <Spinner />
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-        <queryFetcher.Form method="POST" onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <Label htmlFor="message" className="pb-2">
-              Message
-            </Label>
-            <textarea
-              {...register("message")}
-              rows={3}
-              className="w-full rounded-md border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
-            ></textarea>
+                  {queryFetcher.state !== "idle" ? (
+                    <Spinner />
+                  ) : (
+                    <Icon name={"ARROW_UP"} fontSize="24px" />
+                  )}
+                </button>
+              </div>
+            </div>
             {errors.message && <p>{errors.message.message}</p>}
-          </div>
-          <div className="py-4"></div>
-          <Button type="submit" disabled={!isValid}>
-            {queryFetcher.state !== "idle" ? "Submitting..." : "Submit"}
-          </Button>
-          <p className="">
-            Display checkbox list if two or more sources added.
-          </p>
-        </queryFetcher.Form>
+          </queryFetcher.Form>
+        </div>
       </div>
     </div>
   );
@@ -226,7 +269,6 @@ export async function action(args: ActionFunctionArgs) {
       return { defaultValues, errors, ok: false };
     }
 
-    // TODO: update chat updatedAt
     await prisma.message.create({
       data: {
         authorId: currentUser.id,
@@ -238,8 +280,9 @@ export async function action(args: ActionFunctionArgs) {
     });
 
     return {
+      errors: null,
       ok: true,
-    };
+    } satisfies ServerResponse;
   } catch (error) {
     console.error("new chat message error: ", error);
     return serverError(error);

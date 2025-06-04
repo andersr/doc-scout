@@ -11,3 +11,8 @@ export class ServerError extends Error {
       : message;
   }
 }
+
+export interface ServerResponse {
+  errors: string[] | null;
+  ok: boolean;
+}

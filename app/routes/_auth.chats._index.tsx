@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
-import { Icon } from "~/components/icon";
-import { PageTitle } from "~/components/page-title";
+import { ActionLink } from "~/components/ui/ActionLink";
+import { PageHeading } from "~/components/ui/PageHeading";
 
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
@@ -43,18 +43,15 @@ export default function DocsList() {
   const { chats } = useLoaderData<typeof loader>();
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-2">
-        <PageTitle>{SECTION_NAME}</PageTitle>
-        <Link to={appRoutes("/chats/new")} className="">
-          <Icon name="ADD" label="New Chat" fontSize="38px" />
-        </Link>
-      </div>
+    <>
+      <PageHeading pageTitle={SECTION_NAME}>
+        <ActionLink to={appRoutes("/chats/new")}>New Chat</ActionLink>
+      </PageHeading>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {chats.map((c) => (
           <Link
             key={c.publicId}
-            to={appRoutes("/docs/:id", { id: c.publicId })}
+            to={appRoutes("/chats/:id", { id: c.publicId })}
             className="rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
           >
             <h2 className="text-lg font-medium">
@@ -69,6 +66,6 @@ export default function DocsList() {
           </Link>
         ))}
       </ul>
-    </div>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export default function DocsList() {
   const { docs } = useLoaderData<typeof loader>();
 
   return (
-    <div className="flex flex-col gap-6">
+    <>
       <PageHeading pageTitle={SECTION_NAME}>
         <ActionLink to={appRoutes("/docs/new")}>Add Docs</ActionLink>
       </PageHeading>
@@ -59,6 +59,6 @@ export default function DocsList() {
           </Link>
         ))}
       </ul>
-    </div>
+    </>
   );
 }

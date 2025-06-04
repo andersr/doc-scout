@@ -5,6 +5,7 @@ interface QueryResponse {
   answer: string;
 }
 
+// TODO: outdated
 export interface ApiResponse {
   data: ProjectClient | QueryResponse | null;
   errorMessage?: string; // LEGACY

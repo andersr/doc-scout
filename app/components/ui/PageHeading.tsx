@@ -7,7 +7,7 @@ interface Props {
 
 export function PageHeading({ children, pageTitle }: Props) {
   return (
-    <div className="flex items-center justify-between gap-2 py-6">
+    <div className="flex items-center justify-between gap-2 pt-2 pb-6">
       <PageTitle>{pageTitle}</PageTitle>
       {children}
     </div>

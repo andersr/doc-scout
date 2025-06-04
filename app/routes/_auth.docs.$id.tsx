@@ -1,30 +1,24 @@
 import type { LoaderFunctionArgs } from "react-router";
-import {
-  Form,
-  Link,
-  redirect,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import { Link, redirect, useFetcher, useLoaderData } from "react-router";
+import { ENV } from "~/.server/ENV";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
-import { PageTitle } from "~/components/page-title";
+import { Icon } from "~/components/icon";
+import { ActionButton } from "~/components/ui/ActionLink";
+import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
 import { formatDateTime } from "~/utils/formatDateTime";
+import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
 
 export const handle: RouteData = {
   pageTitle: "Doc Details",
 };
-
-export function meta({ data }: { data: { collection: { name: string } } }) {
-  return [{ title: `Collection: ${data?.collection?.name || "Not Found"}` }];
-}
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -56,29 +50,40 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // todo: get chat with required public id AND filter by USER messages
 
-  return { source };
+  return {
+    cdn: ENV.CDN_HOST,
+    source,
+    title: setSourceTitle(source),
+  };
 }
 
 export default function DocDetailsLayout() {
-  const { source } = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
-  return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <PageTitle>Doc: {source.name ?? source.fileName}</PageTitle>
-        <Form method="POST">
-          <button
-            type="submit"
-            disabled={navigation.state !== "idle"}
-            className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-          >
-            {navigation.state !== "idle" ? "Loading..." : "New Doc Chat"}
-          </button>
-        </Form>
-      </div>
+  const { cdn, source, title } = useLoaderData<typeof loader>();
 
+  const fetcher = useFetcher();
+
+  return (
+    <>
+      <title>{title}</title>
+      <PageHeading pageTitle={title}>
+        <fetcher.Form method="POST" className="">
+          <ActionButton type="submit" disabled={fetcher.state !== "idle"}>
+            {fetcher.state !== "idle" ? "Loading..." : "New Doc Chat"}
+          </ActionButton>
+        </fetcher.Form>
+      </PageHeading>
       <div className="">
-        <p>Insert link to view doc - open in new tab</p>
+        {source.storagePath && (
+          <a
+            href={`${cdn}/${source.storagePath}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-blue-500"
+          >
+            <div className="underline">{source.fileName}</div>{" "}
+            <Icon name="NEW_WINDOW" fontSize="20px" />
+          </a>
+        )}
       </div>
       <div className="">
         <p>{source.summary}</p>
@@ -100,7 +105,7 @@ export default function DocDetailsLayout() {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 

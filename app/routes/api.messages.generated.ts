@@ -6,6 +6,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
 import { type BotReply, botReplyResolver } from "~/lib/schemas/botReply";
+import type { ServerResponse } from "~/types/server";
 import type { Route } from "./+types/api.messages.generated";
 
 export async function action(args: Route.ActionArgs) {
@@ -48,8 +49,9 @@ export async function action(args: Route.ActionArgs) {
     });
 
     return {
+      errors: null,
       ok: true,
-    };
+    } satisfies ServerResponse;
   } catch (error) {
     console.error("error: ", error);
     return serverError(error);
