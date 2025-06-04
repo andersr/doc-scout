@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import { useNavigation, useSubmit } from "react-router";
-import { Button } from "~/components/ui/button";
 import { KEYS } from "~/shared/keys";
 import { Dropzone } from "../Dropzone";
+import { ActionButton } from "../ui/ActionButton";
 
 export function FileUploadForm() {
   const navigation = useNavigation();
@@ -59,13 +59,9 @@ export function FileUploadForm() {
         </ul>
       </div>
 
-      <Button
-        type="button"
-        onClick={handleSubmit}
-        disabled={filesSubmitDisabled}
-      >
+      <ActionButton onClick={handleSubmit} disabled={filesSubmitDisabled}>
         {navigation.state === "submitting" ? "Processing..." : "Add Docs"}
-      </Button>
+      </ActionButton>
     </div>
   );
 }

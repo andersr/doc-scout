@@ -6,7 +6,7 @@ import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
 import { Icon } from "~/components/icon";
-import { ActionButton } from "~/components/ui/ActionLink";
+import { ActionButton } from "~/components/ui/ActionButton";
 import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
