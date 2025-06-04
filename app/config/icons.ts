@@ -5,6 +5,7 @@ export const DEFAULT_ICON_SIZE = "24px";
  */
 export const APP_ICONS = {
   ADD: "add_box",
+  ARROW_UP: "arrow_upward",
   CHATS: "chat_bubble",
   COPY: "content_copy",
   DOCUMENTS: "library_books",

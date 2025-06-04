@@ -13,6 +13,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routeData";
 import { formatDateTime } from "~/utils/formatDateTime";
+import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
 
 export const handle: RouteData = {
@@ -52,7 +53,7 @@ export async function loader(args: LoaderFunctionArgs) {
   return {
     cdn: ENV.CDN_HOST,
     source,
-    title: source.title ?? source.name ?? source.fileName ?? "untitled",
+    title: setSourceTitle(source),
   };
 }
 
