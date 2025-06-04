@@ -193,7 +193,6 @@ export default function ChatDetails() {
                 authorName={AUTHOR_NAME_PLACEHOLDER}
               />
             ))}
-            <ChatListItem isBot loading />
             {optimisticQuery && (
               <ChatListItem
                 createdAt={new Date()}
