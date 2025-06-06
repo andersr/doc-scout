@@ -8,7 +8,6 @@ import { cn } from "~/lib/utils";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { Icon } from "./icon";
 
-// TODO:fix dropzone validation, need to map zod error issues to dropzone codes - currently not working
 export function Dropzone({
   onDrop,
 }: {
@@ -24,10 +23,6 @@ export function Dropzone({
       if (error instanceof z.ZodError && error.issues.length > 0) {
         setErrorMessages(error.issues.map((e) => e.message));
         return null;
-        // return {
-        //   code: "size-too-large",
-        //   message: "Image file is larger than 3MB",
-        // };
       } else {
         console.error("Dropzone error: ", error);
         return {
