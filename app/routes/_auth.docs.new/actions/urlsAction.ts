@@ -1,112 +1,81 @@
-import type { Prisma } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
-import { fcApp } from "~/.server/firecrawl/fcApp";
+import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
+import { generateAbstract } from "~/.server/sources/generateAbstract";
+import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";
+import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
+import { urlListSchema } from "~/lib/schemas/urls";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
-import { isValidUrl } from "~/utils/isValidUrl";
+import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
 import { requireInternalUser } from "../../../.server/sessions/requireInternalUser";
-import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
 
 export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
   const user = await requireInternalUser({ request });
+
   const urlsInput = String(formData.get(KEYS.urls) || "");
 
-  if (!urlsInput || urlsInput.trim() === "") {
-    throw new ServerError(
-      "At least one URL is required.",
-      StatusCodes.BAD_REQUEST,
-    );
-  }
+  // TODO: confirm still erroring if no urls submitted
+  const maybeUrls = splitCsvText(urlsInput);
 
-  const urls = splitCsvText(urlsInput);
+  const urls = urlListSchema.parse(maybeUrls);
 
-  for (let index = 0; index < urls.length; index++) {
-    if (!isValidUrl(urls[index])) {
-      throw new ServerError(
-        `Invalid url: ${urls[index]}`,
-        StatusCodes.BAD_REQUEST,
-      );
-    }
-  }
-
-  const existingSources = await prisma.source.findMany({
-    where: {
-      ownerId: user.id,
-      url: {
-        in: urls,
-      },
-    },
+  await throwIfExistingSources({
+    urls,
+    userId: user.id,
   });
 
-  if (existingSources.length > 0) {
-    throw new ServerError(
-      `Some URLs have already been added: ${existingSources.map((s) => s.url).join(", ")}`,
-      StatusCodes.BAD_REQUEST,
-    );
-  }
+  const urlDataItems = await batchScrapeUrls({ urls });
 
-  const scrapeBatchResponse = await fcApp.batchScrapeUrls(urls, {
-    formats: ["markdown"],
-  });
+  const urlsDbInput: UrlSourceInput[] = [];
 
-  if (!scrapeBatchResponse.success) {
-    throw new ServerError(
-      `Failed to get url data: ${scrapeBatchResponse.error}`,
-      StatusCodes.BAD_GATEWAY,
-    );
-  }
-
-  const sourcesInput: Prisma.SourceCreateManyInput[] = [];
-
-  for (let index = 0; index < scrapeBatchResponse.data.length; index++) {
-    const title = scrapeBatchResponse.data[index].metadata?.title ?? "";
+  for await (const urlData of urlDataItems) {
+    const title = urlData.metadata?.title ?? "";
     if (!title) {
-      console.warn(
-        `no title found for: ${scrapeBatchResponse.data[index].metadata}`,
-      );
+      console.warn(`no title found for: ${urlData.metadata}`);
       // TODO: generate a title
     }
-    const text = scrapeBatchResponse.data[index].markdown;
+    const text = urlData.markdown;
     if (!text) {
-      console.warn(
-        `no text found for: ${scrapeBatchResponse.data[index].metadata}`,
-      );
-      continue;
-    }
-    const url = scrapeBatchResponse.data[index].metadata?.url;
-    if (!url) {
-      console.warn(
-        `no url found for: ${scrapeBatchResponse.data[index].metadata}`,
-      );
+      console.warn(`no text found for: ${urlData.metadata}`);
       continue;
     }
 
-    sourcesInput.push({
-      createdAt: new Date(),
-      name: title, // legacy
+    const summary = await generateAbstract({ text });
+    const url = urlData.metadata?.url;
+    if (!url) {
+      console.warn(`no url found for: ${urlData.metadata}`);
+      continue;
+    }
+
+    urlsDbInput.push({
       ownerId: user.id,
-      publicId: generateId(),
+      summary,
       text,
       title,
       url,
     });
   }
 
-  if (sourcesInput.length === 0) {
+  if (urlsDbInput.length === 0) {
     throw new ServerError(
-      `No source inputs to add.  Please check source input data.`,
+      `No source inputs to add. Please check source input data.`,
       StatusCodes.BAD_GATEWAY,
     );
   }
 
   const sources = await prisma.source.createManyAndReturn({
-    data: sourcesInput,
+    data: urlsDbInput.map((f) => ({
+      createdAt: new Date(),
+      name: f.title, // legacy
+      publicId: generateId(),
+      ...f,
+    })),
   });
 
   await addSourcesToVectorStore({ sources, userPublicId: user.publicId });

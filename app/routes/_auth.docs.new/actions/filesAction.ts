@@ -1,15 +1,16 @@
 import { redirect } from "react-router";
-import { openAiClient } from "~/.server/openai/client";
-import { CREATE_ABSTRACT_INSTRUCTIONS } from "~/data/prompts/createAbstract";
+import { extractTextFromFile } from "~/.server/services/extractTextFromFile";
+import { generateAbstract } from "~/.server/sources/generateAbstract";
+import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { prisma } from "~/lib/prisma";
 import { fileListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
+import type { FileSourceInput } from "~/types/source";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
 import { generateS3Key } from "../../../.server/services/generateS3Key";
 import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
 import { requireInternalUser } from "../../../.server/sessions/requireInternalUser";
-import { addSourceFromFiles } from "../../../.server/sources/addSourcesFromFiles";
 import { generateId } from "../../../.server/utils/generateId";
 import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
 
@@ -22,50 +23,43 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
 
   const files = fileListSchema.parse(submittedFiles);
 
-  const fileDataMap = new Map<
-    string,
-    { publicId: string; storagePath: string }
-  >();
-
-  for (const file of files) {
-    const sourcePublicId = generateId();
-    const s3Key = generateS3Key({
-      fileName: file.name,
-      sourcePublicId,
-      userPublicId: user.publicId,
-    });
-
-    await uploadFileToS3({ file, key: s3Key });
-    fileDataMap.set(file.name, {
-      publicId: sourcePublicId,
-      storagePath: s3Key,
-    });
-  }
-
-  const sources = await addSourceFromFiles({
-    fileDataMap,
+  await throwIfExistingSources({
     files,
     userId: user.id,
   });
 
-  for await (const source of sources) {
-    const response = await openAiClient.responses.create({
-      input: `Create an abstract for the following content:
-      
-      ${source.text}`,
-      instructions: CREATE_ABSTRACT_INSTRUCTIONS,
-      model: "gpt-4.1-mini",
+  const filesDbInput: FileSourceInput[] = [];
+
+  for await (const file of files) {
+    const publicId = generateId();
+    const storagePath = generateS3Key({
+      fileName: file.name,
+      sourcePublicId: publicId,
+      userPublicId: user.publicId,
     });
 
-    await prisma.source.update({
-      data: {
-        summary: response.output_text,
-      },
-      where: {
-        id: source.id,
-      },
+    await uploadFileToS3({ file, key: storagePath });
+
+    const text = await extractTextFromFile(file);
+    const summary = await generateAbstract({ text });
+
+    filesDbInput.push({
+      fileName: file.name,
+      ownerId: user.id,
+      publicId,
+      storagePath,
+      summary,
+      text,
+      title: file.name, // TODO: get from file content or suggest via bot
     });
   }
+
+  const sources = await prisma.source.createManyAndReturn({
+    data: filesDbInput.map((f) => ({
+      createdAt: new Date(),
+      ...f,
+    })),
+  });
 
   await addSourcesToVectorStore({ sources, userPublicId: user.publicId });
 
