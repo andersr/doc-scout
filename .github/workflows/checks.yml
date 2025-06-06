@@ -91,15 +91,62 @@ jobs:
     name: 🔬 E2E Testing
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub PostgreSQL image
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    env:
+      ALLOWED_USERS: "foo@bar.com"
+      AUTH_SESSION_SECRET: ${{ secrets.AUTH_SESSION_SECRET }}
+      AWS_DATA_BUCKET_NAME: "foo"
+      AWS_REGION: "foo"
+      AWS_S3_ACCESS_KEY: "foo"
+      AWS_S3_SECRET: "foo"
+      CDN_HOST: "foo"
+      FIRECRAWL_API_KEY: "foo"
+      OPENAI_API_KEY: "foo"
+      PINECONE_API_KEY: "foo"
+      PINECONE_HOST: "foo"
+      PINECONE_INDEX_NAME: "foo"
+      STYTCH_PROJECT_ID: ${{ secrets.STYTCH_PROJECT_ID }}
+      STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      TEST_ENV: true
+      TEST_USERS: ${{ secrets.TEST_USERS }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-      - name: Install dependencies
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📥 Install deps
         run: npm ci
-      - name: Install Playwright Browsers
+
+      - name: 🛠 Setup Database
+        run: npx prisma migrate reset --force
+
+      - name: ⚙️ Build
+        run: npm run build
+
+      - name: 📥 Install Playwright Browsers
         run: npx playwright install --with-deps
+
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4

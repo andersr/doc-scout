@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+const testEnvSchema = z.object({
+  TEST_PWD: z.string().min(3),
+  TEST_USERS: z.string().min(3),
+});
+
 const envSchema = z.object({
   ALLOWED_USERS: z.string().min(3),
   AUTH_SESSION_SECRET: z.string().min(3),
@@ -8,8 +13,6 @@ const envSchema = z.object({
   AWS_S3_ACCESS_KEY: z.string().min(3),
   AWS_S3_SECRET: z.string().min(3),
   CDN_HOST: z.string().url(),
-  CLERK_SECRET_KEY: z.string().min(3),
-  CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(3),
   FIRECRAWL_API_KEY: z.string().min(3),
   OPENAI_API_KEY: z.string().min(3),
   PINECONE_API_KEY: z.string().min(3),
@@ -17,7 +20,6 @@ const envSchema = z.object({
   PINECONE_INDEX_NAME: z.string().min(3),
   STYTCH_PROJECT_ID: z.string().min(3),
   STYTCH_SECRET: z.string().min(3),
-  VITE_CLERK_PUBLISHABLE_KEY: z.string().min(3),
 });
 
 export const ENV = envSchema.parse(process.env);
