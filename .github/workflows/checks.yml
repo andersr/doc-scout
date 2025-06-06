@@ -126,6 +126,7 @@ jobs:
       STYTCH_PROJECT_ID: ${{ secrets.STYTCH_PROJECT_ID }}
       STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
       TEST_ENV: true
       TEST_USERS: ${{ secrets.TEST_USERS }}
 
