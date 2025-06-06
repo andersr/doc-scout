@@ -14,7 +14,7 @@ import { getDomainHost } from "~/.server/utils/getDomainHost";
 import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
 import { PageTitle } from "~/components/page-title";
-import { ActionButton } from "~/components/ui/ActionLink";
+import { ActionButton } from "~/components/ui/ActionButton";
 import { Label } from "~/components/ui/label";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";

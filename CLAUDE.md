@@ -93,8 +93,11 @@ Copy `.env.example` to `.env` and fill required variables:
 ### Code Conventions
 
 - Use existing Zod schemas for validation
-- Follow shadcn/ui component patterns
 - Server actions use `handleActionIntent` for form routing
 - Database operations via Prisma in `.server/` files
 - Type imports from `./+types/` route files
 - User isolation via ownership models and namespaced vector stores
+
+### Coding Best Practices
+
+- Avoid use of any type and instead try to use more specific types

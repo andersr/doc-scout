@@ -1,4 +1,5 @@
 export const DEFAULT_ICON_SIZE = "24px";
+export const LG_ICON_SIZE = "36px";
 
 /**
  * Use https://fonts.google.com/icons for icon names
@@ -12,4 +13,5 @@ export const APP_ICONS = {
   DONE: "done",
   LOGOUT: "logout",
   NEW_WINDOW: "open_in_new",
+  UPLOAD_FILE: "upload_file",
 };
