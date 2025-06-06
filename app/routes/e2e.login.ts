@@ -26,7 +26,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     if (!testUser) {
-      const params = {
+      const searchRes = await stytchClient.users.search({
         cursor: "",
         limit: 1,
         query: {
@@ -38,8 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           ],
           operator: "AND",
         },
-      };
-      const searchRes = await stytchClient.users.search(params);
+      });
 
       if (searchRes.results.length === 0) {
         const userRes = await stytchClient.passwords.create(userInput);
@@ -48,6 +47,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           data: {
             publicId: generateId(),
             stytchId: userRes.user_id,
+            username: email,
+          },
+        });
+      } else {
+        await prisma.user.upsert({
+          create: {
+            publicId: generateId(),
+            stytchId: searchRes.results[0].user_id,
+            username: email,
+          },
+          update: {},
+          where: {
             username: email,
           },
         });
