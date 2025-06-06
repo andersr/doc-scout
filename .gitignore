@@ -7,6 +7,8 @@
 
 .eslintcache
 .env
+.env.test
+
 tmp
 
 # TS

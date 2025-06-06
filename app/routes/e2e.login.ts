@@ -19,51 +19,42 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       password,
     };
 
-    const testUser = await prisma.user.findUnique({
+    let stytchUserId = "";
+
+    const searchRes = await stytchClient.users.search({
+      cursor: "",
+      limit: 1,
+      query: {
+        operands: [
+          {
+            filter_name: "email_address",
+            filter_value: [email],
+          },
+        ],
+        operator: "AND",
+      },
+    });
+
+    stytchUserId =
+      searchRes.results.length > 0 ? searchRes.results[0].user_id : "";
+
+    if (!stytchUserId) {
+      const userRes = await stytchClient.passwords.create(userInput);
+
+      stytchUserId = userRes.user_id;
+    }
+
+    await prisma.user.upsert({
+      create: {
+        publicId: generateId(),
+        stytchId: stytchUserId,
+        username: email,
+      },
+      update: {},
       where: {
         username: email,
       },
     });
-
-    if (!testUser) {
-      const searchRes = await stytchClient.users.search({
-        cursor: "",
-        limit: 1,
-        query: {
-          operands: [
-            {
-              filter_name: "email_address",
-              filter_value: [email],
-            },
-          ],
-          operator: "AND",
-        },
-      });
-
-      if (searchRes.results.length === 0) {
-        const userRes = await stytchClient.passwords.create(userInput);
-
-        await prisma.user.create({
-          data: {
-            publicId: generateId(),
-            stytchId: userRes.user_id,
-            username: email,
-          },
-        });
-      } else {
-        await prisma.user.upsert({
-          create: {
-            publicId: generateId(),
-            stytchId: searchRes.results[0].user_id,
-            username: email,
-          },
-          update: {},
-          where: {
-            username: email,
-          },
-        });
-      }
-    }
 
     const authRes = await stytchClient.passwords.authenticate({
       ...userInput,

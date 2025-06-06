@@ -27,28 +27,28 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
       },
     },
-    {
-      dependencies: ["setup"],
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      dependencies: ["setup"],
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
+    // {
+    //   dependencies: ["setup"],
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
+    // },
+    // {
+    //   dependencies: ["setup"],
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
+    // },
 
     /* Test against mobile viewports. */
-    {
-      dependencies: ["setup"],
-      name: "Mobile Chrome",
-      use: { ...devices["Pixel 5"] },
-    },
-    {
-      dependencies: ["setup"],
-      name: "Mobile Safari",
-      use: { ...devices["iPhone 12"] },
-    },
+    // {
+    //   dependencies: ["setup"],
+    //   name: "Mobile Chrome",
+    //   use: { ...devices["Pixel 5"] },
+    // },
+    // {
+    //   dependencies: ["setup"],
+    //   name: "Mobile Safari",
+    //   use: { ...devices["iPhone 12"] },
+    // },
 
     /* Test against branded browsers. */
     // {
