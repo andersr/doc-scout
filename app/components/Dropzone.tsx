@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { z } from "zod";
-import { FILETYPES_ACCEPTED } from "~/config/files";
+import { FILE_CONFIG, FILETYPES_ACCEPTED } from "~/config/files";
 import { LG_ICON_SIZE } from "~/config/icons";
 import { fileSchema } from "~/lib/schemas/files";
 import { cn } from "~/lib/utils";
@@ -95,7 +95,16 @@ export function Dropzone({
             className="text-muted-foreground text-xs"
             id="dropzone-description"
           >
-            Supported formats: PDF, DOC, DOCX, TXT, MD
+            Supported formats:{" "}
+            {FILE_CONFIG.allowedExtensions
+              .map((ext) => `.${ext.toUpperCase()}`)
+              .join(", ")}
+          </div>
+          <div
+            className="text-muted-foreground text-xs"
+            id="dropzone-description"
+          >
+            Max file size: {FILE_CONFIG.maxSizeInBytes / (1024 * 1024)}mb
           </div>
         </div>
       </div>
