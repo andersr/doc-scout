@@ -13,6 +13,7 @@ export function UrlForm() {
 
   const hasValidUrls = urlInput.trim().length > 0;
 
+  // TODO: use zod schema
   const handleUrlBlur = () => {
     if (!urlInput.trim()) {
       setValidationError("");
@@ -21,14 +22,10 @@ export function UrlForm() {
 
     const urls = splitCsvText(urlInput);
     const invalidUrls = urls.filter((url) => !isValidUrl(url));
+    const invalidUrlError = `Invalid URL${invalidUrls.length > 1 ? "s" : ""}: ${invalidUrls.join(", ")}`;
+    const error = invalidUrls.length > 0 ? invalidUrlError : "";
 
-    if (invalidUrls.length > 0) {
-      setValidationError(
-        `Invalid URL${invalidUrls.length > 1 ? "s" : ""}: ${invalidUrls.join(", ")}`,
-      );
-    } else {
-      setValidationError("");
-    }
+    setValidationError(error);
   };
 
   const handleUrlChange = (value: string) => {
