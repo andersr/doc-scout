@@ -1,5 +1,3 @@
-// import { data, type ActionFunctionArgs } from "react-router";
-
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type ActionFunctionArgs, data } from "react-router";
 import { createSession } from "~/.server/sessions/createSession";
@@ -11,15 +9,11 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
-// const testUserEmail = (username: string) => `${username}@test.com`;
-
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const email = requireSearchParam({ key: KEYS.email, request });
     const password = requireSearchParam({ key: KEYS.password, request });
-    // const testDomain = TEST_ENV.TEST_DOMAIN;
-    // const email = testUserEmail(username);
-    // console.log("email: ", email);
+
     const userInput = {
       email,
       password,
@@ -45,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const authRes = await stytchClient.passwords.authenticate({
       ...userInput,
-      session_duration_minutes: 60, // add to config
+      session_duration_minutes: 60,
     });
 
     return createSession({

@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-const testEnvSchema = z.object({
-  TEST_PWD: z.string().min(3),
-  TEST_USERS: z.string().min(3),
-});
-
 const envSchema = z.object({
   ALLOWED_USERS: z.string().min(3),
   AUTH_SESSION_SECRET: z.string().min(3),
