@@ -52,14 +52,14 @@ export function UrlForm() {
           rows={6}
           required
           aria-invalid={!!validationError}
-          aria-describedby={validationError ? "url-error" : "url-description"}
+          aria-describedby={validationError ? KEYS.error : KEYS.description}
         />
         {validationError && (
-          <div id="url-error" className="text-danger py-2" role="alert">
+          <div id={KEYS.error} className="text-danger py-2" role="alert">
             {validationError}
           </div>
         )}
-        <p id="url-description" className="text-muted-foreground text-sm">
+        <p id={KEYS.description} className="text-muted-foreground text-sm">
           Enter URLs one per line or comma-separated
         </p>
       </div>
