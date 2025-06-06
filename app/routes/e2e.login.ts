@@ -26,15 +26,32 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     if (!testUser) {
-      const userRes = await stytchClient.passwords.create(userInput);
-
-      await prisma.user.create({
-        data: {
-          publicId: generateId(),
-          stytchId: userRes.user_id,
-          username: email,
+      const params = {
+        cursor: "",
+        limit: 1,
+        query: {
+          operands: [
+            {
+              filter_name: "email_address",
+              filter_value: [email],
+            },
+          ],
+          operator: "AND",
         },
-      });
+      };
+      const searchRes = await stytchClient.users.search(params);
+
+      if (searchRes.results.length === 0) {
+        const userRes = await stytchClient.passwords.create(userInput);
+
+        await prisma.user.create({
+          data: {
+            publicId: generateId(),
+            stytchId: userRes.user_id,
+            username: email,
+          },
+        });
+      }
     }
 
     const authRes = await stytchClient.passwords.authenticate({
