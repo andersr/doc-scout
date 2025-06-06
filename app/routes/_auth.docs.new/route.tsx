@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "react-router";
+import { type ActionFunctionArgs, useActionData } from "react-router";
 import { handleActionIntent } from "~/.server/actions/handleActionIntent";
 import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
@@ -27,6 +27,7 @@ export function meta() {
 
 export default function NewDocsRoute() {
   const { onValueChange, value } = useTabs({ defaultValue: KEYS.files });
+  const actionData = useActionData<typeof action>();
 
   return (
     <div>
@@ -58,12 +59,11 @@ export default function NewDocsRoute() {
           <UrlForm />
         </TabContent>
       </Tabs>
-      {/* THIS NEEDS TO BE FIXED */}
-      {/* {actionData?.errorMessage && (
-        <div className="mt-4 text-center font-semibold text-red-400">
-          {actionData.errorMessage}
-        </div>
-      )} */}
+      {actionData?.errors && (
+        <ul className="mt-4 text-center font-semibold text-red-400">
+          {actionData?.errors.map((e) => <li key={e}>{e}</li>)}
+        </ul>
+      )}
     </div>
   );
 }
