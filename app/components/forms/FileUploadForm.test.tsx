@@ -325,7 +325,7 @@ describe("FileUploadForm", () => {
     render(<RouterStub />);
 
     expect(
-      screen.getByText("Supported formats: PDF, DOC, DOCX, TXT, MD"),
+      screen.getByText("Supported formats: .MD, .TXT, .PDF"),
     ).toBeInTheDocument();
   });
 });
