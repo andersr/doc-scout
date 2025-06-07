@@ -82,7 +82,7 @@ export default function LoginRoute() {
             />
           </div>
           <ActionButton type="submit">
-            {navigation.state === "submitting" ? "Sending..." : "Sign In"}
+            {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
 
