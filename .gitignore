@@ -7,6 +7,8 @@
 
 .eslintcache
 .env
+.env.test
+
 tmp
 
 # TS
@@ -18,3 +20,4 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/playwright/.auth/

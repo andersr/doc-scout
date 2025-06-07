@@ -16,13 +16,13 @@
     "strict": true,
     "target": "ES2022",
     "types": [
+      "@testing-library/jest-dom",
       "node",
       "vite/client",
-      "vitest/globals",
-      "@testing-library/jest-dom"
+      "vitest/globals"
     ],
     "verbatimModuleSyntax": true
   },
   "exclude": ["tmp"],
-  "include": ["app/**/*", ".react-router/types/**/*", "app/.server/**/*"]
+  "include": [".react-router/types/**/*", "app/**/*", "app/.server/**/*"]
 }

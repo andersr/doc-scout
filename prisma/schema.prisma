@@ -190,6 +190,8 @@ model User {
 
   stytchId String @unique
 
+  username String? @unique // used for testing only
+
   // role      Role      @default(USER)
   // email     String    @unique
   // name      String?

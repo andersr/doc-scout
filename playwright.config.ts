@@ -1,12 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const port = process.env.PORT;
+
+if (!port) {
+  throw new Error("no port found");
+}
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -19,29 +22,35 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      dependencies: ["setup"],
+      name: "Desktop Chrome",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
     },
-
     {
+      dependencies: ["setup"],
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
     },
-
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
-
+    // {
+    //   dependencies: ["setup"],
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
+    // },
+    // currently not testing on webkit due to auth issues, likely related to this: https://github.com/microsoft/playwright/issues/35712
     /* Test against mobile viewports. */
     // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
+    //   dependencies: ["setup"],
+    //   name: "Mobile Chrome",
+    //   use: { ...devices["Pixel 5"] },
     // },
     // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
+    //   dependencies: ["setup"],
+    //   name: "Mobile Safari",
+    //   use: { ...devices["iPhone 12"] },
     // },
 
     /* Test against branded browsers. */
@@ -63,17 +72,18 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
+    baseURL: `http://localhost:${port}`,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: "npm run e2e:start",
+    reuseExistingServer: !process.env.CI,
+    url: `http://localhost:${port}`,
+  },
+  /* Opt out of parallel tests on CI. */
+  workers: process.env.CI ? 1 : undefined,
 });

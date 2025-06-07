@@ -10,7 +10,9 @@ export const AppKeys = [
   "files",
   "message",
   "intent",
+  "username",
   "urls",
+  "password",
 ] as const;
 
 const keyTuples = AppKeys.map((k) => [k, k]);
