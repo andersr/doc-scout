@@ -1,13 +1,22 @@
 import { test as setup } from "@playwright/test";
 import { $path as appRoutes } from "safe-routes";
-import { ENV_TEST } from "~/.server/ENV";
 
-import { E2E_PORT } from "~/config/testing";
+const port = process.env.PORT;
+
+if (!port) {
+  throw new Error("no port found");
+}
+
+const testUsers = process.env.TEST_USERS;
+
+if (!testUsers) {
+  throw new Error("no port found");
+}
 
 const user1TestAuthStorage = "playwright/.auth/user1.json";
 
 setup("authenticate user", async ({ request }) => {
-  const testUser = ENV_TEST.TEST_USERS.split(",")[0];
+  const testUser = testUsers.split(",")[0];
   if (!testUser) {
     throw new Error("no test user found");
   }
@@ -25,7 +34,7 @@ setup("authenticate user", async ({ request }) => {
     password,
   });
 
-  await request.post(`http://localhost:${E2E_PORT}${loginRoute}`);
+  await request.post(`http://localhost:${port}${loginRoute}`);
 
   await request.storageState({ path: user1TestAuthStorage });
 });

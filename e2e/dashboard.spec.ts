@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { appRoutes } from "~/shared/appRoutes";
+import { appRoutes } from "../app/shared/appRoutes";
 import { userAuthStorage } from "./helpers";
 
 test.describe("Dashboard", () => {

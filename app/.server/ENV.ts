@@ -18,9 +18,3 @@ const envSchema = z.object({
 });
 
 export const ENV = envSchema.parse(process.env);
-
-const testEnvSchema = z.object({
-  TEST_USERS: z.string().min(3),
-});
-
-export const ENV_TEST = testEnvSchema.parse(process.env);

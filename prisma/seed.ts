@@ -1,10 +1,17 @@
 const prisma = new PrismaClient();
 
 import { PrismaClient } from "@prisma/client";
-import { ENV_TEST } from "~/.server/ENV";
 
-import { stytchClient } from "~/.server/stytch/client";
-import { generateId } from "~/.server/utils/generateId";
+import { z } from "zod";
+import { stytchClient } from "../app/.server/stytch/client";
+import { generateId } from "../app/.server/utils/generateId";
+
+// TODO: duplicated
+const testEnvSchema = z.object({
+  TEST_USERS: z.string().min(3),
+});
+
+const ENV_TEST = testEnvSchema.parse(process.env);
 
 type TestUser = { email: string; password: string };
 type DbUser = { email: string; stytchId: string };

@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
@@ -38,7 +37,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
@@ -58,7 +56,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
@@ -78,7 +75,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
@@ -136,7 +132,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
