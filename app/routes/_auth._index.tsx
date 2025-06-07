@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { Link, useLoaderData } from "react-router";
+import { Link, redirect, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
@@ -8,6 +8,15 @@ import { formatDateTime } from "~/utils/formatDateTime";
 
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
+
+  const userDocs = await prisma.source.count({
+    where: {
+      ownerId: internalUser.id,
+    },
+  });
+  if (userDocs === 0) {
+    return redirect(appRoutes("/docs/new"));
+  }
 
   const [recentDocs, recentChats] = await Promise.all([
     prisma.source.findMany({
