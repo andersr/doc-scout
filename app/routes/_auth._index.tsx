@@ -6,10 +6,6 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { formatDateTime } from "~/utils/formatDateTime";
 
-export function meta() {
-  return [{ title: "Dashboard" }, { content: "", name: "description" }];
-}
-
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
 
@@ -45,16 +41,16 @@ export async function loader(args: LoaderFunctionArgs) {
   return {
     recentChats,
     recentDocs,
+    title: "Dashboard",
   };
 }
 
 export default function Dashboard() {
-  const { recentChats, recentDocs } = useLoaderData<typeof loader>();
+  const { recentChats, recentDocs, title } = useLoaderData<typeof loader>();
 
   return (
     <div className="space-y-8">
-      <PageTitle>Dashboard</PageTitle>
-
+      <PageTitle title={title} />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div>
           <div className="mb-4 flex items-center justify-between">

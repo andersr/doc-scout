@@ -11,14 +11,9 @@ import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
-import type { RouteData } from "~/types/routeData";
 import { formatDateTime } from "~/utils/formatDateTime";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
-
-export const handle: RouteData = {
-  pageTitle: "Doc Details",
-};
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -48,8 +43,6 @@ export async function loader(args: LoaderFunctionArgs) {
     throw redirect(appRoutes("/docs"));
   }
 
-  // todo: get chat with required public id AND filter by USER messages
-
   return {
     cdn: ENV.CDN_HOST,
     source,
@@ -64,7 +57,6 @@ export default function DocDetailsLayout() {
 
   return (
     <>
-      <title>{title}</title>
       <PageHeading pageTitle={title}>
         <fetcher.Form method="POST" className="">
           <ActionButton type="submit" disabled={fetcher.state !== "idle"}>

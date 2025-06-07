@@ -29,16 +29,11 @@ import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage, MESSAGE_INCLUDE } from "~/types/message";
-import type { RouteData } from "~/types/routeData";
 import type { ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 
 // temporary until user name is added
 const AUTHOR_NAME_PLACEHOLDER = "AUTHOR NAME";
-
-export const handle: RouteData = {
-  pageTitle: "Chat Details",
-};
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -175,7 +170,7 @@ export default function ChatDetails() {
     <div className="relative flex w-full flex-1 flex-col gap-6">
       <title>{title}</title>
       <div className="flex items-center justify-between">
-        <PageTitle>{title}</PageTitle>
+        <PageTitle title={title} />
       </div>
       <div className="flex flex-1 flex-col">
         <ScrollContainer

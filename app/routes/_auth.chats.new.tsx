@@ -10,25 +10,12 @@ import {
 import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Checkbox } from "~/components/checkbox";
+import { PageTitle } from "~/components/page-title";
 import { Button } from "~/components/ui/button";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import type { RouteData } from "~/types/routeData";
-
-const PAGE_TITLE = "New Chat";
-
-export const handle: RouteData = {
-  pageTitle: PAGE_TITLE,
-};
-
-export function meta() {
-  return [
-    { title: PAGE_TITLE },
-    // { content: "Create a new collection", name: "description" },
-  ];
-}
 
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
@@ -41,11 +28,12 @@ export async function loader(args: LoaderFunctionArgs) {
 
   return {
     docs,
+    title: "New Chat",
   };
 }
 
 export default function NewDocsRoute() {
-  const { docs } = useLoaderData<typeof loader>();
+  const { docs, title } = useLoaderData<typeof loader>();
 
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
@@ -56,7 +44,7 @@ export default function NewDocsRoute() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">{PAGE_TITLE}</h1>
+      <PageTitle title={title} />
       <Form method="POST" className="flex flex-col gap-6">
         <ul>
           {docs.map((item) => (

@@ -9,10 +9,6 @@ import { Logout } from "~/components/logout";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
-export function meta() {
-  return [{ title: "Doc Scout" }, { content: "", name: "description" }];
-}
-
 export async function loader({ request }: Route.LoaderArgs) {
   const { clientUser } = await requireUser({ request });
 
