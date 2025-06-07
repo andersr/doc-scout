@@ -1,9 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-// dotenv.config();
-// import "dotenv/config";
-// import dotenvx from "@dotenvx/dotenvx";
-// // dotenv.config({ path: path.resolve(__dirname, ".env") });
-// dotenvx.config({ path: [".env.test"] });
+
 const port = process.env.PORT;
 
 if (!port) {
