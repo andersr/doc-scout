@@ -2,10 +2,8 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type ActionFunctionArgs, data } from "react-router";
 import { createSession } from "~/.server/sessions/createSession";
 import { stytchClient } from "~/.server/stytch/client";
-import { generateId } from "~/.server/utils/generateId";
 import { requireSearchParam } from "~/.server/utils/requireSearchParam";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
-import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
@@ -14,50 +12,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const email = requireSearchParam({ key: KEYS.email, request });
     const password = requireSearchParam({ key: KEYS.password, request });
 
-    const userInput = {
+    const authRes = await stytchClient.passwords.authenticate({
       email,
       password,
-    };
-
-    let stytchUserId = "";
-
-    const searchRes = await stytchClient.users.search({
-      cursor: "",
-      limit: 1,
-      query: {
-        operands: [
-          {
-            filter_name: "email_address",
-            filter_value: [email],
-          },
-        ],
-        operator: "AND",
-      },
-    });
-
-    stytchUserId =
-      searchRes.results.length > 0 ? searchRes.results[0].user_id : "";
-
-    if (!stytchUserId) {
-      const userRes = await stytchClient.passwords.create(userInput);
-
-      stytchUserId = userRes.user_id;
-    }
-
-    await prisma.user.upsert({
-      create: {
-        publicId: generateId(),
-        stytchId: stytchUserId,
-        username: email,
-      },
-      update: {},
-      where: {
-        username: email,
-      },
-    });
-
-    const authRes = await stytchClient.passwords.authenticate({
-      ...userInput,
       session_duration_minutes: 60,
     });
 
