@@ -9,7 +9,7 @@ import {
 } from "react-router";
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
-import { PageTitle } from "./components/page-title";
+import { PageTitle } from "./components/PageTitle";
 import "./styles/app.css";
 
 export function meta() {

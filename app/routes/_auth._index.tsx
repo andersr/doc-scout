@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/sessions/requireUser";
-import { PageTitle } from "~/components/page-title";
+import { PageTitle } from "~/components/PageTitle";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { formatDateTime } from "~/utils/formatDateTime";
