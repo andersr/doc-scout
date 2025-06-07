@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
 import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateAbstract } from "~/.server/sources/generateAbstract";
 import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";
@@ -13,10 +14,9 @@ import { ServerError } from "~/types/server";
 import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
-import { requireInternalUser } from "../../../.server/sessions/requireInternalUser";
 
 export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
-  const user = await requireInternalUser({ request });
+  const { internalUser } = await requireUser({ request });
 
   const urlsInput = String(formData.get(KEYS.urls) || "");
 
@@ -27,7 +27,7 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
 
   await throwIfExistingSources({
     urls,
-    userId: user.id,
+    userId: internalUser.id,
   });
 
   const urlDataItems = await batchScrapeUrls({ urls });
@@ -54,7 +54,7 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
     }
 
     urlsDbInput.push({
-      ownerId: user.id,
+      ownerId: internalUser.id,
       summary,
       text,
       title,
@@ -78,7 +78,10 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
     })),
   });
 
-  await addSourcesToVectorStore({ sources, userPublicId: user.publicId });
+  await addSourcesToVectorStore({
+    sources,
+    userPublicId: internalUser.publicId,
+  });
 
   const redirectRoute =
     sources.length === 1

@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { PageTitle } from "~/components/page-title";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
@@ -11,7 +11,7 @@ export function meta() {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  const user = await requireInternalUser(args);
+  const { internalUser } = await requireUser(args);
 
   const [recentDocs, recentChats] = await Promise.all([
     prisma.source.findMany({
@@ -20,7 +20,7 @@ export async function loader(args: LoaderFunctionArgs) {
       },
       take: 5,
       where: {
-        ownerId: user.id,
+        ownerId: internalUser.id,
       },
     }),
     prisma.chat.findMany({
@@ -37,7 +37,7 @@ export async function loader(args: LoaderFunctionArgs) {
       },
       take: 5,
       where: {
-        ownerId: user.id,
+        ownerId: internalUser.id,
       },
     }),
   ]);

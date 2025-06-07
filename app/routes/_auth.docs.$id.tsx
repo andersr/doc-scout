@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, redirect, useFetcher, useLoaderData } from "react-router";
 import { ENV } from "~/.server/ENV";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
@@ -110,7 +110,7 @@ export default function DocDetailsLayout() {
 }
 
 export async function action(args: Route.ActionArgs) {
-  const user = await requireInternalUser(args);
+  const { internalUser } = await requireUser(args);
   try {
     const sourcePublicId = requireRouteParam({
       key: KEYS.id,
@@ -126,7 +126,7 @@ export async function action(args: Route.ActionArgs) {
     const chat = await prisma.chat.create({
       data: {
         createdAt: new Date(),
-        ownerId: user.id,
+        ownerId: internalUser.id,
         publicId: generateId(),
         sources: {
           create: {

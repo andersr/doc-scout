@@ -8,7 +8,7 @@ import {
   useRemixForm,
 } from "remix-hook-form";
 import { twMerge } from "tailwind-merge";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
@@ -243,7 +243,7 @@ export default function ChatDetails() {
 }
 
 export async function action(args: ActionFunctionArgs) {
-  const currentUser = await requireInternalUser(args);
+  const { internalUser } = await requireUser(args);
   try {
     const chatPublicId = requireRouteParam({
       key: KEYS.id,
@@ -271,7 +271,7 @@ export async function action(args: ActionFunctionArgs) {
 
     await prisma.message.create({
       data: {
-        authorId: currentUser.id,
+        authorId: internalUser.id,
         chatId: chat.id,
         createdAt: new Date(),
         publicId: generateId(),

@@ -1,6 +1,6 @@
 import { data, Link, Outlet, useLoaderData, useLocation } from "react-router";
 
-import { requireUser } from "~/.server/users";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { AppContainer } from "~/components/AppContainer";
 import { Avatar } from "~/components/Avatar";
 import { FoldedDoc } from "~/components/brand/FoldedDoc";
@@ -14,16 +14,9 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { user } = await requireUser({ request });
+  const { clientUser } = await requireUser({ request });
 
-  return data(
-    { user },
-    {
-      // headers: {
-      //   "Set-Cookie": await authSessionStore.commitSession(session),
-      // },
-    },
-  );
+  return data({ user: clientUser });
 }
 
 const NAV_LINKS: { label: string; route: string }[] = [

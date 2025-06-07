@@ -1,6 +1,6 @@
 import { type ActionFunctionArgs, useActionData } from "react-router";
 import { handleActionIntent } from "~/.server/actions/handleActionIntent";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";
 import {
@@ -69,7 +69,7 @@ export default function NewDocsRoute() {
 }
 
 export async function action(args: ActionFunctionArgs) {
-  await requireInternalUser(args);
+  await requireUser(args);
   return await handleActionIntent({
     handlers: {
       files: filesAction,

@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { ActionLink } from "~/components/ui/ActionLink";
 import { PageHeading } from "~/components/ui/PageHeading";
 
@@ -20,14 +20,14 @@ export function meta() {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  const user = await requireInternalUser(args);
+  const { internalUser } = await requireUser(args);
 
   const chats = await prisma.chat.findMany({
     include: {
       messages: true,
     },
     where: {
-      ownerId: user.id,
+      ownerId: internalUser.id,
     },
   });
 
