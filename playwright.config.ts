@@ -34,33 +34,25 @@ export default defineConfig({
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
     },
-    // {
-    //   dependencies: ["setup"],
-    //   name: "webkit",
-    //   use: { ...devices["Desktop Safari"] },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   dependencies: ["setup"],
-    //   name: "Mobile Chrome",
-    //   use: { ...devices["Pixel 5"] },
-    // },
-    // {
-    //   dependencies: ["setup"],
-    //   name: "Mobile Safari",
-    //   use: { ...devices["iPhone 12"] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    {
+      dependencies: ["setup"],
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+    {
+      dependencies: ["setup"],
+      name: "Mobile Chrome",
+      use: { ...devices["Pixel 5"] },
+    },
+    {
+      dependencies: ["setup"],
+      name: "Mobile Safari",
+      use: { ...devices["iPhone 12"] },
+    },
+    {
+      name: "Microsoft Edge",
+      use: { ...devices["Desktop Edge"], channel: "msedge" },
+    },
   ],
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
