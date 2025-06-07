@@ -16,10 +16,7 @@ export const handle: RouteData = {
 };
 
 export function meta() {
-  return [
-    { title: SECTION_NAME },
-    // { content: "My Documents", name: "description" },
-  ];
+  return [{ title: SECTION_NAME }];
 }
 
 export async function loader(args: LoaderFunctionArgs) {
