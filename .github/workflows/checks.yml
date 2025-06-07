@@ -125,6 +125,7 @@ jobs:
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
       TEST_ENV: true
       TEST_USERS: ${{ secrets.TEST_USERS }}
+      PORT: 8080
 
     steps:
       - uses: actions/checkout@v4
