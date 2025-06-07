@@ -8,7 +8,7 @@ import {
   useRemixForm,
 } from "remix-hook-form";
 import { twMerge } from "tailwind-merge";
-import { requireInternalUser } from "~/.server/sessions/requireInternalUser";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
@@ -29,16 +29,11 @@ import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage, MESSAGE_INCLUDE } from "~/types/message";
-import type { RouteData } from "~/types/routeData";
 import type { ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 
 // temporary until user name is added
 const AUTHOR_NAME_PLACEHOLDER = "AUTHOR NAME";
-
-export const handle: RouteData = {
-  pageTitle: "Chat Details",
-};
 
 export async function loader(args: LoaderFunctionArgs) {
   const publicId = requireRouteParam({
@@ -175,7 +170,7 @@ export default function ChatDetails() {
     <div className="relative flex w-full flex-1 flex-col gap-6">
       <title>{title}</title>
       <div className="flex items-center justify-between">
-        <PageTitle>{title}</PageTitle>
+        <PageTitle title={title} />
       </div>
       <div className="flex flex-1 flex-col">
         <ScrollContainer
@@ -243,7 +238,7 @@ export default function ChatDetails() {
 }
 
 export async function action(args: ActionFunctionArgs) {
-  const currentUser = await requireInternalUser(args);
+  const { internalUser } = await requireUser(args);
   try {
     const chatPublicId = requireRouteParam({
       key: KEYS.id,
@@ -271,7 +266,7 @@ export async function action(args: ActionFunctionArgs) {
 
     await prisma.message.create({
       data: {
-        authorId: currentUser.id,
+        authorId: internalUser.id,
         chatId: chat.id,
         createdAt: new Date(),
         publicId: generateId(),

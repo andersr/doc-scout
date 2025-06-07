@@ -1,5 +1,6 @@
 import { redirect } from "react-router";
 import { extractTextFromFile } from "~/.server/services/extractTextFromFile";
+import { requireUser } from "~/.server/sessions/requireUser";
 import { generateAbstract } from "~/.server/sources/generateAbstract";
 import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { prisma } from "~/lib/prisma";
@@ -10,12 +11,11 @@ import type { FileSourceInput } from "~/types/source";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
 import { generateS3Key } from "../../../.server/services/generateS3Key";
 import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
-import { requireInternalUser } from "../../../.server/sessions/requireInternalUser";
 import { generateId } from "../../../.server/utils/generateId";
 import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
 
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
-  const user = await requireInternalUser({ request });
+  const { internalUser } = await requireUser({ request });
 
   const submittedFiles = formData
     .getAll(KEYS.files)
@@ -25,7 +25,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
 
   await throwIfExistingSources({
     files,
-    userId: user.id,
+    userId: internalUser.id,
   });
 
   const filesDbInput: FileSourceInput[] = [];
@@ -35,7 +35,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
     const storagePath = generateS3Key({
       fileName: file.name,
       sourcePublicId: publicId,
-      userPublicId: user.publicId,
+      userPublicId: internalUser.publicId,
     });
 
     await uploadFileToS3({ file, key: storagePath });
@@ -45,7 +45,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
 
     filesDbInput.push({
       fileName: file.name,
-      ownerId: user.id,
+      ownerId: internalUser.id,
       publicId,
       storagePath,
       summary,
@@ -61,7 +61,10 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
     })),
   });
 
-  await addSourcesToVectorStore({ sources, userPublicId: user.publicId });
+  await addSourcesToVectorStore({
+    sources,
+    userPublicId: internalUser.publicId,
+  });
 
   const redirectRoute =
     sources.length === 1

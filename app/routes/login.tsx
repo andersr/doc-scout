@@ -20,10 +20,6 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 
-export function meta() {
-  return [{ title: "Login" }];
-}
-
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAnon({ request });
 
@@ -32,10 +28,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     error,
+    title: "Sign In",
   };
 }
 export default function LoginRoute() {
-  const { error } = useLoaderData<typeof loader>();
+  const { error, title } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
@@ -62,7 +59,7 @@ export default function LoginRoute() {
         )}
 
         <div className="mb-4">
-          <PageTitle>Sign In</PageTitle>
+          <PageTitle title={title} />
         </div>
         <Form
           method="POST"
@@ -82,7 +79,7 @@ export default function LoginRoute() {
             />
           </div>
           <ActionButton type="submit">
-            {navigation.state === "submitting" ? "Sending..." : "Sign In"}
+            {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
 

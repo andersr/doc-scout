@@ -2,7 +2,11 @@ import { redirect } from "react-router";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
-import type { UserClient } from "~/types/user";
+import {
+  USER_INTERNAL_INCLUDE,
+  type UserClient,
+  type UserInternal,
+} from "~/types/user";
 import { stytchClient } from "../stytch/client";
 import { getCookieValue } from "./getCookieValue";
 import { logout } from "./logout";
@@ -11,7 +15,7 @@ export async function requireUser({
   request,
 }: {
   request: Request;
-}): Promise<{ user: UserClient }> {
+}): Promise<{ clientUser: UserClient; internalUser: UserInternal }> {
   const sessionToken = await getCookieValue({
     key: STYTCH_SESSION_TOKEN,
     request,
@@ -38,6 +42,7 @@ export async function requireUser({
     }
 
     const user = await prisma.user.findUnique({
+      include: USER_INTERNAL_INCLUDE,
       where: {
         stytchId: resp.user.user_id,
       },
@@ -61,7 +66,8 @@ export async function requireUser({
     }
 
     return {
-      user: { email, publicId: user.publicId },
+      clientUser: { email, publicId: user.publicId },
+      internalUser: user,
     };
   } catch (error) {
     console.error("error: ", error);
