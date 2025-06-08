@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FILE_CONFIG } from "~/config/files";
 import { fileListSchema, fileSchema } from "./files";
 
 function createMockFile({
@@ -98,7 +99,7 @@ describe("fileSchema", () => {
   it("should reject files exceeding size limit", () => {
     const file = createMockFile({
       name: "large.pdf",
-      size: 5 * 1024 * 1024, // 5MB
+      size: FILE_CONFIG.maxSizeInBytes + 1,
       type: "application/pdf",
     });
 
