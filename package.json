@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@aws-sdk/client-s3": "^3.799.0",
+    "@aws-sdk/s3-request-presigner": "^3.826.0",
     "@hookform/resolvers": "^5.0.1",
     "@langchain/core": "^0.3.57",
     "@langchain/langgraph": "^0.2.74",
