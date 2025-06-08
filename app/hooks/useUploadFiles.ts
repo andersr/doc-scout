@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
@@ -59,7 +59,19 @@ export function useUploadFiles({
               continue;
             }
 
-            await uploadToPresignedUrl(url.signedUrl, file);
+            const formData = new FormData();
+            formData.append(
+              "file",
+              new Blob([file], { type: file.type }),
+              file.name,
+            );
+            await fetch(url.signedUrl, {
+              body: formData,
+              headers: {
+                "Content-Type": file.type,
+              },
+              method: "PUT",
+            });
           }
 
           setSelectedFiles([]);
@@ -136,17 +148,4 @@ export function useUploadFiles({
     setShowSelect,
     showSelect,
   };
-}
-
-async function uploadToPresignedUrl(presignedUrl: string, file: File) {
-  try {
-    // TODO: why PUT and not POST?
-    await axios.put(presignedUrl, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-  } catch (error) {
-    console.error("error: ", error);
-  }
 }
