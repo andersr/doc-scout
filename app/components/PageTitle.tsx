@@ -1,6 +1,5 @@
 import { setWindowTitle } from "~/utils/setWindowTitle";
 
-// TODO: rename file back to PageTitle
 export function PageTitle({ title }: { title: string }) {
   return (
     <>
