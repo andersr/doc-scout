@@ -16,7 +16,7 @@ import { ChatListItem } from "~/components/ChatListItem";
 import { ListContainer } from "~/components/containers/ListContainer";
 import { ScrollContainer } from "~/components/containers/ScrollContainer";
 import { Icon } from "~/components/icon";
-import { PageTitle } from "~/components/page-title";
+import { PageTitle } from "~/components/PageTitle";
 import { Spinner } from "~/components/Spinner";
 import { getNameSpace } from "~/config/namespaces";
 import { FALLBACK_TITLE } from "~/config/sources";

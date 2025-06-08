@@ -3,7 +3,7 @@ import { handleActionIntent } from "~/.server/actions/handleActionIntent";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";
-import { PageTitle } from "~/components/page-title";
+import { PageTitle } from "~/components/PageTitle";
 import {
   TabButton,
   TabContent,
