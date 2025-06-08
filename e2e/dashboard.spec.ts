@@ -5,9 +5,10 @@ import { userAuthStorage } from "./helpers";
 test.describe("Dashboard", () => {
   test.use({ storageState: userAuthStorage });
 
-  test("allows an auth user to view the dashboard", async ({ page }) => {
+  test("redirects to the new docs form if a user has no docs", async ({
+    page,
+  }) => {
     await page.goto(appRoutes("/"));
-
-    await expect(page).toHaveTitle(/Dashboard/);
+    await expect(page.getByRole("heading")).toHaveText(/Add Docs/);
   });
 });
