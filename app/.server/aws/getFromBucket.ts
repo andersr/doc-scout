@@ -1,5 +1,4 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import type { ScrapeData } from "~/types/doc";
 import { ENV } from "../ENV";
 import { s3Client } from "./s3Client";
 
@@ -15,17 +14,4 @@ export async function getFromBucket(key: string) {
   });
 
   return s3Client.send(command);
-}
-
-export async function getBucketData(path: string): Promise<ScrapeData> {
-  const res = await getFromBucket(path);
-
-  if (res.$metadata.httpStatusCode !== 200 || !res.Body) {
-    throw new Error("error getting data from bucket");
-  }
-  const bodyString = await res?.Body?.transformToString();
-
-  const sourceData: ScrapeData = JSON.parse(bodyString);
-
-  return sourceData;
 }

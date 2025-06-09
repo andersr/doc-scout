@@ -1,75 +1,103 @@
-import { redirect } from "react-router";
-import { extractTextFromFile } from "~/.server/services/extractTextFromFile";
+import type { Source } from "@prisma/client";
 import { requireUser } from "~/.server/sessions/requireUser";
-import { generateAbstract } from "~/.server/sources/generateAbstract";
-import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { prisma } from "~/lib/prisma";
-import { fileListSchema } from "~/lib/schemas/files";
-import { appRoutes } from "~/shared/appRoutes";
+import { sourceIdListSchema } from "~/lib/schemas/files";
 import { KEYS } from "~/shared/keys";
-import type { FileSourceInput } from "~/types/source";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
-import { generateS3Key } from "../../../.server/services/generateS3Key";
-import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
-import { generateId } from "../../../.server/utils/generateId";
-import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
 
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
 
-  const submittedFiles = formData
-    .getAll(KEYS.files)
-    .filter((f) => f instanceof File);
+  // const submittedFiles = formData
+  //   .getAll(KEYS.files)
+  //   .filter((f) => f instanceof File);
+  const items = formData.getAll(KEYS.ids);
 
-  const files = fileListSchema.parse(submittedFiles);
+  const ids = sourceIdListSchema.parse(items);
 
-  await throwIfExistingSources({
-    files,
-    userId: internalUser.id,
-  });
+  // await throwIfExistingSources({
+  //   files,
+  //   userId: internalUser.id,
+  // });
 
-  const filesDbInput: FileSourceInput[] = [];
+  // const filesDbInput: FileSourceInput[] = [];
 
-  for await (const file of files) {
-    const publicId = generateId();
-    const storagePath = generateS3Key({
-      fileName: file.name,
-      sourcePublicId: publicId,
-      userPublicId: internalUser.publicId,
+  const sources: Source[] = [];
+
+  // allow CDN to update
+  // await asyncDelay(1000);
+
+  for await (const id of ids) {
+    const source = await prisma.source.findFirst({
+      where: {
+        publicId: id,
+      },
     });
 
-    await uploadFileToS3({ file, key: storagePath });
+    if (!source) {
+      console.warn(`No source found for id: ${id}`);
+      continue;
+    }
 
-    const text = await extractTextFromFile(file);
-    const summary = await generateAbstract({ text });
+    if (!source.storagePath) {
+      console.warn(`No storage path found for id: ${id}`);
+      continue;
+    }
 
-    filesDbInput.push({
-      fileName: file.name,
-      ownerId: internalUser.id,
-      publicId,
-      storagePath,
-      summary,
-      text,
-      title: file.name, // TODO: get from file content or suggest via bot
-    });
+    // await extractText(source.storagePath);
+    // const url = `${ENV.CDN_HOST}/${source.storagePath}`;
+
+    // const text = await extractTextFromPdfUrl(url);
+    // const summary = await generateAbstract({ text });
+
+    // const file = await getFileFromS3(source.storagePath);
+    // const fileData = await getFromBucket(source.storagePath);
+    // console.log("fileData: ", fileData);
+    // const publicId = generateId();
+    // const storagePath = generateS3Key({
+    //   fileName: file.name,
+    //   sourcePublicId: publicId,
+    //   userPublicId: internalUser.publicId,
+    // });
+
+    // await uploadFileToS3({ file, key: storagePath });
+
+    // const text = await extractTextFromFile(file);
+    // const summary = await generateAbstract({ text });
+
+    // await prisma.source.update({
+    //   data: {
+    //     // summary,
+    //     text,
+    //   },
+    //   where: {
+    //     id: source.id,
+    //   },
+    // });
+
+    // sources.push(source);
+
+    // filesDbInput.push({
+    //   fileName: file.name,
+    //   ownerId: internalUser.id,
+    //   publicId,
+    //   storagePath,
+    //   summary,
+    //   text,
+    //   title: file.name, // TODO: get from file content or suggest via bot
+    // });
   }
 
-  const sources = await prisma.source.createManyAndReturn({
-    data: filesDbInput.map((f) => ({
-      createdAt: new Date(),
-      ...f,
-    })),
-  });
+  // await addSourcesToVectorStore({
+  //   sources,
+  //   userPublicId: internalUser.publicId,
+  // });
 
-  await addSourcesToVectorStore({
-    sources,
-    userPublicId: internalUser.publicId,
-  });
+  // const redirectRoute =
+  //   sources.length === 1
+  //     ? appRoutes("/docs/:id", { id: sources[0].publicId })
+  //     : appRoutes("/docs");
 
-  const redirectRoute =
-    sources.length === 1
-      ? appRoutes("/docs/:id", { id: sources[0].publicId })
-      : appRoutes("/docs");
-
-  return redirect(redirectRoute);
+  // return redirect(redirectRoute);
+  return null;
 };

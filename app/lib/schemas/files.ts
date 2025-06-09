@@ -2,6 +2,22 @@ import { z } from "zod";
 import { FILE_CONFIG as CONFIG } from "~/config/files";
 import { formatBytes } from "~/utils/formatBytes";
 
+// TODO: also validate file type
+export const fileNameSchema = z
+  .string()
+  .min(5)
+  .refine((name) => name.trim() !== "", {
+    message: `File name cannot be empty`,
+  });
+
+export const fileNameListSchema = z
+  .array(fileNameSchema)
+  .refine((list) => list.length > 0, "No files selected")
+  .refine(
+    (list) => list.length <= CONFIG.maxFiles,
+    `Maximum ${CONFIG.maxFiles} files allowed`,
+  );
+
 export const fileSchema = z
   .instanceof(File)
   .refine((file) => file.name.trim() !== "", {
@@ -21,3 +37,7 @@ export const fileListSchema = z
     (list) => list.length <= CONFIG.maxFiles,
     `Maximum ${CONFIG.maxFiles} files allowed`,
   );
+
+export const sourceIdListSchema = z
+  .array(z.string().min(5))
+  .refine((list) => list.length > 0, "No items");

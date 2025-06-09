@@ -3,6 +3,10 @@ import { openAiClient } from "../openai/client";
 
 export async function generateAbstract({ text }: { text: string }) {
   try {
+    if (text.trim() === "") {
+      console.warn("no text found, cannot generate abstract");
+      return "";
+    }
     const response = await openAiClient.responses.create({
       input: `Create an abstract for the following content:
    

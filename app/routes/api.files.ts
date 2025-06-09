@@ -1,15 +1,12 @@
 import { data } from "react-router";
 import { createPresignedUrl } from "~/.server/aws/createPresignedUrl";
-import { extractTextFromFile } from "~/.server/services/extractTextFromFile";
 import { generateS3Key } from "~/.server/services/generateS3Key";
 import { requireUser } from "~/.server/sessions/requireUser";
-import { generateAbstract } from "~/.server/sources/generateAbstract";
 import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
-import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
-import { fileListSchema } from "~/lib/schemas/files";
+import { fileNameListSchema } from "~/lib/schemas/files";
 import { KEYS } from "~/shared/keys";
 import type { SignedUrlPayload } from "~/types/files";
 import type { FileSourceInput } from "~/types/source";
@@ -20,49 +17,48 @@ export async function action(args: Route.ActionArgs) {
   try {
     const clone = args.request.clone();
     const formData = await clone.formData();
-    const submittedFiles = formData
-      .getAll(KEYS.files)
-      .filter((f) => f instanceof File);
+    const submittedFiles = formData.getAll(KEYS.fileNames);
 
-    const files = fileListSchema.parse(submittedFiles);
+    const fileNames = fileNameListSchema.parse(submittedFiles);
 
     await throwIfExistingSources({
-      files,
+      fileNames,
       userId: internalUser.id,
     });
+
     const urls: SignedUrlPayload[] = [];
     const filesDbInput: FileSourceInput[] = [];
 
-    for await (const file of files) {
+    for await (const fileName of fileNames) {
       const sourcePublicId = generateId();
       const storagePath = generateS3Key({
-        fileName: file.name,
+        fileName,
         sourcePublicId,
         userPublicId: internalUser.publicId,
       });
 
-      const text = await extractTextFromFile(file);
-      const summary = await generateAbstract({ text });
+      // const text = await extractTextFromFile(file);
+      // const summary = await generateAbstract({ text });
       const signedUrl = await createPresignedUrl({ key: storagePath });
 
       filesDbInput.push({
-        fileName: file.name,
+        fileName,
         ownerId: internalUser.id,
         publicId: sourcePublicId,
         storagePath,
-        summary,
-        text,
-        title: file.name, // TODO: get from file content or suggest via bot
+        // summary: "",
+        text: "",
+        title: fileName, // TODO: get from file content or suggest via bot
       });
 
       urls.push({
-        fileName: file.name,
+        fileName,
         signedUrl,
         sourcePublicId,
       });
     }
 
-    const sources = await prisma.source.createManyAndReturn({
+    await prisma.source.createManyAndReturn({
       data: filesDbInput.map((f) => {
         return {
           ...f,
@@ -71,10 +67,10 @@ export async function action(args: Route.ActionArgs) {
       }),
     });
 
-    await addSourcesToVectorStore({
-      sources,
-      userPublicId: internalUser.publicId,
-    });
+    // await addSourcesToVectorStore({
+    //   sources,
+    //   userPublicId: internalUser.publicId,
+    // });
 
     return data({ urls }, { status: 200 });
   } catch (error) {

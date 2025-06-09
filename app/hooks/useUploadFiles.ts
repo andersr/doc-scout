@@ -1,4 +1,3 @@
-// import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
@@ -21,6 +20,10 @@ export function useUploadFiles({
   const [showSelect, setShowSelect] = useState(false);
 
   const signedUrlFetcher = useFetcherWithReset<{
+    urls?: SignedUrlPayload[];
+  }>();
+
+  const sourceUpdateFetcher = useFetcherWithReset<{
     urls?: SignedUrlPayload[];
   }>();
 
@@ -49,6 +52,9 @@ export function useUploadFiles({
         }
 
         try {
+          const localDbUpdateData = new FormData();
+          localDbUpdateData.append(KEYS.intent, KEYS.files);
+
           for await (const url of urls) {
             const file = selectedFiles.find((f) => f.name === url.fileName);
 
@@ -59,14 +65,15 @@ export function useUploadFiles({
               continue;
             }
 
-            const formData = new FormData();
-            formData.append(
+            const s3UploadData = new FormData();
+            s3UploadData.append(
               "file",
               new Blob([file], { type: file.type }),
               file.name,
             );
+            localDbUpdateData.append(KEYS.ids, url.sourcePublicId);
             await fetch(url.signedUrl, {
-              body: formData,
+              body: s3UploadData,
               headers: {
                 "Content-Type": file.type,
               },
@@ -74,17 +81,27 @@ export function useUploadFiles({
             });
           }
 
-          setSelectedFiles([]);
+          // setSelectedFiles([]);
 
-          setIsUpdating(false);
+          sourceUpdateFetcher.submit(localDbUpdateData, { method: "POST" });
 
-          if (redirectOnDone) {
-            const redirectRoute =
-              urls.length === 1
-                ? appRoutes("/docs/:id", { id: urls[0].sourcePublicId })
-                : appRoutes("/docs");
-            navigate(redirectRoute);
-          }
+          // const idData = new FormData();
+          // // formData.append(KEYS.intent, KEYS.files);
+
+          // for (const file of selectedFiles) {
+          //   formData.append(KEYS.ids, file.name);
+          // }
+
+          // sourceUpdateFetcher.submit(formData, { method: "post" });
+
+          // fetch file data from s3 bucket and update text, summary, vectorstore
+          // if (redirectOnDone) {
+          //   const redirectRoute =
+          //     urls.length === 1
+          //       ? appRoutes("/docs/:id", { id: urls[0].sourcePublicId })
+          //       : appRoutes("/docs");
+          //   navigate(redirectRoute);
+          // }
         } catch (error) {
           console.error("handleSignedUrls error: ", error);
           setErrorMessage(INTENTIONALLY_GENERIC_ERROR_MESSAGE);
@@ -98,20 +115,16 @@ export function useUploadFiles({
       isUpdating,
       selectedFiles,
       signedUrlFetcher,
+      sourceUpdateFetcher,
     ],
   );
 
   async function handleSubmit() {
     setIsUpdating(true);
     const formData = new FormData();
-    formData.append(KEYS.intent, KEYS.files);
 
     for (const file of selectedFiles) {
-      formData.append(
-        KEYS.files,
-        new Blob([file], { type: file.type }), // needs to be explicitly set to prevent generic binary type
-        file.name,
-      );
+      formData.append(KEYS.fileNames, file.name);
     }
 
     signedUrlFetcher.submit(formData, {
