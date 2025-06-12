@@ -10,15 +10,14 @@ import {
 } from "@adobe/pdfservices-node-sdk";
 import AdmZip from "adm-zip";
 import fs from "fs";
-import os from "os";
 import path from "path";
 import { pdfClient } from "../vendors/adobe/pdfClient";
 
 export async function extractPdfData(filePath: string): Promise<string> {
   let readStream;
-  let tmpDir;
-  const appPrefix = "pdf-";
-  let tempFilePath = "";
+  // let tmpDir;
+  // const appPrefix = "pdf-";
+  // let tempFilePath = "";
 
   try {
     readStream = fs.createReadStream(filePath);
@@ -46,8 +45,11 @@ export async function extractPdfData(filePath: string): Promise<string> {
       throw new Error("No result asset returned");
     }
     const streamAsset = await pdfClient.getContent({ asset: resultAsset });
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), appPrefix));
-    tempFilePath = path.join(tmpDir, `pdf-extract-${Date.now()}.zip`);
+    if (!fs.existsSync("/tmp")) {
+      throw new Error("no tmp dir");
+    }
+    // tmpDir = fs.mkdtempSync(path.join("/tmp", appPrefix));
+    const tempFilePath = path.join("/tmp", `pdf-extract-${Date.now()}.zip`);
     const writeStream = fs.createWriteStream(tempFilePath);
 
     await new Promise<void>((resolve, reject) => {
@@ -88,16 +90,16 @@ export async function extractPdfData(filePath: string): Promise<string> {
     }
   } finally {
     readStream?.destroy();
-    if (tmpDir) {
-      try {
-        fs.rmSync(tmpDir, { recursive: true });
-      } catch (cleanupError) {
-        console.error(
-          `Failed to remove temporary directory: ${tmpDir}`,
-          cleanupError,
-        );
-      }
-    }
+    // if (tmpDir) {
+    //   try {
+    //     fs.rmSync(tmpDir, { recursive: true });
+    //   } catch (cleanupError) {
+    //     console.error(
+    //       `Failed to remove temporary directory: ${tmpDir}`,
+    //       cleanupError,
+    //     );
+    //   }
+    // }
     // if (tempFilePath && fs.existsSync(tempFilePath)) {
     //   fs.unlinkSync(tempFilePath);
     // }
