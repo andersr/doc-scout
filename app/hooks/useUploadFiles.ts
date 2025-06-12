@@ -6,6 +6,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import type { SourceInitResponse } from "~/types/files";
+import type { ServerResponse } from "~/types/server";
 import { useFetcherWithReset } from "./useFetcherWithReset";
 
 export function useUploadFiles({
@@ -14,19 +15,45 @@ export function useUploadFiles({
   redirectOnDone?: boolean;
 } = {}) {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
   const [dropError, setDropError] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showSelect, setShowSelect] = useState(false);
 
-  const sourcesInitFetcher = useFetcherWithReset<{
-    items?: SourceInitResponse[];
-  }>();
+  const sourcesInitFetcher = useFetcherWithReset<
+    {
+      items?: SourceInitResponse[];
+    } & ServerResponse
+  >();
 
-  const sourcesUpdateFetcher = useFetcherWithReset<{
-    items?: SourceInitResponse[];
-  }>();
+  const sourcesUpdateFetcher = useFetcherWithReset<
+    {
+      items?: SourceInitResponse[];
+    } & ServerResponse
+  >();
+
+  useEffect(() => {
+    if (
+      sourcesInitFetcher.data?.errors &&
+      sourcesInitFetcher.data?.errors.length > 0
+    ) {
+      setErrors(sourcesInitFetcher.data?.errors);
+      setIsUpdating(false);
+      sourcesInitFetcher.reset();
+    }
+  }, [sourcesInitFetcher]);
+
+  useEffect(() => {
+    if (
+      sourcesUpdateFetcher.data?.errors &&
+      sourcesUpdateFetcher.data?.errors.length > 0
+    ) {
+      setErrors(sourcesUpdateFetcher.data?.errors);
+      setIsUpdating(false);
+      sourcesUpdateFetcher.reset();
+    }
+  }, [sourcesUpdateFetcher]);
 
   useEffect(
     function handleSignedUrls() {
@@ -35,8 +62,8 @@ export function useUploadFiles({
         sourcesInitFetcher.state === "idle" &&
         sourcesInitFetcher?.data?.items
       ) {
-        if (errorMessage) {
-          setErrorMessage("");
+        if (errors.length > 0) {
+          setErrors([]);
         }
 
         uploadFiles({
@@ -67,12 +94,12 @@ export function useUploadFiles({
           sourcesUpdateFetcher.submit(sourceUpdateData, { method: "POST" });
         } catch (error) {
           console.error("handleSignedUrls error: ", error);
-          setErrorMessage(INTENTIONALLY_GENERIC_ERROR_MESSAGE);
+          setErrors([INTENTIONALLY_GENERIC_ERROR_MESSAGE]);
         }
       }
     },
     [
-      errorMessage,
+      errors,
       redirectOnDone,
       navigate,
       isUpdating,
@@ -107,14 +134,14 @@ export function useUploadFiles({
     if (dropError) {
       setDropError("");
     }
-    if (errorMessage) {
-      setErrorMessage("");
+    if (errors.length > 0) {
+      setErrors([]);
     }
   };
 
   return {
     dropError,
-    errorMessage,
+    errors,
     handleReset,
     handleSubmit,
     isUpdating: isUpdating,

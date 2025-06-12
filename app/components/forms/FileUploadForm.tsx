@@ -4,7 +4,7 @@ import { Dropzone } from "../Dropzone";
 import { ActionButton } from "../ui/ActionButton";
 
 export function FileUploadForm() {
-  const { handleSubmit, isUpdating, selectedFiles, setSelectedFiles } =
+  const { errors, handleSubmit, isUpdating, selectedFiles, setSelectedFiles } =
     useUploadFiles({
       redirectOnDone: true,
     });
@@ -20,6 +20,13 @@ export function FileUploadForm() {
 
   return (
     <div>
+      {errors.length > 0 && (
+        <ul>
+          {errors.map((e) => (
+            <li key={e}>{e}</li>
+          ))}
+        </ul>
+      )}
       <div className="flex flex-col gap-2">
         <Dropzone onDrop={onDrop} />
         <ul className="p-4 text-green-400">
