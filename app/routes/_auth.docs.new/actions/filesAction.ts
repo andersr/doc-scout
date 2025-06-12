@@ -43,6 +43,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
 
     const fileExtension = path.extname(source.storagePath).toLowerCase();
     const isPdf = fileExtension === ".pdf";
+    console.info("isPdf: ", isPdf);
 
     if (isPdf) {
       let localFilePath = "";
@@ -51,10 +52,10 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
         text = await extractPdfData(localFilePath);
       } catch (error) {
         console.error(`Failed to extract PDF data for ${publicId}:`, error);
-        const fallbackText = await getMarkdownFromUrl(
-          `${ENV.CDN_HOST}/${source.storagePath}`,
-        );
-        text = fallbackText || "";
+        // const fallbackText = await getMarkdownFromUrl(
+        //   `${ENV.CDN_HOST}/${source.storagePath}`,
+        // );
+        text = "";
       } finally {
         if (localFilePath && fs.existsSync(localFilePath)) {
           fs.unlinkSync(localFilePath);
