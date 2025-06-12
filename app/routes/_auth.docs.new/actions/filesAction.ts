@@ -1,7 +1,10 @@
 import type { Source } from "@prisma/client";
+import fs from "fs";
 import { StatusCodes } from "http-status-codes";
+import path from "path";
 import { redirect } from "react-router";
 import { ENV } from "~/.server/ENV";
+import { extractPdfData } from "~/.server/services/extractPdfData";
 import { getMarkdownFromUrl } from "~/.server/services/getMarkdownFromUrl";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
@@ -10,6 +13,7 @@ import { sourceIdListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
+import { getFileFromS3 } from "~/utils/getFileFromS3";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
@@ -35,9 +39,33 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
       continue;
     }
 
-    const text = await getMarkdownFromUrl(
-      `${ENV.CDN_HOST}/${source.storagePath}`,
-    );
+    let text: string;
+
+    const fileExtension = path.extname(source.storagePath).toLowerCase();
+    const isPdf = fileExtension === ".pdf";
+
+    if (isPdf) {
+      let localFilePath = "";
+      try {
+        localFilePath = await getFileFromS3(source.storagePath);
+        text = await extractPdfData(localFilePath);
+      } catch (error) {
+        console.error(`Failed to extract PDF data for ${publicId}:`, error);
+        const fallbackText = await getMarkdownFromUrl(
+          `${ENV.CDN_HOST}/${source.storagePath}`,
+        );
+        text = fallbackText || "";
+      } finally {
+        if (localFilePath && fs.existsSync(localFilePath)) {
+          fs.unlinkSync(localFilePath);
+        }
+      }
+    } else {
+      const extractedText = await getMarkdownFromUrl(
+        `${ENV.CDN_HOST}/${source.storagePath}`,
+      );
+      text = extractedText || "";
+    }
 
     const updated = await prisma.source.update({
       data: { text },
