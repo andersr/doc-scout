@@ -7,7 +7,7 @@ import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
 import { type BotReply, botReplyResolver } from "~/lib/schemas/botReply";
 import type { ServerResponse } from "~/types/server";
-import type { Route } from "./+types/api.messages.generated";
+import type { Route } from "./+types/api.responses";
 
 export async function action(args: Route.ActionArgs) {
   await requireUser(args);
@@ -23,6 +23,13 @@ export async function action(args: Route.ActionArgs) {
     }
 
     const chat = await prisma.chat.findFirstOrThrow({
+      include: {
+        sources: {
+          include: {
+            source: true,
+          },
+        },
+      },
       where: {
         publicId: data.chatPublicId,
       },

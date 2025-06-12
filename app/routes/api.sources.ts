@@ -8,9 +8,9 @@ import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
 import { fileNameListSchema } from "~/lib/schemas/files";
 import { KEYS } from "~/shared/keys";
-import type { SignedUrlPayload } from "~/types/files";
+import type { SourceInitResponse } from "~/types/files";
 import type { FileSourceInput } from "~/types/source";
-import type { Route } from "./+types/api.messages.generated";
+import type { Route } from "./+types/api.sources";
 
 export async function action(args: Route.ActionArgs) {
   const { internalUser } = await requireUser(args);
@@ -26,7 +26,7 @@ export async function action(args: Route.ActionArgs) {
       userId: internalUser.id,
     });
 
-    const urls: SignedUrlPayload[] = [];
+    const items: SourceInitResponse[] = [];
     const filesDbInput: FileSourceInput[] = [];
 
     for await (const fileName of fileNames) {
@@ -37,8 +37,6 @@ export async function action(args: Route.ActionArgs) {
         userPublicId: internalUser.publicId,
       });
 
-      // const text = await extractTextFromFile(file);
-      // const summary = await generateAbstract({ text });
       const signedUrl = await createPresignedUrl({ key: storagePath });
 
       filesDbInput.push({
@@ -46,19 +44,18 @@ export async function action(args: Route.ActionArgs) {
         ownerId: internalUser.id,
         publicId: sourcePublicId,
         storagePath,
-        // summary: "",
         text: "",
         title: fileName, // TODO: get from file content or suggest via bot
       });
 
-      urls.push({
+      items.push({
         fileName,
         signedUrl,
         sourcePublicId,
       });
     }
 
-    await prisma.source.createManyAndReturn({
+    await prisma.source.createMany({
       data: filesDbInput.map((f) => {
         return {
           ...f,
@@ -67,12 +64,7 @@ export async function action(args: Route.ActionArgs) {
       }),
     });
 
-    // await addSourcesToVectorStore({
-    //   sources,
-    //   userPublicId: internalUser.publicId,
-    // });
-
-    return data({ urls }, { status: 200 });
+    return data({ items }, { status: 200 });
   } catch (error) {
     console.error("error: ", error);
     return serverError(error);

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
+// import { uploadFileToS3 } from "~/.server/services/uploadFileToS3";
+import { uploadFileToS3 } from "~/.server/aws/uploadFileToS3";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
-import type { SignedUrlPayload } from "~/types/files";
+import type { SourceInitResponse } from "~/types/files";
 import { useFetcherWithReset } from "./useFetcherWithReset";
 
 export function useUploadFiles({
@@ -19,89 +21,51 @@ export function useUploadFiles({
   const [isUpdating, setIsUpdating] = useState(false);
   const [showSelect, setShowSelect] = useState(false);
 
-  const signedUrlFetcher = useFetcherWithReset<{
-    urls?: SignedUrlPayload[];
+  const sourcesInitFetcher = useFetcherWithReset<{
+    items?: SourceInitResponse[];
   }>();
 
-  const sourceUpdateFetcher = useFetcherWithReset<{
-    urls?: SignedUrlPayload[];
+  const sourcesUpdateFetcher = useFetcherWithReset<{
+    items?: SourceInitResponse[];
   }>();
 
   useEffect(
     function handleSignedUrls() {
       if (
         isUpdating &&
-        signedUrlFetcher.state === "idle" &&
-        signedUrlFetcher?.data?.urls
+        sourcesInitFetcher.state === "idle" &&
+        sourcesInitFetcher?.data?.items
       ) {
-        uploadFiles({
-          urls: signedUrlFetcher?.data?.urls,
-        });
-        signedUrlFetcher.reset();
-      }
-
-      async function uploadFiles({ urls }: { urls: SignedUrlPayload[] }) {
         if (errorMessage) {
           setErrorMessage("");
         }
-        if (urls.length === 0) {
-          console.warn("no urls returned");
-          setErrorMessage(INTENTIONALLY_GENERIC_ERROR_MESSAGE);
-          setIsUpdating(false);
-          return;
-        }
 
+        uploadFiles({
+          items: sourcesInitFetcher?.data?.items,
+        });
+        sourcesInitFetcher.reset();
+      }
+
+      async function uploadFiles({ items }: { items: SourceInitResponse[] }) {
         try {
-          const localDbUpdateData = new FormData();
-          localDbUpdateData.append(KEYS.intent, KEYS.files);
+          const sourceUpdateData = new FormData();
+          sourceUpdateData.append(KEYS.intent, KEYS.files);
 
-          for await (const url of urls) {
-            const file = selectedFiles.find((f) => f.name === url.fileName);
+          for await (const item of items) {
+            const file = selectedFiles.find((f) => f.name === item.fileName);
 
             if (!file) {
               console.warn(
-                `no matching file found for name ${url.fileName}, skipping.`,
+                `no matching file found for name ${item.fileName}, skipping.`,
               );
               continue;
             }
+            sourceUpdateData.append(KEYS.ids, item.sourcePublicId);
 
-            const s3UploadData = new FormData();
-            s3UploadData.append(
-              "file",
-              new Blob([file], { type: file.type }),
-              file.name,
-            );
-            localDbUpdateData.append(KEYS.ids, url.sourcePublicId);
-            await fetch(url.signedUrl, {
-              body: s3UploadData,
-              headers: {
-                "Content-Type": file.type,
-              },
-              method: "PUT",
-            });
+            await uploadFileToS3({ file, signedUrl: item.signedUrl });
           }
 
-          // setSelectedFiles([]);
-
-          sourceUpdateFetcher.submit(localDbUpdateData, { method: "POST" });
-
-          // const idData = new FormData();
-          // // formData.append(KEYS.intent, KEYS.files);
-
-          // for (const file of selectedFiles) {
-          //   formData.append(KEYS.ids, file.name);
-          // }
-
-          // sourceUpdateFetcher.submit(formData, { method: "post" });
-
-          // fetch file data from s3 bucket and update text, summary, vectorstore
-          // if (redirectOnDone) {
-          //   const redirectRoute =
-          //     urls.length === 1
-          //       ? appRoutes("/docs/:id", { id: urls[0].sourcePublicId })
-          //       : appRoutes("/docs");
-          //   navigate(redirectRoute);
-          // }
+          sourcesUpdateFetcher.submit(sourceUpdateData, { method: "POST" });
         } catch (error) {
           console.error("handleSignedUrls error: ", error);
           setErrorMessage(INTENTIONALLY_GENERIC_ERROR_MESSAGE);
@@ -114,8 +78,8 @@ export function useUploadFiles({
       navigate,
       isUpdating,
       selectedFiles,
-      signedUrlFetcher,
-      sourceUpdateFetcher,
+      sourcesInitFetcher,
+      sourcesUpdateFetcher,
     ],
   );
 
@@ -127,8 +91,8 @@ export function useUploadFiles({
       formData.append(KEYS.fileNames, file.name);
     }
 
-    signedUrlFetcher.submit(formData, {
-      action: appRoutes("/api/files"),
+    sourcesInitFetcher.submit(formData, {
+      action: appRoutes("/api/sources"),
       encType: "multipart/form-data",
       method: "post",
     });

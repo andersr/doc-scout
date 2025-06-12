@@ -5,7 +5,7 @@ export interface FileUploadOptions {
   maxSizeInBytes: number;
 }
 
-export type SignedUrlPayload = {
+export type SourceInitResponse = {
   fileName: string;
   signedUrl: string;
   sourcePublicId: string;
