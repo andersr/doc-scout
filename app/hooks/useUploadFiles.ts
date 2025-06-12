@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
-// import { uploadFileToS3 } from "~/.server/services/uploadFileToS3";
-import { uploadFileToS3 } from "~/.server/aws/uploadFileToS3";
+import { uploadFileToS3 } from "~/lib/uploadFileToS3";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
