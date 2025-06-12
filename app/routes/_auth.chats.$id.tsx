@@ -137,7 +137,7 @@ export default function ChatDetails() {
       });
 
       responseFetcher.submit(formData, {
-        action: appRoutes("/api/messages/generated"),
+        action: appRoutes("/api/responses"),
         method: "POST",
       });
       listBottomRef.current?.scrollIntoView(false);

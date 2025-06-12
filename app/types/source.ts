@@ -1,7 +1,7 @@
 import type { Source } from "@prisma/client";
 
 type BaseSourceInput = Required<Pick<Source, "title" | "ownerId" | "text">> &
-  Pick<Source, "summary">;
+  Partial<Pick<Source, "summary">>;
 
 export type UrlSourceInput = BaseSourceInput & Required<Pick<Source, "url">>;
 

@@ -47,7 +47,7 @@ describe("generateS3Key", () => {
     });
 
     expect(result).toBe(
-      "users/user123/sources/source456/my.file.backup-1640995200000.txt",
+      "users/user123/sources/source456/myfilebackup-1640995200000.txt",
     );
 
     vi.restoreAllMocks();
@@ -64,7 +64,7 @@ describe("generateS3Key", () => {
     });
 
     expect(result).toBe(
-      "users/user123/sources/source456/.gitignore-1640995200000",
+      "users/user123/sources/source456/gitignore-1640995200000",
     );
 
     vi.restoreAllMocks();

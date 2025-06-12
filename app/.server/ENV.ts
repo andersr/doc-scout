@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 const envSchema = z.object({
+  ADOBE_PDF_SERVICES_CLIENT_ID: z.string().min(3),
+  ADOBE_PDF_SERVICES_CLIENT_SECRET: z.string().min(3),
   ALLOWED_USERS: z.string().min(3),
   AUTH_SESSION_SECRET: z.string().min(3),
   AWS_DATA_BUCKET_NAME: z.string().min(3),

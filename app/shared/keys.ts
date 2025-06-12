@@ -8,6 +8,7 @@ export const AppKeys = [
   "email",
   "error",
   "files",
+  "fileNames",
   "message",
   "intent",
   "username",

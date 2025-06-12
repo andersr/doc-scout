@@ -8,7 +8,16 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  { ignores: ["build", "tmp", ".react-router"] },
+  {
+    ignores: [
+      "build",
+      "tmp",
+      ".react-router",
+      "node_modules",
+      "playwright-report",
+      "test-results",
+    ],
+  },
   {
     extends: ["js/recommended"],
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],

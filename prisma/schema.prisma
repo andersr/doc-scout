@@ -159,12 +159,13 @@ model Source {
   createdAt DateTime?
   updatedAt DateTime?
 
-  title       String?
-  fileName    String?
-  url         String?
-  storagePath String?
-  text        String?
-  summary     String?
+  title         String?
+  fileName      String?
+  url           String?
+  storagePath   String?
+  text          String?
+  summary       String?
+  vectorStoreId String?
 
   //legacy
   name      String?

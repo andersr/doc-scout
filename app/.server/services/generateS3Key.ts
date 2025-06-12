@@ -1,3 +1,5 @@
+import { slugify } from "~/utils/slugify";
+
 export function generateS3Key({
   fileName,
   sourcePublicId,
@@ -22,5 +24,5 @@ export function generateS3Key({
     extension = fileName.substring(lastDotIndex + 1);
   }
 
-  return `users/${userPublicId}/sources/${sourcePublicId}/${nameWithoutExt}-${timestamp}${extension ? `.${extension}` : ""}`;
+  return `users/${userPublicId}/sources/${sourcePublicId}/${slugify(nameWithoutExt)}-${timestamp}${extension ? `.${extension}` : ""}`;
 }

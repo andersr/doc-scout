@@ -1,74 +1,95 @@
+import type { Source } from "@prisma/client";
+import fs from "fs";
+import { StatusCodes } from "http-status-codes";
+import path from "path";
 import { redirect } from "react-router";
-import { extractTextFromFile } from "~/.server/services/extractTextFromFile";
+import { ENV } from "~/.server/ENV";
+import { extractPdfData } from "~/.server/services/extractPdfData";
+import { getMarkdownFromUrl } from "~/.server/services/getMarkdownFromUrl";
 import { requireUser } from "~/.server/sessions/requireUser";
-import { generateAbstract } from "~/.server/sources/generateAbstract";
-import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
+import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
-import { fileListSchema } from "~/lib/schemas/files";
+import { sourceIdListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
-import type { FileSourceInput } from "~/types/source";
+import { ServerError } from "~/types/server";
+import { getFileFromS3 } from "~/utils/getFileFromS3";
 import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
-import { generateS3Key } from "../../../.server/services/generateS3Key";
-import { uploadFileToS3 } from "../../../.server/services/uploadFileToS3";
-import { generateId } from "../../../.server/utils/generateId";
-import { addSourcesToVectorStore } from "../../../.server/vectorStore/addSourcesToVectorStore";
-
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
 
-  const submittedFiles = formData
-    .getAll(KEYS.files)
-    .filter((f) => f instanceof File);
+  const items = formData.getAll(KEYS.ids);
+  const sourcePublicIds = sourceIdListSchema.parse(items);
+  const sources: Source[] = [];
 
-  const files = fileListSchema.parse(submittedFiles);
-
-  await throwIfExistingSources({
-    files,
-    userId: internalUser.id,
-  });
-
-  const filesDbInput: FileSourceInput[] = [];
-
-  for await (const file of files) {
-    const publicId = generateId();
-    const storagePath = generateS3Key({
-      fileName: file.name,
-      sourcePublicId: publicId,
-      userPublicId: internalUser.publicId,
+  for await (const publicId of sourcePublicIds) {
+    const source = await prisma.source.findFirst({
+      where: {
+        publicId,
+      },
     });
 
-    await uploadFileToS3({ file, key: storagePath });
+    if (!source) {
+      console.warn(`No source found for id: ${publicId}`);
+      continue;
+    }
 
-    const text = await extractTextFromFile(file);
-    const summary = await generateAbstract({ text });
+    if (!source.storagePath) {
+      console.warn(`No storage path found for id: ${publicId}`);
+      continue;
+    }
 
-    filesDbInput.push({
-      fileName: file.name,
-      ownerId: internalUser.id,
-      publicId,
-      storagePath,
-      summary,
-      text,
-      title: file.name, // TODO: get from file content or suggest via bot
+    let text: string;
+
+    const fileExtension = path.extname(source.storagePath).toLowerCase();
+    const isPdf = fileExtension === ".pdf";
+    console.info("isPdf: ", isPdf);
+
+    if (isPdf) {
+      let localFilePath = "";
+      try {
+        localFilePath = await getFileFromS3(source.storagePath);
+        text = await extractPdfData(localFilePath);
+      } catch (error) {
+        console.error(`Failed to extract PDF data for ${publicId}:`, error);
+        // const fallbackText = await getMarkdownFromUrl(
+        //   `${ENV.CDN_HOST}/${source.storagePath}`,
+        // );
+        text = "";
+      } finally {
+        if (localFilePath && fs.existsSync(localFilePath)) {
+          fs.unlinkSync(localFilePath);
+        }
+      }
+    } else {
+      const extractedText = await getMarkdownFromUrl(
+        `${ENV.CDN_HOST}/${source.storagePath}`,
+      );
+      text = extractedText || "";
+    }
+
+    const updated = await prisma.source.update({
+      data: { text },
+      where: { id: source.id },
     });
+
+    sources.push(updated);
   }
 
-  const sources = await prisma.source.createManyAndReturn({
-    data: filesDbInput.map((f) => ({
-      createdAt: new Date(),
-      ...f,
-    })),
-  });
-
+  if (sources.length === 0) {
+    throw new ServerError(
+      "No matching sources found for submitted ids",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
   await addSourcesToVectorStore({
     sources,
     userPublicId: internalUser.publicId,
   });
 
   const redirectRoute =
-    sources.length === 1
-      ? appRoutes("/docs/:id", { id: sources[0].publicId })
+    sourcePublicIds.length === 1
+      ? appRoutes("/docs/:id", { id: sourcePublicIds[0] })
       : appRoutes("/docs");
 
   return redirect(redirectRoute);
