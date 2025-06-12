@@ -50,6 +50,7 @@ export async function extractPdfData(filePath: string): Promise<string> {
     }
     // tmpDir = fs.mkdtempSync(path.join("/tmp", appPrefix));
     const tempFilePath = path.join("/tmp", `pdf-extract-${Date.now()}.zip`);
+    console.info("tempFilePath: ", tempFilePath);
     const writeStream = fs.createWriteStream(tempFilePath);
 
     await new Promise<void>((resolve, reject) => {
