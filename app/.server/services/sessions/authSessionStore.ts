@@ -1,5 +1,5 @@
 import { ENV } from "~/.server/ENV";
-import { createSessionStore } from "~/.server/sessions/createSessionStore";
+import { createSessionStore } from "~/.server/services/sessions/createSessionStore";
 import { AUTH_SESSION_DURATION, AUTH_SESSION_NAME } from "~/config/auth";
 
 export const authSessionStore = createSessionStore({
