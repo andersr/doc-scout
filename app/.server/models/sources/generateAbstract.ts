@@ -1,5 +1,5 @@
+import { openAiClient } from "~/.server/vendors/openai/client";
 import { CREATE_ABSTRACT_INSTRUCTIONS } from "~/data/prompts/createAbstract";
-import { openAiClient } from "../vendors/openai/client";
 
 export async function generateAbstract({ text }: { text: string }) {
   try {

@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
+import { generateAbstract } from "~/.server/models/sources/generateAbstract";
+import { throwIfExistingSources } from "~/.server/models/sources/throwIfExistingSources";
 import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
 import { requireUser } from "~/.server/sessions/requireUser";
-import { generateAbstract } from "~/.server/sources/generateAbstract";
-import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";
 import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
