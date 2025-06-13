@@ -1,6 +1,6 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from "../ENV";
-import { s3Client } from "./s3Client";
+import { s3Client } from "../vendors/aws/s3Client";
 
 /**
  * Get data from S3 bucket
