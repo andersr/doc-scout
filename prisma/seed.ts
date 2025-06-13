@@ -3,8 +3,8 @@ const prisma = new PrismaClient();
 import { PrismaClient } from "@prisma/client";
 
 import { z } from "zod";
-import { stytchClient } from "../app/.server/stytch/client";
 import { generateId } from "../app/.server/utils/generateId";
+import { stytchClient } from "../app/.server/vendors/stytch/client";
 
 // TODO: duplicated
 const testEnvSchema = z.object({

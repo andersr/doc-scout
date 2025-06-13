@@ -4,17 +4,17 @@ import { StatusCodes } from "http-status-codes";
 import path from "path";
 import { redirect } from "react-router";
 import { ENV } from "~/.server/ENV";
-import { extractPdfData } from "~/.server/services/extractPdfData";
-import { getMarkdownFromUrl } from "~/.server/services/getMarkdownFromUrl";
+import { extractPdfData } from "~/.server/services/pdfExtract/extractPdfData";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
+import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
+import { getMarkdownFromUrl } from "~/.server/services/webScrape/getMarkdownFromUrl";
 import { prisma } from "~/lib/prisma";
 import { sourceIdListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
 import { getFileFromS3 } from "~/utils/getFileFromS3";
-import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
+import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
 

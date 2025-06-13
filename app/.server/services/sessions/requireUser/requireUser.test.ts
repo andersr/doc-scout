@@ -34,7 +34,7 @@ vi.mock("~/types/user", () => ({
 }));
 
 // Mock stytch client
-vi.mock("../../../stytch/client", () => ({
+vi.mock("~/.server/vendors/stytch/client", () => ({
   stytchClient: {
     sessions: {
       authenticate: vi.fn(),
@@ -57,10 +57,10 @@ import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { USER_INTERNAL_INCLUDE } from "~/types/user";
-import { stytchClient } from "../../../stytch/client";
 
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { logout } from "~/.server/services/sessions/logout";
+import { stytchClient } from "~/.server/vendors/stytch/client";
 import { requireUser } from "./requireUser";
 
 const mockRedirect = vi.mocked(redirect);

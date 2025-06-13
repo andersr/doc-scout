@@ -7,11 +7,11 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
+import { upsertUser } from "~/.server/models/users/upsertUser";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 
-import { stytchClient } from "~/.server/stytch/client";
-import { upsertUser } from "~/.server/users/upsertUser";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
 import { PageTitle } from "~/components/PageTitle";

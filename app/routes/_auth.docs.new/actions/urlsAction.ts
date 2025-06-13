@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
-import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
+import { throwIfExistingSources } from "~/.server/models/sources/throwIfExistingSources";
+import { generateAbstract } from "~/.server/services/agents/docSummary/generateAbstract";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { generateAbstract } from "~/.server/sources/generateAbstract";
-import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
+import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
+import { batchScrapeUrls } from "~/.server/services/webScrape/batchScrapeUrls";
 import { generateId } from "~/.server/utils/generateId";
-import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
 import { urlListSchema } from "~/lib/schemas/urls";
 import { appRoutes } from "~/shared/appRoutes";
@@ -13,7 +13,7 @@ import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
 import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
-import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
+import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 
 export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
