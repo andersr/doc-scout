@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Readable } from "stream";
-import { getFromBucket } from "~/.server/aws/getFromBucket";
+import { getFromBucket } from "~/.server/services/cloudStore/getFromBucket";
 
 export async function getFileFromS3(key: string): Promise<string> {
   try {
