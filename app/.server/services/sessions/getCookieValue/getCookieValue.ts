@@ -1,4 +1,4 @@
-import { getSession } from "../getSession";
+import { getSession } from "~/.server/sessions/getSession";
 
 export async function getCookieValue({
   key,

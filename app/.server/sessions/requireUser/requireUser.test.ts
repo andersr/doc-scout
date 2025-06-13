@@ -43,7 +43,7 @@ vi.mock("../../stytch/client", () => ({
 }));
 
 // Mock getCookieValue
-vi.mock("../getCookieValue", () => ({
+vi.mock("~/.server/services/sessions/getCookieValue", () => ({
   getCookieValue: vi.fn(),
 }));
 
@@ -58,7 +58,8 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { USER_INTERNAL_INCLUDE } from "~/types/user";
 import { stytchClient } from "../../stytch/client";
-import { getCookieValue } from "../getCookieValue";
+
+import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { logout } from "../logout";
 import { requireUser } from "./requireUser";
 

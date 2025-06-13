@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
+import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
-import { getCookieValue } from "../getCookieValue";
 
 export async function requireAnon({
   request,

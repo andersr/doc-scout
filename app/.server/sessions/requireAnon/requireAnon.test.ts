@@ -20,14 +20,15 @@ vi.mock("~/shared/appRoutes", () => ({
 }));
 
 // Mock getCookieValue
-vi.mock("../getCookieValue", () => ({
+vi.mock("~/.server/services/sessions/getCookieValue", () => ({
   getCookieValue: vi.fn(),
 }));
 
 import { redirect } from "react-router";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
-import { getCookieValue } from "../getCookieValue";
+
+import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { requireAnon } from "./requireAnon";
 
 const mockRedirect = vi.mocked(redirect);
