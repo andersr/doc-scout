@@ -1,5 +1,5 @@
 import { getRecordCount } from "./getRecordCount";
-import { getVectorStore } from "./vectorStore";
+import { getVectorStore } from "./getVectorStore";
 
 export async function getResetVectorStore(namespace: string) {
   const recordCount = await getRecordCount(namespace);

@@ -1,8 +1,8 @@
 import { PineconeStore } from "@langchain/pinecone";
 
-import { ENV } from "../ENV";
-import { pcClient } from "../vendors/pinecone/client";
-import { oaiEmbeddings } from "./embeddings";
+import { ENV } from "../../ENV";
+import { oaiEmbeddings } from "../../langchain/embeddings";
+import { pcClient } from "../../vendors/pinecone/client";
 
 export async function getVectorStore(namespace: string) {
   return await PineconeStore.fromExistingIndex(oaiEmbeddings, {

@@ -1,4 +1,4 @@
-import { getIndexStats } from "../pinecone/getIndexStats";
+import { getIndexStats } from "./getIndexStats";
 
 export async function getRecordCount(namespace: string) {
   const indexStats = await getIndexStats();
