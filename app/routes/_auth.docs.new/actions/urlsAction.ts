@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
 import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateAbstract } from "~/.server/sources/generateAbstract";
 import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";

@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
-import { createMockSession, type MockSession } from "../../../__mocks__/types";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -10,6 +8,8 @@ vi.mock("../getSession", () => ({
   getSession: vi.fn(),
 }));
 
+import { mockServerEnv } from "~/__mocks__/env";
+import { createMockSession, type MockSession } from "~/__mocks__/types";
 import { getSession } from "../getSession";
 import { getCookieValue } from "./getCookieValue";
 

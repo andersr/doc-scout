@@ -1,17 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
 
 // Mock the authSessionStore
-vi.mock("../authSessionStore", () => ({
+vi.mock("~/.server/services/sessions/authSessionStore", () => ({
   authSessionStore: {
     getSession: vi.fn(),
   },
 }));
 
-import { authSessionStore } from "../authSessionStore";
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
+import { mockServerEnv } from "~/__mocks__/env";
 import { getSession } from "./getSession";
 
 const mockAuthSessionStore = vi.mocked(authSessionStore);

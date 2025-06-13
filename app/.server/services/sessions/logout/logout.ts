@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
+import { getSession } from "~/.server/services/sessions/getSession";
 import { appRoutes } from "~/shared/appRoutes";
-import { authSessionStore } from "../authSessionStore";
-import { getSession } from "../getSession";
 
 export async function logout({ request }: { request: Request }) {
   const session = await getSession({

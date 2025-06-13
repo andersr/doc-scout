@@ -8,7 +8,7 @@ import {
   useRemixForm,
 } from "remix-hook-form";
 import { twMerge } from "tailwind-merge";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";

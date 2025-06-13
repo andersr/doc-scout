@@ -7,7 +7,8 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { requireAnon } from "~/.server/sessions/requireAnon";
+import { requireAnon } from "~/.server/services/sessions/requireAnon";
+
 import { stytchClient } from "~/.server/stytch/client";
 import { upsertUser } from "~/.server/users/upsertUser";
 import { getDomainHost } from "~/.server/utils/getDomainHost";

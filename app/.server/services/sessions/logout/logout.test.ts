@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
-import { createMockSession, type MockSession } from "../../../__mocks__/types";
+import { mockServerEnv } from "../../../../__mocks__/env";
+import {
+  createMockSession,
+  type MockSession,
+} from "../../../../__mocks__/types";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -16,21 +19,21 @@ vi.mock("~/shared/appRoutes", () => ({
 }));
 
 // Mock authSessionStore
-vi.mock("../authSessionStore", () => ({
+vi.mock("~/.server/services/sessions/authSessionStore", () => ({
   authSessionStore: {
     destroySession: vi.fn(),
   },
 }));
 
 // Mock getSession
-vi.mock("../getSession", () => ({
+vi.mock("~/.server/services/sessions/getSession", () => ({
   getSession: vi.fn(),
 }));
 
 import { redirect } from "react-router";
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
+import { getSession } from "~/.server/services/sessions/getSession";
 import { appRoutes } from "~/shared/appRoutes";
-import { authSessionStore } from "../authSessionStore";
-import { getSession } from "../getSession";
 import { logout } from "./logout";
 
 const mockRedirect = vi.mocked(redirect);
