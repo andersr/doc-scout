@@ -4,13 +4,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 mockServerEnv();
 
 // Mock getSession
-vi.mock("~/.server/sessions/getSession", () => ({
+vi.mock("../getSession", () => ({
   getSession: vi.fn(),
 }));
 
-import { getSession } from "~/.server/sessions/getSession";
 import { mockServerEnv } from "~/__mocks__/env";
 import { createMockSession, type MockSession } from "~/__mocks__/types";
+import { getSession } from "../getSession";
 import { getCookieValue } from "./getCookieValue";
 
 const mockGetSession = vi.mocked(getSession);

@@ -27,14 +27,15 @@ vi.mock("~/.server/services/sessions/authSessionStore", () => ({
 }));
 
 // Mock getSession
-vi.mock("~/.server/sessions/getSession", () => ({
+vi.mock("../getSession", () => ({
   getSession: vi.fn(),
 }));
 
 import { redirect } from "react-router";
 
 import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
-import { getSession } from "~/.server/sessions/getSession";
+
+import { getSession } from "../getSession";
 import { createSession } from "./createSession";
 
 const mockRedirect = vi.mocked(redirect);
