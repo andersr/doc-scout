@@ -8,8 +8,8 @@ import {
   type UserClient,
   type UserInternal,
 } from "~/types/user";
+import { logout } from "../../services/sessions/logout";
 import { stytchClient } from "../../stytch/client";
-import { logout } from "../logout";
 
 export async function requireUser({
   request,

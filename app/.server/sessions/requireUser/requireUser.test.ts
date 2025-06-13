@@ -48,7 +48,7 @@ vi.mock("~/.server/services/sessions/getCookieValue", () => ({
 }));
 
 // Mock logout
-vi.mock("../logout", () => ({
+vi.mock("~/.server/services/sessions/logout", () => ({
   logout: vi.fn(),
 }));
 
@@ -60,7 +60,7 @@ import { USER_INTERNAL_INCLUDE } from "~/types/user";
 import { stytchClient } from "../../stytch/client";
 
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
-import { logout } from "../logout";
+import { logout } from "~/.server/services/sessions/logout";
 import { requireUser } from "./requireUser";
 
 const mockRedirect = vi.mocked(redirect);

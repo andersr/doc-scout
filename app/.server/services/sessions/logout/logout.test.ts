@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
-import { createMockSession, type MockSession } from "../../../__mocks__/types";
+import { mockServerEnv } from "../../../../__mocks__/env";
+import {
+  createMockSession,
+  type MockSession,
+} from "../../../../__mocks__/types";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
