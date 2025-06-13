@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { ServerError } from "~/types/server";
-import { fcApp } from "../vendors/firecrawl/fcApp";
+import { fcApp } from "../../vendors/firecrawl/fcApp";
 
-export async function batchScrapeUrls({ urls }: { urls: string[] }) {
-  const res = await fcApp.batchScrapeUrls(urls, {
+export async function getMarkdownFromUrl(url: string) {
+  const res = await fcApp.scrapeUrl(url, {
     formats: ["markdown"],
   });
 
@@ -14,5 +14,5 @@ export async function batchScrapeUrls({ urls }: { urls: string[] }) {
     );
   }
 
-  return res.data;
+  return res.markdown;
 }

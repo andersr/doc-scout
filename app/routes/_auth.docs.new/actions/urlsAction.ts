@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
-import { batchScrapeUrls } from "~/.server/services/batchScrapeUrls";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
+import { batchScrapeUrls } from "~/.server/services/webScrape/batchScrapeUrls";
 import { generateAbstract } from "~/.server/sources/generateAbstract";
 import { throwIfExistingSources } from "~/.server/sources/throwIfExistingSources";
 import { generateId } from "~/.server/utils/generateId";
