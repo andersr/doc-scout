@@ -1,6 +1,6 @@
-import type { Session } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockServerEnv } from "../../../__mocks__/env";
+import { createMockSession, type MockSession } from "../../../__mocks__/types";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -37,17 +37,6 @@ const mockRedirect = vi.mocked(redirect);
 const mockAuthSessionStore = vi.mocked(authSessionStore);
 const mockGetSession = vi.mocked(getSession);
 
-// Define proper mock types
-interface MockSession extends Session {
-  data: Record<string, unknown>;
-  flash: ReturnType<typeof vi.fn>;
-  get: ReturnType<typeof vi.fn>;
-  has: ReturnType<typeof vi.fn>;
-  id: string;
-  set: ReturnType<typeof vi.fn>;
-  unset: ReturnType<typeof vi.fn>;
-}
-
 describe("createSession", () => {
   let mockSession: MockSession;
   let mockRequest: Request;
@@ -55,15 +44,7 @@ describe("createSession", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockSession = {
-      data: {},
-      flash: vi.fn(),
-      get: vi.fn(),
-      has: vi.fn(),
-      id: "test-session-id",
-      set: vi.fn(),
-      unset: vi.fn(),
-    };
+    mockSession = createMockSession();
 
     mockRequest = new Request("http://localhost");
 
