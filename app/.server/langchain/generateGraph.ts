@@ -2,8 +2,8 @@ import type { Document } from "@langchain/core/documents";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { Annotation, StateGraph } from "@langchain/langgraph";
 import { RAG_TEMPLATE } from "~/config/prompts";
+import { getVectorStore } from "../services/vectorStore/vectorStore";
 import { llm } from "./llm";
-import { getVectorStore } from "./vectorStore";
 
 export async function generateGraph({
   namespace,

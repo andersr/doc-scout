@@ -7,7 +7,7 @@ import { ENV } from "~/.server/ENV";
 import { extractPdfData } from "~/.server/services/extractPdfData";
 import { getMarkdownFromUrl } from "~/.server/services/getMarkdownFromUrl";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { addSourcesToVectorStore } from "~/.server/vectorStore/addSourcesToVectorStore";
+import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
 import { prisma } from "~/lib/prisma";
 import { sourceIdListSchema } from "~/lib/schemas/files";
 import { appRoutes } from "~/shared/appRoutes";
