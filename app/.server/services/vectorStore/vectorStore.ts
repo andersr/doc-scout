@@ -3,7 +3,7 @@ import { PineconeStore } from "@langchain/pinecone";
 import { ENV } from "../../ENV";
 
 import { pcClient } from "../../vendors/pinecone/client";
-import { oaiEmbeddings } from "./embeddings";
+import { oaiEmbeddings } from "../llm/embeddings";
 
 export async function getVectorStore(namespace: string) {
   return await PineconeStore.fromExistingIndex(oaiEmbeddings, {
