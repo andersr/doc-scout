@@ -7,9 +7,9 @@ import {
   type UserClient,
   type UserInternal,
 } from "~/types/user";
-import { stytchClient } from "../stytch/client";
-import { getCookieValue } from "./getCookieValue";
-import { logout } from "./logout";
+import { stytchClient } from "../../stytch/client";
+import { getCookieValue } from "../getCookieValue";
+import { logout } from "../logout";
 
 export async function requireUser({
   request,
