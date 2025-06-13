@@ -13,7 +13,7 @@ import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
 import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
-import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
+import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 
 export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
