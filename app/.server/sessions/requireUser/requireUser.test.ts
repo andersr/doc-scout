@@ -34,7 +34,7 @@ vi.mock("~/types/user", () => ({
 }));
 
 // Mock stytch client
-vi.mock("../../stytch/client", () => ({
+vi.mock("~/.server/vendors/stytch/client", () => ({
   stytchClient: {
     sessions: {
       authenticate: vi.fn(),
@@ -53,11 +53,11 @@ vi.mock("../logout", () => ({
 }));
 
 import { redirect } from "react-router";
+import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { USER_INTERNAL_INCLUDE } from "~/types/user";
-import { stytchClient } from "../../stytch/client";
 import { getCookieValue } from "../getCookieValue";
 import { logout } from "../logout";
 import { requireUser } from "./requireUser";
