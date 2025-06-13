@@ -1,6 +1,6 @@
 import { POMPADOUR_PURPLE } from "~/config/theme";
 
-export function FoldedDoc({ size }: { size: number }) {
+export function Logo({ size }: { size: number }) {
   const sizePx = `${size}px`;
   return (
     <svg

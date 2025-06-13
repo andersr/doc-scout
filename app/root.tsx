@@ -29,9 +29,6 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-// export async function loader(args: Route.LoaderArgs) {
-// }
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">

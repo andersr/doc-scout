@@ -3,7 +3,7 @@ import { data, Link, Outlet, useLoaderData, useLocation } from "react-router";
 import { requireUser } from "~/.server/sessions/requireUser";
 import { AppContainer } from "~/components/AppContainer";
 import { Avatar } from "~/components/Avatar";
-import { FoldedDoc } from "~/components/brand/FoldedDoc";
+import { LogoWithText } from "~/components/brand/LogoWithText";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
 import { appRoutes } from "~/shared/appRoutes";
@@ -26,19 +26,17 @@ export default function AuthLayout() {
 
   const isHome = pathname === "/";
 
-  const brand = (
-    <div className="text-pompadour/70 flex items-baseline">
-      <FoldedDoc size={28} />
-      <div className="pl-2 text-3xl font-stretch-50% md:pl-3 md:text-4xl">
-        Doc Scout
-      </div>
-    </div>
-  );
   return (
     <AppContainer>
       <div className="flex place-items-baseline gap-2 md:gap-4">
         <div className="flex-1">
-          {isHome ? brand : <Link to={appRoutes("/")}>{brand}</Link>}
+          {isHome ? (
+            <LogoWithText />
+          ) : (
+            <Link to={appRoutes("/")}>
+              <LogoWithText />
+            </Link>
+          )}
         </div>
         {NAV_LINKS.map((l) => (
           <Link className="md:text-2xl" key={l.label} to={l.route}>
