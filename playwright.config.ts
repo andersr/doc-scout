@@ -3,7 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const port = process.env.PORT;
 
 if (!port) {
-  throw new Error("no port found");
+  console.warn("No port found");
 }
 
 /**
