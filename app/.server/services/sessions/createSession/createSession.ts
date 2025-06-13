@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
+import { getSession } from "~/.server/sessions/getSession";
 import { AUTH_DEFAULT_REDIRECT, AUTH_SESSION_DURATION } from "~/config/auth";
-import { getSession } from "../getSession";
 
 export async function createSession({
   key,
