@@ -17,7 +17,7 @@ vi.mock("~/config/auth", () => ({
 }));
 
 // Mock authSessionStore
-vi.mock("../authSessionStore", () => ({
+vi.mock("~/.server/services/sessions/authSessionStore", () => ({
   authSessionStore: {
     commitSession: vi.fn(),
   },
@@ -29,7 +29,8 @@ vi.mock("../getSession", () => ({
 }));
 
 import { redirect } from "react-router";
-import { authSessionStore } from "../authSessionStore";
+
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
 import { getSession } from "../getSession";
 import { createSession } from "./createSession";
 

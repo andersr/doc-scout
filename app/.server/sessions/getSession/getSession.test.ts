@@ -5,13 +5,13 @@ import { mockServerEnv } from "../../../__mocks__/env";
 mockServerEnv();
 
 // Mock the authSessionStore
-vi.mock("../authSessionStore", () => ({
+vi.mock("~/.server/services/sessions/authSessionStore", () => ({
   authSessionStore: {
     getSession: vi.fn(),
   },
 }));
 
-import { authSessionStore } from "../authSessionStore";
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
 import { getSession } from "./getSession";
 
 const mockAuthSessionStore = vi.mocked(authSessionStore);

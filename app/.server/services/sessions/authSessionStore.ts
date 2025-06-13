@@ -1,6 +1,6 @@
+import { ENV } from "~/.server/ENV";
+import { createSessionStore } from "~/.server/sessions/createSessionStore";
 import { AUTH_SESSION_DURATION, AUTH_SESSION_NAME } from "~/config/auth";
-import { ENV } from "../ENV";
-import { createSessionStore } from "./createSessionStore";
 
 export const authSessionStore = createSessionStore({
   httpOnly: true,

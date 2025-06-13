@@ -16,7 +16,7 @@ vi.mock("~/shared/appRoutes", () => ({
 }));
 
 // Mock authSessionStore
-vi.mock("../authSessionStore", () => ({
+vi.mock("~/.server/services/sessions/authSessionStore", () => ({
   authSessionStore: {
     destroySession: vi.fn(),
   },
@@ -28,8 +28,8 @@ vi.mock("../getSession", () => ({
 }));
 
 import { redirect } from "react-router";
+import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
 import { appRoutes } from "~/shared/appRoutes";
-import { authSessionStore } from "../authSessionStore";
 import { getSession } from "../getSession";
 import { logout } from "./logout";
 
