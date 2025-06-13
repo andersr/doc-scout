@@ -1,6 +1,5 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { type ActionFunctionArgs, data } from "react-router";
-import { createSession } from "~/.server/sessions/createSession";
+import { type ActionFunctionArgs, createSession, data } from "react-router";
 import { requireSearchParam } from "~/.server/utils/requireSearchParam";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";

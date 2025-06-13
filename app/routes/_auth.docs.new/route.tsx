@@ -1,5 +1,5 @@
 import { type ActionFunctionArgs, useActionData } from "react-router";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import { FileUploadForm } from "~/components/forms/FileUploadForm";
 import { UrlForm } from "~/components/forms/UrlForm";

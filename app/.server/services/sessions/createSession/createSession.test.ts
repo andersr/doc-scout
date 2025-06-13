@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
-import { createMockSession, type MockSession } from "../../../__mocks__/types";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -29,6 +27,8 @@ vi.mock("../getSession", () => ({
 }));
 
 import { redirect } from "react-router";
+import { mockServerEnv } from "~/__mocks__/env";
+import { createMockSession, type MockSession } from "~/__mocks__/types";
 import { authSessionStore } from "../authSessionStore";
 import { getSession } from "../getSession";
 import { createSession } from "./createSession";

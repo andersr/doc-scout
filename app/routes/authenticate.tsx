@@ -1,5 +1,5 @@
 import { Link, type LoaderFunctionArgs, useLoaderData } from "react-router";
-import { createSession } from "~/.server/sessions/createSession";
+import { createSession } from "~/.server/services/sessions/createSession";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import {
   STYTCH_SESSION_DURATION_MINUTES,

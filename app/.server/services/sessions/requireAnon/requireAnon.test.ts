@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -25,6 +24,7 @@ vi.mock("../getCookieValue", () => ({
 }));
 
 import { redirect } from "react-router";
+import { mockServerEnv } from "~/__mocks__/env";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
 import { getCookieValue } from "../getCookieValue";

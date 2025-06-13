@@ -1,6 +1,6 @@
 import { data, Link, Outlet, useLoaderData, useLocation } from "react-router";
 
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { AppContainer } from "~/components/AppContainer";
 import { Avatar } from "~/components/Avatar";
 import { LogoWithText } from "~/components/brand/LogoWithText";

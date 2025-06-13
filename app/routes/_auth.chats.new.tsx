@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { Checkbox } from "~/components/checkbox";
 import { PageTitle } from "~/components/PageTitle";

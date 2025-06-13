@@ -8,7 +8,7 @@ import {
   useNavigation,
 } from "react-router";
 import { upsertUser } from "~/.server/models/users/upsertUser";
-import { requireAnon } from "~/.server/sessions/requireAnon";
+import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/AppContainer";

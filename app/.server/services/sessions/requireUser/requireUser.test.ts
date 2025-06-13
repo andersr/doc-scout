@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../__mocks__/env";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -54,6 +53,7 @@ vi.mock("../logout", () => ({
 
 import { redirect } from "react-router";
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { mockServerEnv } from "~/__mocks__/env";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";

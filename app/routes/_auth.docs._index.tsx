@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { ActionLink } from "~/components/ui/ActionLink";
 import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
