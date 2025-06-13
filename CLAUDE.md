@@ -34,7 +34,7 @@ npm run db:studio      # Open Prisma Studio
 npm run db:reset       # Reset database with migrations
 
 # Testing
-npm test               # Run vitest tests
+npm test:run               # Run vitest tests
 npm run e2e:run       # Run Playwright e2e tests
 ```
 
