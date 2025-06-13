@@ -1,6 +1,6 @@
 import type { LCDocument } from "~/types/document";
-import { splitDocuments } from "../../langchain/splitDocuments";
 import { getResetVectorStore } from "./getResetVectorStore";
+import { splitDocuments } from "./splitDocuments";
 
 export async function addDocsToVectorStore({
   docs,

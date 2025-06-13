@@ -11,7 +11,7 @@ import {
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
-import { pdfClient } from "../vendors/adobe/pdfClient";
+import { pdfClient } from "~/.server/vendors/adobe/pdfClient";
 
 export async function extractPdfData(filePath: string): Promise<string> {
   let readStream;
