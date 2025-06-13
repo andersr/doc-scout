@@ -1,26 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { mockServerEnv } from "../../../__mocks__/env";
 
 // Mock ENV module to prevent validation errors
-vi.mock("../../ENV", () => ({
-  ENV: {
-    ADOBE_PDF_SERVICES_CLIENT_ID: "test",
-    ADOBE_PDF_SERVICES_CLIENT_SECRET: "test",
-    ALLOWED_USERS: "test@example.com",
-    AUTH_SESSION_SECRET: "test-secret",
-    AWS_DATA_BUCKET_NAME: "test-bucket",
-    AWS_REGION: "us-east-1",
-    AWS_S3_ACCESS_KEY: "test-key",
-    AWS_S3_SECRET: "test-secret",
-    CDN_HOST: "test-cdn.com",
-    FIRECRAWL_API_KEY: "test-key",
-    OPENAI_API_KEY: "test-key",
-    PINECONE_API_KEY: "test-key",
-    PINECONE_HOST: "test-host",
-    PINECONE_INDEX_NAME: "test-index",
-    STYTCH_PROJECT_ID: "test-project",
-    STYTCH_SECRET: "test-secret",
-  },
-}));
+mockServerEnv();
 
 // Mock the authSessionStore
 vi.mock("../authSessionStore", () => ({
@@ -29,8 +11,8 @@ vi.mock("../authSessionStore", () => ({
   },
 }));
 
-import { getSession } from "./getSession";
 import { authSessionStore } from "../authSessionStore";
+import { getSession } from "./getSession";
 
 const mockAuthSessionStore = vi.mocked(authSessionStore);
 
