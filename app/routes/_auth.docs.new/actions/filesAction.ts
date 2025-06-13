@@ -14,7 +14,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
 import { getFileFromS3 } from "~/utils/getFileFromS3";
-import type { ActionHandlerFn } from "../../../.server/actions/handleActionIntent";
+import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
 
