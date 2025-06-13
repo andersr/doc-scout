@@ -107,7 +107,6 @@ export default function ChatDetails() {
 
   const queryFetcher = useFetcher();
   const responseFetcher = useFetcher<ServerResponse>();
-  // const { handleResizeTextArea } = useTextArea(KEYS.message);
 
   const hasPendingQuery =
     responseFetcher.data?.errors === null &&
@@ -175,8 +174,8 @@ export default function ChatDetails() {
       <div className="flex flex-1 flex-col">
         <ScrollContainer
           listBottomRef={listBottomRef}
-          height="h-[calc(100vh-300px)]"
-          marginBottom="mb-12"
+          height="h-[calc(100vh-285px)]"
+          marginBottom=""
         >
           <ListContainer>
             {messages.map((m) => (
@@ -200,23 +199,23 @@ export default function ChatDetails() {
         </ScrollContainer>
         <div
           className={twMerge(
-            "fixed bottom-0 z-10 h-24 p-2 md:w-5xl",
+            "fixed right-4 bottom-4 left-4 z-10 md:mx-auto md:max-w-5xl",
             "bg-background",
           )}
         >
           <queryFetcher.Form method="POST" onSubmit={handleSubmit}>
-            <div className="flex w-full items-end gap-2 md:gap-4">
+            <div className="flex w-full items-end gap-2">
               <textarea
                 {...register("message")}
                 className={twMerge(INPUT_STYLES, "bg-white")}
                 placeholder={"Message"}
                 rows={1}
               />
-              <div className="flex items-center py-1 md:py-0">
+              <div className="flex items-center">
                 <button
                   type="submit"
                   className={twMerge(
-                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-full p-1 text-white disabled:text-stone-100 md:rounded-lg md:p-3",
+                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100",
                     HOVER_TRANSITION,
                   )}
                   disabled={!isValid}

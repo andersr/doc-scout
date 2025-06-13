@@ -14,6 +14,9 @@ npm run dev:rr
 # Build production
 npm run build
 
+# Run build locally
+npm run start:dev
+
 # Lint and format (run before commits)
 npm run checks
 
@@ -31,8 +34,8 @@ npm run db:studio      # Open Prisma Studio
 npm run db:reset       # Reset database with migrations
 
 # Testing
-npm test               # Run vitest tests
-npm run test:e2e       # Run Playwright e2e tests (when available)
+npm test:run               # Run vitest tests
+npm run e2e:run       # Run Playwright e2e tests
 ```
 
 ## Architecture Overview

@@ -10,11 +10,8 @@ import {
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
 import { PageTitle } from "./components/PageTitle";
+import { APP_NAME } from "./config/app";
 import "./styles/app.css";
-
-export function meta() {
-  return [{ title: "Muni Admin" }, { content: "", name: "description" }];
-}
 
 export const links: Route.LinksFunction = () => [
   { href: "https://fonts.googleapis.com", rel: "preconnect" },
@@ -28,9 +25,6 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
   },
 ];
-
-// export async function loader(args: Route.LoaderArgs) {
-// }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -55,6 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/site.webmanifest" />
         <Meta />
         <Links />
+        <title>{APP_NAME}</title>
       </head>
       <body className={twMerge("h-full", "bg-background")}>
         {children}

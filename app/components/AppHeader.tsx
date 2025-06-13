@@ -1,11 +1,7 @@
 import { Link } from "react-router";
 
-import { FoldedDoc } from "~/components/brand/FoldedDoc";
+import { Logo } from "~/components/brand/Logo";
 import { appRoutes } from "~/shared/appRoutes";
-
-// interface Props {
-//   user?: UserClient;
-// }
 
 export default function AppHeader() {
   return (
@@ -15,7 +11,7 @@ export default function AppHeader() {
           className="text-pompadour/70 flex items-center"
           to={appRoutes("/")}
         >
-          <FoldedDoc size={24} />
+          <Logo size={24} />
           <div className="pl-2 text-3xl font-stretch-50%">Doc Scout</div>
         </Link>
       </div>

@@ -117,6 +117,7 @@
     "start": "react-router-serve ./build/server/index.js",
     "start:dev": "PORT=4000  dotenv -- npm start",
     "test": "vitest",
+    "test:run": "vitest run",
     "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit"
   },
   "type": "module"
