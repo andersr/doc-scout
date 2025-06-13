@@ -13,7 +13,6 @@ export async function getFileFromS3(key: string): Promise<string> {
     const parts = key.split("/");
     const fileName = parts[parts.length - 1];
 
-    // fs.mkdirSync(path.join(process.cwd(), "tmpfiles"), { recursive: true });
     const filePath = path.join("/tmp", fileName);
     const writeStream = fs.createWriteStream(filePath);
     const readStream = res.Body as Readable;
