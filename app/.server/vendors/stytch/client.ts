@@ -1,5 +1,5 @@
 import stytch from "stytch";
-import { ENV } from "../ENV";
+import { ENV } from "~/.server/ENV";
 
 export const stytchClient = new stytch.Client({
   project_id: ENV.STYTCH_PROJECT_ID,
