@@ -1,7 +1,7 @@
 import { MessageType } from "@prisma/client";
 import { getValidatedFormData } from "remix-hook-form";
 import { generateGraph } from "~/.server/langchain/generateGraph";
-import { requireUser } from "~/.server/sessions/requireUser";
+import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
 import { prisma } from "~/lib/prisma";
