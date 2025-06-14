@@ -1,20 +1,29 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
-import { Logo } from "~/components/brand/Logo";
 import { appRoutes } from "~/shared/appRoutes";
+import { LogoWithText } from "./brand/LogoWithText";
 
-export default function AppHeader() {
+export default function AppHeader({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
+  const { pathname } = useLocation();
+
+  const isHome = pathname === appRoutes("/");
+
   return (
-    <header className="flex items-center gap-2">
+    <header className="flex place-items-baseline gap-2 md:gap-4">
       <div className="flex-1">
-        <Link
-          className="text-pompadour/70 flex items-center"
-          to={appRoutes("/")}
-        >
-          <Logo size={24} />
-          <div className="pl-2 text-3xl font-stretch-50%">Doc Scout</div>
-        </Link>
+        {isHome ? (
+          <LogoWithText />
+        ) : (
+          <Link to={appRoutes("/")} className="inline-block">
+            <LogoWithText />
+          </Link>
+        )}
       </div>
+      {children}
     </header>
   );
 }

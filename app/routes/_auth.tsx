@@ -1,9 +1,9 @@
-import { data, Link, Outlet, useLoaderData, useLocation } from "react-router";
+import { data, Link, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { AppContainer } from "~/components/AppContainer";
+import AppHeader from "~/components/AppHeader";
 import { Avatar } from "~/components/Avatar";
-import { LogoWithText } from "~/components/brand/LogoWithText";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
 import { appRoutes } from "~/shared/appRoutes";
@@ -22,22 +22,10 @@ const NAV_LINKS: { label: string; route: string }[] = [
 
 export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
-  const { pathname } = useLocation();
-
-  const isHome = pathname === "/";
 
   return (
     <AppContainer>
-      <div className="flex place-items-baseline gap-2 md:gap-4">
-        <div className="flex-1">
-          {isHome ? (
-            <LogoWithText />
-          ) : (
-            <Link to={appRoutes("/")}>
-              <LogoWithText />
-            </Link>
-          )}
-        </div>
+      <AppHeader>
         {NAV_LINKS.map((l) => (
           <Link className="md:text-2xl" key={l.label} to={l.route}>
             {l.label}
@@ -61,7 +49,7 @@ export default function AuthLayout() {
             </div>
           )}
         </div>
-      </div>
+      </AppHeader>
       <main className="mx-auto flex w-full flex-1 flex-col gap-6 py-6 md:max-w-5xl md:min-w-3xl md:py-12">
         <Outlet />
       </main>
