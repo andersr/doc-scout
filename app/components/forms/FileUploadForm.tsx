@@ -5,9 +5,7 @@ import { ActionButton } from "../ui/ActionButton";
 
 export function FileUploadForm() {
   const { errors, handleSubmit, isUpdating, selectedFiles, setSelectedFiles } =
-    useUploadFiles({
-      redirectOnDone: true,
-    });
+    useUploadFiles();
 
   const filesSubmitDisabled = isUpdating || selectedFiles.length === 0;
 
@@ -51,10 +49,12 @@ export function FileUploadForm() {
           ))}
         </ul>
       </div>
-
       <ActionButton onClick={handleSubmit} disabled={filesSubmitDisabled}>
         {isUpdating ? "Processing..." : "Add Docs"}
       </ActionButton>
+      {isUpdating && (
+        <div className="py-4 text-sm italic">This may take a while...</div>
+      )}
     </div>
   );
 }

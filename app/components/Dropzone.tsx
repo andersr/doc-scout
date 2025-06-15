@@ -104,7 +104,7 @@ export function Dropzone({
             className="text-muted-foreground text-xs"
             id="dropzone-description"
           >
-            Max file size: {FILE_CONFIG.maxSizeInBytes / (1024 * 1024)}mb
+            Max file size: {FILE_CONFIG.maxSizeInBytes / (1024 * 1024)}MB
           </div>
         </div>
       </div>

@@ -5,8 +5,23 @@ export interface FileUploadOptions {
   maxSizeInBytes: number;
 }
 
-export type SourceInitResponse = {
+export interface SignedUrlResponseFileInfo {
   fileName: string;
   signedUrl: string;
   sourcePublicId: string;
+  storagePath: string;
+}
+
+export interface SignedUrlResponse {
+  filesInfo: SignedUrlResponseFileInfo[];
+}
+
+type SourceInitFileInfo = {
+  fileName: string;
+  signedUrl: string;
+  sourcePublicId: string;
+};
+
+export type SourceInitResponse = {
+  filesInfo: SourceInitFileInfo[];
 };

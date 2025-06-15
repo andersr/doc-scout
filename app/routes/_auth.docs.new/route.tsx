@@ -12,7 +12,7 @@ import {
   useTabs,
 } from "~/components/ui/tabs";
 import { KEYS } from "~/shared/keys";
-import { filesAction } from "./actions/filesAction";
+import { createSourcesAction } from "./actions/createSourcesAction";
 import { urlsAction } from "./actions/urlsAction";
 
 export default function NewDocsRoute() {
@@ -39,11 +39,9 @@ export default function NewDocsRoute() {
             Via URL
           </TabButton>
         </TabsList>
-
         <TabContent value={KEYS.files} currentValue={value}>
           <FileUploadForm />
         </TabContent>
-
         <TabContent value={KEYS.urls} currentValue={value}>
           <UrlForm />
         </TabContent>
@@ -61,7 +59,7 @@ export async function action(args: ActionFunctionArgs) {
   await requireUser(args);
   return await handleActionIntent({
     handlers: {
-      files: filesAction,
+      createSources: createSourcesAction,
       urls: urlsAction,
     },
     request: args.request,

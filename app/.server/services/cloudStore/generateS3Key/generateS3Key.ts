@@ -1,5 +1,6 @@
 import { slugify } from "~/utils/slugify";
 
+// TODO:require file extension
 export function generateS3Key({
   fileName,
   sourcePublicId,
@@ -12,7 +13,7 @@ export function generateS3Key({
   const timestamp = Date.now();
   const lastDotIndex = fileName.lastIndexOf(".");
 
-  let nameWithoutExt: string;
+  let nameWithoutExt: string; // get rid of this
   let extension: string;
 
   if (lastDotIndex === -1 || lastDotIndex === 0) {

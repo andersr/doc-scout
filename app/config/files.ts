@@ -4,7 +4,7 @@ export const FILE_CONFIG: FileUploadOptions = {
   allowedExtensions: ["md", "txt", "pdf"],
   allowedFileTypes: ["application/pdf", "text/markdown", "text/plain"],
   maxFiles: 10,
-  maxSizeInBytes: 30 * 1024 * 1024, //30mb, for now
+  maxSizeInBytes: 50 * 1024 * 1024, // 50mb
 };
 
 // TODO: DRY this up - reuse above config

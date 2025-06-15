@@ -5,18 +5,18 @@ import { generateS3Key } from "~/.server/services/cloudStore/generateS3Key/gener
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
-import { prisma } from "~/lib/prisma";
 import { fileNameListSchema } from "~/lib/schemas/files";
 import { KEYS } from "~/shared/keys";
-import type { SourceInitResponse } from "~/types/files";
-import type { FileSourceInput } from "~/types/source";
-import type { Route } from "./+types/api.sources";
+import type {
+  SignedUrlResponse,
+  SignedUrlResponseFileInfo,
+} from "~/types/files";
+import type { Route } from "./+types/api.signed-urls";
 
 export async function action(args: Route.ActionArgs) {
   const { internalUser } = await requireUser(args);
   try {
-    const clone = args.request.clone();
-    const formData = await clone.formData();
+    const formData = await args.request.formData();
     const submittedFiles = formData.getAll(KEYS.fileNames);
 
     const fileNames = fileNameListSchema.parse(submittedFiles);
@@ -26,8 +26,7 @@ export async function action(args: Route.ActionArgs) {
       userId: internalUser.id,
     });
 
-    const items: SourceInitResponse[] = [];
-    const filesDbInput: FileSourceInput[] = [];
+    const filesInfo: SignedUrlResponseFileInfo[] = [];
 
     for await (const fileName of fileNames) {
       const sourcePublicId = generateId();
@@ -39,32 +38,15 @@ export async function action(args: Route.ActionArgs) {
 
       const signedUrl = await createPresignedUrl({ key: storagePath });
 
-      filesDbInput.push({
-        fileName,
-        ownerId: internalUser.id,
-        publicId: sourcePublicId,
-        storagePath,
-        text: "",
-        title: fileName, // TODO: get from file content or suggest via bot
-      });
-
-      items.push({
+      filesInfo.push({
         fileName,
         signedUrl,
         sourcePublicId,
+        storagePath,
       });
     }
 
-    await prisma.source.createMany({
-      data: filesDbInput.map((f) => {
-        return {
-          ...f,
-          createdAt: new Date(),
-        };
-      }),
-    });
-
-    return data({ items }, { status: 200 });
+    return data({ filesInfo } satisfies SignedUrlResponse, { status: 200 });
   } catch (error) {
     console.error("error: ", error);
     return serverError(error);
