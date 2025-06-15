@@ -15,9 +15,6 @@ import { pdfClient } from "~/.server/vendors/adobe/pdfClient";
 
 export async function extractPdfData(filePath: string): Promise<string> {
   let readStream;
-  // let tmpDir;
-  // const appPrefix = "pdf-";
-  // let tempFilePath = "";
 
   try {
     readStream = fs.createReadStream(filePath);
@@ -48,9 +45,8 @@ export async function extractPdfData(filePath: string): Promise<string> {
     if (!fs.existsSync("/tmp")) {
       throw new Error("no tmp dir");
     }
-    // tmpDir = fs.mkdtempSync(path.join("/tmp", appPrefix));
     const tempFilePath = path.join("/tmp", `pdf-extract-${Date.now()}.zip`);
-    console.info("tempFilePath: ", tempFilePath);
+
     const writeStream = fs.createWriteStream(tempFilePath);
 
     await new Promise<void>((resolve, reject) => {
@@ -91,19 +87,6 @@ export async function extractPdfData(filePath: string): Promise<string> {
     }
   } finally {
     readStream?.destroy();
-    // if (tmpDir) {
-    //   try {
-    //     fs.rmSync(tmpDir, { recursive: true });
-    //   } catch (cleanupError) {
-    //     console.error(
-    //       `Failed to remove temporary directory: ${tmpDir}`,
-    //       cleanupError,
-    //     );
-    //   }
-    // }
-    // if (tempFilePath && fs.existsSync(tempFilePath)) {
-    //   fs.unlinkSync(tempFilePath);
-    // }
   }
 }
 

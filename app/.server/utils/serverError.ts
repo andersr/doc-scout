@@ -14,6 +14,7 @@ export function serverError(error: unknown) {
     );
   }
 
+  // TODO: re-add Zod eror handling
   // if (error instanceof ZodError) {
   //   // TODO: return actual Zod error
   //   return new Response(JSON.stringify(DEFAULT_ERROR), {

@@ -5,5 +5,6 @@ type BaseSourceInput = Required<Pick<Source, "title" | "ownerId" | "text">> &
 
 export type UrlSourceInput = BaseSourceInput & Required<Pick<Source, "url">>;
 
-export type FileSourceInput = BaseSourceInput &
-  Required<Pick<Source, "storagePath" | "fileName" | "publicId">>;
+export type FileSourceInput = Required<
+  Pick<Source, "storagePath" | "publicId" | "fileName">
+>;
