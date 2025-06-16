@@ -6,6 +6,7 @@ import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { formatDateTime } from "~/utils/formatDateTime";
+import { setSourceTitle } from "~/utils/setSourceTitle";
 
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
@@ -36,7 +37,7 @@ export default function DocsList() {
             to={appRoutes("/docs/:id", { id: d.publicId })}
             className="rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
           >
-            <h2 className="text-lg font-medium">{d.name ?? d.fileName}</h2>
+            <h2 className="text-lg font-medium">{setSourceTitle(d)}</h2>
             <div className="mt-2 text-xs text-gray-400">
               Created:{" "}
               {d.createdAt
