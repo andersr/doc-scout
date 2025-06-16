@@ -1,10 +1,10 @@
 import { CREATE_ABSTRACT_INSTRUCTIONS } from "~/data/prompts/createAbstract";
 import { openAiClient } from "../../../vendors/openai/client";
 
-export async function generateAbstract({ text }: { text: string }) {
+export async function generateSummary({ text }: { text: string }) {
   try {
     if (text.trim() === "") {
-      console.warn("no text found, cannot generate abstract");
+      console.warn("no text found, cannot generate summary");
       return "";
     }
     const response = await openAiClient.responses.create({

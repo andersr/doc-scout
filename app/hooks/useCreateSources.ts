@@ -8,7 +8,7 @@ import type {
   SourceInitResponse,
 } from "~/types/files";
 import type { ServerResponse } from "~/types/server";
-import type { FileSourceInput } from "~/types/source";
+import type { SourceInput } from "~/types/source";
 import { useFetcherWithReset } from "./useFetcherWithReset";
 
 export function useCreateSources({
@@ -72,7 +72,7 @@ function getSourcesFormData({
   filesInfo: SignedUrlResponseFileInfo[];
 }): FormData {
   const formData = new FormData();
-  formData.append(KEYS.intent, KEYS.createSources);
+  formData.append(KEYS.intent, KEYS.files);
 
   filesInfo.forEach((f) => {
     formData.append(
@@ -81,7 +81,7 @@ function getSourcesFormData({
         fileName: f.fileName,
         publicId: f.sourcePublicId,
         storagePath: f.storagePath,
-      } satisfies FileSourceInput),
+      } satisfies SourceInput),
     );
   });
 

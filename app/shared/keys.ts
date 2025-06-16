@@ -9,7 +9,6 @@ export const AppKeys = [
   "error",
   "files",
   "fileNames",
-  "createSources",
   "sourcesInput",
   "message",
   "intent",

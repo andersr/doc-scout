@@ -15,3 +15,8 @@ export const FILETYPES_ACCEPTED = {
 };
 
 export const INVALID_FILE_ERROR = `Only ${FILE_CONFIG.allowedExtensions.join(", ")} files are allowed`;
+
+/**
+ * Name of temp dir on Vercel serverless host.  We can only create temporary files in this dir on the serverless host.
+ */
+export const VERCEL_TMP_DIR = "/tmp";

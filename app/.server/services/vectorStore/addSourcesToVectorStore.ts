@@ -3,6 +3,7 @@ import { getNameSpace } from "~/config/namespaces";
 import type { LCDocument } from "~/types/document";
 import { addDocsToVectorStore } from "./addDocsToVectorStore";
 
+// TODO: should this be in a try/catch or just throw?
 export async function addSourcesToVectorStore({
   sources,
   userPublicId,
