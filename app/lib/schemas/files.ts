@@ -37,18 +37,3 @@ export const fileListSchema = z
     (list) => list.length <= CONFIG.maxFiles,
     `Maximum ${CONFIG.maxFiles} files allowed`,
   );
-
-// const sourceIdListSchema = z
-//   .array(z.string().min(5))
-//   .refine((list) => list.length > 0, "No items");
-
-// const sourceInputSchema = z.object({
-//   fileName: z.string().min(1),
-//   publicId: z.string().min(ID_DEFAULT_LENGTH),
-//   storagePath: z.string().min(1),
-// });
-// export const sourceInputArraySchema = z
-//   .array(sourceInputSchema)
-//   .refine((list) => list.length > 0, "No files selected");
-
-// export type SourceInputArray = z.infer<typeof sourceInputArraySchema>;
