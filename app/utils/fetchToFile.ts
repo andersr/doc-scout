@@ -3,6 +3,7 @@ import path from "path";
 import { Readable } from "stream";
 import { finished } from "stream/promises";
 
+// TODO: unused?
 export async function fetchToFile(url: string) {
   try {
     const response = await fetch(url);

@@ -12,6 +12,7 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
 import { pdfClient } from "~/.server/vendors/adobe/pdfClient";
+import { VERCEL_TMP_DIR } from "~/config/files";
 
 export async function extractPdfData(filePath: string): Promise<string> {
   let readStream;
@@ -42,10 +43,13 @@ export async function extractPdfData(filePath: string): Promise<string> {
       throw new Error("No result asset returned");
     }
     const streamAsset = await pdfClient.getContent({ asset: resultAsset });
-    if (!fs.existsSync("/tmp")) {
+    if (!fs.existsSync(VERCEL_TMP_DIR)) {
       throw new Error("no tmp dir");
     }
-    const tempFilePath = path.join("/tmp", `pdf-extract-${Date.now()}.zip`);
+    const tempFilePath = path.join(
+      VERCEL_TMP_DIR,
+      `pdf-extract-${Date.now()}.zip`,
+    );
 
     const writeStream = fs.createWriteStream(tempFilePath);
 

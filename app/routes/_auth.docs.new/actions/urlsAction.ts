@@ -1,16 +1,13 @@
-import { StatusCodes } from "http-status-codes";
 import { redirect } from "react-router";
+import { createSourcesAndAddToVectorStore } from "~/.server/models/sources/createSourcesAndAddToVectorStore";
+import { setCreateSourcesRedirectRoute } from "~/.server/models/sources/setCreateSourcesRedirectRoute";
 import { throwIfExistingSources } from "~/.server/models/sources/throwIfExistingSources";
-import { generateAbstract } from "~/.server/services/agents/docSummary/generateAbstract";
+import { generateSummary } from "~/.server/services/agents/docSummary/generateSummary";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
 import { batchScrapeUrls } from "~/.server/services/webScrape/batchScrapeUrls";
 import { generateId } from "~/.server/utils/generateId";
-import { prisma } from "~/lib/prisma";
 import { urlListSchema } from "~/lib/schemas/urls";
-import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
-import { ServerError } from "~/types/server";
 import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
 import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
@@ -32,7 +29,7 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
 
   const urlDataItems = await batchScrapeUrls({ urls });
 
-  const urlsDbInput: UrlSourceInput[] = [];
+  const sourcesInput: UrlSourceInput[] = [];
 
   for await (const urlData of urlDataItems) {
     const title = urlData.metadata?.title ?? "";
@@ -46,15 +43,18 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
       continue;
     }
 
-    const summary = await generateAbstract({ text });
+    const summary = await generateSummary({ text });
+
     const url = urlData.metadata?.url;
     if (!url) {
       console.warn(`no url found for: ${urlData.metadata}`);
       continue;
     }
 
-    urlsDbInput.push({
+    sourcesInput.push({
+      createdAt: new Date(),
       ownerId: internalUser.id,
+      publicId: generateId(),
       summary,
       text,
       title,
@@ -62,31 +62,12 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
     });
   }
 
-  if (urlsDbInput.length === 0) {
-    throw new ServerError(
-      `No source inputs to add. Please check source input data.`,
-      StatusCodes.BAD_GATEWAY,
-    );
-  }
-
-  const sources = await prisma.source.createManyAndReturn({
-    data: urlsDbInput.map((f) => ({
-      createdAt: new Date(),
-      name: f.title, // legacy
-      publicId: generateId(),
-      ...f,
-    })),
-  });
-
-  await addSourcesToVectorStore({
-    sources,
+  const sources = await createSourcesAndAddToVectorStore({
+    data: sourcesInput,
     userPublicId: internalUser.publicId,
   });
 
-  const redirectRoute =
-    sources.length === 1
-      ? appRoutes("/docs/:id", { id: sources[0].publicId })
-      : appRoutes("/docs");
+  const redirectRoute = setCreateSourcesRedirectRoute(sources);
 
   return redirect(redirectRoute);
 };

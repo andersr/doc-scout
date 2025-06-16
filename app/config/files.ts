@@ -15,3 +15,5 @@ export const FILETYPES_ACCEPTED = {
 };
 
 export const INVALID_FILE_ERROR = `Only ${FILE_CONFIG.allowedExtensions.join(", ")} files are allowed`;
+
+export const VERCEL_TMP_DIR = "/tmp";

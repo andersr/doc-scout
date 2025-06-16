@@ -2,19 +2,19 @@ import fs from "fs";
 import path from "path";
 import { Readable } from "stream";
 import { getFromBucket } from "~/.server/services/cloudStore/getFromBucket";
+import { VERCEL_TMP_DIR } from "~/config/files";
+import { getFilenameFromPath } from "~/utils/getFilenameFromPath";
 
-export async function getFileFromS3(key: string): Promise<string> {
+export async function cloudStoreToLocalFile(key: string): Promise<string> {
   try {
     const res = await getFromBucket(key);
 
     if (!res.Body) {
       throw new Error("No body");
     }
-    const parts = key.split("/");
-    const fileName = parts[parts.length - 1];
 
-    // fs.mkdirSync(path.join(process.cwd(), "tmpfiles"), { recursive: true });
-    const filePath = path.join("/tmp", fileName);
+    const fileName = getFilenameFromPath(key);
+    const filePath = path.join(VERCEL_TMP_DIR, fileName);
     const writeStream = fs.createWriteStream(filePath);
     const readStream = res.Body as Readable;
 

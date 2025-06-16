@@ -12,7 +12,7 @@ import {
   useTabs,
 } from "~/components/ui/tabs";
 import { KEYS } from "~/shared/keys";
-import { createSourcesAction } from "./actions/createSourcesAction";
+import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";
 
 export default function NewDocsRoute() {
@@ -59,7 +59,7 @@ export async function action(args: ActionFunctionArgs) {
   await requireUser(args);
   return await handleActionIntent({
     handlers: {
-      createSources: createSourcesAction,
+      files: filesAction,
       urls: urlsAction,
     },
     request: args.request,
