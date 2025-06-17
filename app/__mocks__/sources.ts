@@ -1,0 +1,38 @@
+import type { Source } from "@prisma/client";
+
+// export type SeedUser = Pick<UserInternal, "email"> &
+//   Partial<Pick<User, "name" | "role">>;
+// need user with docs
+
+export const MOCK_FILE_PDF_SOURCE: Pick<
+  Source,
+  "title" | "fileName" | "text" | "summary" | "storagePath"
+> = {
+  fileName: "Smart_Hawk.pdf",
+  // publicId: "2Z4mIya4k1kR",
+  storagePath:
+    "users/73tkQ5NCznp6/sources/2Z4mIya4k1kR/smarthawk-1750089013765.pdf",
+  summary:
+    "Dr. Vladimir Dinets, a zoologist and mathematician, documents an innovative urban hunting behavior of a Cooper’s hawk in a 2025 Frontiers in Ethology article. Observing near his home, he found that the hawk exploited traffic patterns at a pedestrian-crossing intersection, using the sound signal indicating an extended red light to time strikes on birds feeding near a residence. The hawk utilized the queue of cars as cover, demonstrating an understanding of human-generated cues and a mental map of its environment. This behavior highlights the species’ remarkable adaptability to urban habitats despite inherent risks, suggesting intelligence and learning are key to their survival in cities. The article sheds light on broader animal interactions with human infrastructure beyond typical roadkill scenarios.",
+  text: `Smart Hawk 
+Dr Vladimir Dinets, a research assistant professor at the University of Tennessee, is a zoologist who studies animal behavior, ecology, and conservation. As of 2025, he also teaches mathematics at Rutgers University. He is the author of a recently published Frontiers in Ethology article that documents the impressive adaptation of an avian newcomer to the city. A Cooper’s hawk, a medium-sized raptor native to North America, appears to have learned how to adapt its hunting strategy and strike at a flock of birds precisely when cars at an intersection lined up after traffic lights switched to red, having been alerted by a sound signal that the red phase would last longer than usual. In the following guest editorial, he describes his observations. 
+by Dr Vladimir Dinets 
+Many years ago, I got to spend some time in Ngorongoro Crater, a unique place in Africa where immense herds of animals are being watched by equally immense crowds of 4x4-riding tourists, and traffic jams of all kinds are frequent. On my last evening there, a local guide told me at a campfire that some buffalo in the crater had figured out the meaning of car turn signals and used that understanding to get out of the way of turning Jeeps and Land Rovers. 
+I never had a chance to return to the crater and still don’t know if that story was true, but it got me interested in animals’ perception of – and interactions with – human-made vehicles. Of course, the most common interaction is the animal becoming a roadkill, but it’s not the whole story. Many animals have learned to use cars for their own benefit, and birds seem to be particularly good at it. Crows drop walnuts, clams, even small vertebrates onto busy roads to have them killed and/or crushed by cars. Carrion-eating birds routinely monitor or patrol busy roads to immediately snatch roadkill. For example, many American highways are partitioned by families of ravens who watch them from dawn till dusk, waiting for meals from under wheels. Songbirds glean dead insects from cars and even nest in moving cars, trains and boats. Small birds use moving cars as mobile shelters from pursuing hawks, while hawks in one Ukrainian city have long been known to use moving cars and streetcars as cover to sneak up on their prey. 
+Hunt at the crosswalk 
+So I’ve been keeping an eye for unusual bird-car play, and that’s why I noticed something interesting going on at a street intersection near my home. The intersection wasn’t particularly busy, and even during morning rush hour, when I was driving my daughter to school, there were usually only a few cars waiting for the green light. But sometimes a pedestrian pressed a button, and that caused the red light to last a lot longer, so the car queue became longer, too, stretching all the way to a small 
+streetside tree with a particularly dense crown. When that happened, the streetlight produced a sound signal, letting blind people know that it was safe to cross. 
+The study area. The route used by the hawk to attack a flock of birds feeding in front of house #2 is shown with white arrows. The hawk appeared in the tree in front of house #11 as soon as sound signals at the streetlight at the intersection (marked with white asterisks) indicated that red light will be longer than usual, and attacked when the queue of cars reached house #8, making it possible for the hawk to move to the tree in front of house #1 without being visible to potential prey. Credit: Dinets, 2025. 
+One winter morning I was in my car waiting for the light to change and suddenly saw a Cooper’s hawk: it emerged from that small tree, flew very low above the sidewalk along the line of cars, made a sharp turn, crossed the street between the cars, and dove onto something near one of the houses. 
+A few days later I saw the same thing happen again and decided to investigate. It turned out that the house targeted by the hawk’s attacks was inhabited by a nice big family that liked to eat dinner in the front yard. Next morning their breadcrumbs and other leftovers attracted a small flock of birds – sparrows, doves, and sometimes starlings. That’s what the hawk was after. 
+But what was really interesting, and took me much longer to figure out, was that the hawk always attacked when the car queue was long enough to provide cover all the way to the small tree, and that only happened after someone had pressed the pedestrian crossing button. As soon as the sound signal was activated, the raptor would fly from somewhere into the small tree, wait for the cars to line up, and then strike. 
+Download and read original article 
+Survival of the smartest? 
+That meant that the hawk understood the connection between the sound and the eventual car queue length. The bird also had to have a good mental map of the place, because when the car queue reached its tree, the raptor could no longer see the place where its prey was and had to get there by memory. 
+It was an immature bird. Cooper’s hawks rarely nest in cities in our area but are common winter visitors. So the bird I was watching was almost certainly a migrant, having moved to the city just a few weeks earlier. And it had already figured out how to use traffic signals and patterns. To me it seemed very impressive. 
+Immature Cooper’s hawk in an ambush. Image: Vladimir Dinets. 
+Next winter I saw a hawk in adult plumage hunt in exactly the same way, and I’m pretty sure it was the same bird. The following summer, the sound signal at the streetlight stopped working, and the residents of the house moved out, so there were no more bird flocks. I haven’t seen any Cooper’s hawks around here ever since. 
+Cooper’s hawk is on a rather short list of bird of prey species that have successfully adapted to life in cities. A city is a difficult and very dangerous habitat for any bird, but particularly for a large raptor specializing in live prey: you have to avoid windows, cars, utility wires, and countless other dangers while catching something to eat every day. I think my observations show that Cooper’s hawks manage to survive and thrive there, at least in part, by being very smart. 
+REPUBLISHING GUIDELINES: Open access and sharing research is part of Frontiers’ mission. Unless otherwise noted, you can republish articles posted in the Frontiers news site — as long as you include a link back to the original research. Selling the articles is not allowed. `,
+  title: "Smart Hawk",
+};
