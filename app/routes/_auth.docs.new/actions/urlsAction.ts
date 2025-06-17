@@ -8,9 +8,9 @@ import { batchScrapeUrls } from "~/.server/services/webScrape/batchScrapeUrls";
 import { generateId } from "~/.server/utils/generateId";
 import { urlListSchema } from "~/lib/schemas/urls";
 import { KEYS } from "~/shared/keys";
+import type { ActionHandlerFn } from "~/types/action";
 import type { UrlSourceInput } from "~/types/source";
 import { splitCsvText } from "~/utils/splitCsvText";
-import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 
 export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });
