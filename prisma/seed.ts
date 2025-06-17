@@ -2,55 +2,26 @@ const prisma = new PrismaClient();
 
 import { PrismaClient } from "@prisma/client";
 
-import { z } from "zod";
-import { generateId } from "../app/.server/utils/generateId";
+// import { z } from "zod";
 import { stytchClient } from "../app/.server/vendors/stytch/client";
+import {
+  CreateTestUserInput,
+  getTestEmail,
+  TEST_USER_PWD,
+  TestUserNames,
+} from "../app/__test__/users";
+import { generateTestId } from "../e2e/utils/generateTestId";
 
-// TODO: duplicated
-const testEnvSchema = z.object({
-  TEST_USERS: z.string().min(3),
-});
-
-const ENV_TEST = testEnvSchema.parse(process.env);
-
-type TestUser = { email: string; password: string };
-type DbUser = { email: string; stytchId: string };
+const isTestEnv = process.env.TEST_ENV;
 
 async function seed() {
-  if (!process.env.TEST_ENV) {
-    throw new Error("not a test env");
+  if (isTestEnv) {
+    if (!TestUserNames) {
+      console.error("no test uernames found, cannot seed test users");
+      return;
+    }
+    await upsertTestUsers(TestUserNames);
   }
-
-  const usersString = ENV_TEST.TEST_USERS;
-  if (!usersString) {
-    throw new Error("no test users env var found");
-  }
-
-  const users = getTestUsers(usersString);
-
-  const dbUsers: DbUser[] = [];
-
-  for await (const user of users) {
-    const dbUser = await upsertStytchUser(user);
-    dbUsers.push(dbUser);
-  }
-
-  for await (const user of dbUsers) {
-    await prisma.user.upsert({
-      create: {
-        publicId: generateId(),
-        stytchId: user.stytchId,
-        username: user.email,
-      },
-      update: {
-        stytchId: user.stytchId,
-      },
-      where: {
-        username: user.email,
-      },
-    });
-  }
-  console.info("db users upserted");
 }
 
 seed()
@@ -62,28 +33,29 @@ seed()
     await prisma.$disconnect();
   });
 
-function getTestUsers(usersString: string) {
-  const emailPasswords = usersString.split(",");
-  if (emailPasswords.length === 0) {
-    throw new Error("no test user strings found");
-  }
-  const users: TestUser[] = [];
-  emailPasswords.forEach((ep) => {
-    const parts = ep.split("|");
-    if (parts.length !== 2 || !parts[0] || !parts[1]) {
-      throw new Error("no test users found");
-    }
+async function upsertTestUsers(userNames: readonly string[]) {
+  for await (const userName of userNames) {
+    const user: CreateTestUserInput = {
+      email: getTestEmail(userName),
+      password: TEST_USER_PWD,
+    };
+    const stytchId = await upsertStytchUser(user);
 
-    users.push({
-      email: parts[0],
-      password: parts[1],
+    await prisma.user.upsert({
+      create: {
+        publicId: generateTestId(),
+        stytchId,
+        username: user.email,
+      },
+      update: {},
+      where: {
+        stytchId,
+      },
     });
-  });
-
-  return users;
+  }
 }
 
-async function upsertStytchUser(user: TestUser): Promise<DbUser> {
+async function upsertStytchUser(user: CreateTestUserInput): Promise<string> {
   try {
     let stytchUserId = "";
     const searchRes = await stytchClient.users.search({
@@ -109,10 +81,7 @@ async function upsertStytchUser(user: TestUser): Promise<DbUser> {
       stytchUserId = userRes.user_id;
     }
 
-    return {
-      email: user.email,
-      stytchId: stytchUserId,
-    };
+    return stytchUserId;
   } catch (error) {
     console.error("error: ", error);
     throw new Error("error upserting stytch user");
