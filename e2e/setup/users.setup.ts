@@ -1,15 +1,18 @@
-import { APIRequestContext, test as setup } from "@playwright/test";
-import {
-  getTestEmail,
-  TEST_USER_PWD,
-  TestUserNames,
-} from "../../app/__test__/users";
+import { type APIRequestContext, test as setup } from "@playwright/test";
+import { getTestEmail } from "e2e/utils/getTestEmail";
 import { appRoutes } from "../../app/shared/appRoutes";
+import { TestUserNames } from "../../app/types/testUsers";
 import { setAuthStoragePath } from "../utils/setAuthStoragePath";
 import { upsertTestUser } from "../utils/upsertTestUsers";
 const port = process.env.PORT;
 
+const testUserPwd: string = process.env.TEST_USER_PWD ?? "";
+
 setup("test users setup", async ({ request }) => {
+  if (testUserPwd === "") {
+    throw new Error("No test user password");
+  }
+
   if (!port) {
     throw new Error("No port env var found");
   }
@@ -31,7 +34,7 @@ async function authenticateTestUsers({
 
     const loginRoute = appRoutes("/e2e/login", {
       email: getTestEmail(userName),
-      password: TEST_USER_PWD,
+      password: testUserPwd,
     });
 
     await request.post(`http://localhost:${port}${loginRoute}`);

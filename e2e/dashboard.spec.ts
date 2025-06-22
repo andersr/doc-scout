@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-import { TestActionRequest } from "../app/__test__/actions";
-import { TEST_KEYS } from "../app/__test__/keys";
-import { getTestEmail, TEST_USERS } from "../app/__test__/users";
 import { appRoutes } from "../app/shared/appRoutes";
+import { TEST_KEYS } from "../app/shared/testKeys";
+import type { TestActionRequest } from "../app/types/testActions";
+import { TEST_USERS } from "../app/types/testUsers";
+import { getTestEmail } from "./utils/getTestEmail";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
 test.describe("Dashboard - No Docs", () => {

@@ -1,10 +1,10 @@
 import { createChat } from "~/.server/models/chats/createChat";
 import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
 import { MOCK_SOURCE } from "~/__mocks__/sources";
-import type { TestActionResponse } from "~/__test__/actions";
-import { createChatSchema } from "~/__test__/schemas";
 import { prisma } from "~/lib/prisma";
+import { createChatSchema } from "~/routes/e2e.$command/utils/schemas";
 import type { ActionHandlerFn } from "~/types/action";
+import type { TestActionResponse } from "~/types/testActions";
 
 export const createChatAction: ActionHandlerFn = async ({ formData }) => {
   const formPayload = Object.fromEntries(formData);

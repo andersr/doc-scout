@@ -1,7 +1,7 @@
-import type { TestActionResponse } from "~/__test__/actions";
-import { TEST_KEYS } from "~/__test__/keys";
 import { prisma } from "~/lib/prisma";
+import { TEST_KEYS } from "~/shared/testKeys";
 import type { ActionHandlerFn } from "~/types/action";
+import type { TestActionResponse } from "~/types/testActions";
 
 export const deleteChatAction: ActionHandlerFn = async ({ formData }) => {
   const formPayload = Object.fromEntries(formData);

@@ -1,5 +1,5 @@
 import { stytchClient } from "../../app/.server/vendors/stytch/client";
-import { type CreateTestUserInput } from "../../app/__test__/users";
+import { type CreateTestUserInput } from "../../app/types/testUsers";
 
 export async function upsertStytchUser(
   user: CreateTestUserInput,

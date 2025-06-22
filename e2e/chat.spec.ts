@@ -1,10 +1,11 @@
 import { expect, test } from "@playwright/test";
-import type { TestActionResponse } from "../app/__test__/actions";
-import { TEST_KEYS } from "../app/__test__/keys";
-import type { CreateChatInput } from "../app/__test__/schemas";
-import { getTestEmail, TEST_USERS } from "../app/__test__/users";
+import type { CreateChatInput } from "../app/routes/e2e.$command/utils/schemas";
 import { appRoutes } from "../app/shared/appRoutes";
+import { TEST_KEYS } from "../app/shared/testKeys";
+import type { TestActionResponse } from "../app/types/testActions";
+import { TEST_USERS } from "../app/types/testUsers";
 import { generateTestId } from "./utils/generateTestId";
+import { getTestEmail } from "./utils/getTestEmail";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
 const user = TEST_USERS.hasDocCreateChat;

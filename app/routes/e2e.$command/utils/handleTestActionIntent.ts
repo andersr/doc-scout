@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import type { LoaderFunctionArgs } from "react-router";
 import type { ActionHandlerFn } from "~/types/action";
 import { ServerError } from "~/types/server";
-import { TEST_KEYS, TestKeys } from "../../../__test__/keys";
+import { TEST_KEYS, TestKeys } from "../../../shared/testKeys";
 
 export type ActionHandlers = { [k in TestKeys]?: ActionHandlerFn };
 
