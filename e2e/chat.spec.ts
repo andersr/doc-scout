@@ -29,6 +29,7 @@ test.describe("Chat", () => {
     const { chatPublicId } = (await res.json()) as TestActionResponse;
     chatId = chatPublicId;
   });
+
   test.afterEach(async ({ page, request }, testInfo) => {
     if (testInfo.status !== "passed") {
       await page.screenshot({
