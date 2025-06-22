@@ -5,5 +5,11 @@
       "~/*": ["./app/*"]
     }
   },
-  "extends": "./tsconfig.json"
+  "extends": "./tsconfig.json",
+  "include": [
+    ".react-router/types/**/*",
+    "app/**/*",
+    "app/.server/**/*",
+    "e2e/**/*"
+  ]
 }
