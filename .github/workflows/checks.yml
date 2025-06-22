@@ -126,7 +126,7 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
       E2E_ENV: true
-      TEST_USERS: ${{ secrets.TEST_USERS }}
+      TEST_USER_PWD: ${{ secrets.TEST_USER_PWD }}
       PORT: 8080
 
     steps:
