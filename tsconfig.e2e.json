@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@services/*": ["./app/__mocks__/services/*"],
+      "~/*": ["./app/*"]
+    }
+  },
+  "extends": "./tsconfig.json",
+  "include": [
+    ".react-router/types/**/*",
+    "app/**/*",
+    "app/.server/**/*",
+    "e2e/**/*"
+  ]
+}

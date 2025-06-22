@@ -1,7 +1,9 @@
 import type { Source } from "@prisma/client";
+// import { addDocsToVectorStore } from "@services/vectorStore/addDocsToVectorStore";
+import { addDocsToVectorStore } from "./addDocsToVectorStore";
+
 import { getNameSpace } from "~/config/namespaces";
 import type { LCDocument } from "~/types/document";
-import { addDocsToVectorStore } from "./addDocsToVectorStore";
 
 // TODO: should this be in a try/catch or just throw?
 export async function addSourcesToVectorStore({

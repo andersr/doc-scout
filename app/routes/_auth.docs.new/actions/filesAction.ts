@@ -8,8 +8,8 @@ import { extractTextFromCloudStorePdf } from "~/.server/services/pdfExtract/extr
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { getMarkdownFromUrl } from "~/.server/services/webScrape/getMarkdownFromUrl";
 import { KEYS } from "~/shared/keys";
+import type { ActionHandlerFn } from "~/types/action";
 import { type FileSourceInput, sourceInputArraySchema } from "~/types/source";
-import type { ActionHandlerFn } from "../../../.server/utils/handleActionIntent";
 
 export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
   const { internalUser } = await requireUser({ request });

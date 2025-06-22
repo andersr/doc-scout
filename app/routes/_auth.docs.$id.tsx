@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, redirect, useFetcher, useLoaderData } from "react-router";
 import { ENV } from "~/.server/ENV";
+import { createChat } from "~/.server/models/chats/createChat";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { serverError } from "~/.server/utils/serverError";
 import { Icon } from "~/components/icon";
@@ -109,24 +109,7 @@ export async function action(args: Route.ActionArgs) {
       params: args.params,
     });
 
-    const source = await prisma.source.findUniqueOrThrow({
-      where: {
-        publicId: sourcePublicId,
-      },
-    });
-
-    const chat = await prisma.chat.create({
-      data: {
-        createdAt: new Date(),
-        ownerId: internalUser.id,
-        publicId: generateId(),
-        sources: {
-          create: {
-            sourceId: source.id,
-          },
-        },
-      },
-    });
+    const chat = await createChat({ sourcePublicId, userId: internalUser.id });
 
     return redirect(appRoutes("/chats/:id", { id: chat.publicId }));
   } catch (error) {

@@ -1,13 +1,11 @@
 import { MessageType } from "@prisma/client";
-import { useEffect } from "react";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { redirect, useFetcher, useLoaderData } from "react-router";
-import {
-  createFormData,
-  getValidatedFormData,
-  useRemixForm,
-} from "remix-hook-form";
+import { data, redirect, useFetcher, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
+
+import { answerQuery } from "@services/agents/docQuery/answerQuery";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
@@ -22,14 +20,13 @@ import { getNameSpace } from "~/config/namespaces";
 import { FALLBACK_TITLE } from "~/config/sources";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { prisma } from "~/lib/prisma";
-import type { BotReply } from "~/lib/schemas/botReply";
-import { type NewQuery, newQuerySchema } from "~/lib/schemas/newQuery";
+import { userMessageSchema } from "~/lib/schemas/userMessage";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage, MESSAGE_INCLUDE } from "~/types/message";
-import type { ServerResponse } from "~/types/server";
+import { ServerError, type ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 
 // temporary until user name is added
@@ -82,88 +79,43 @@ export async function loader(args: LoaderFunctionArgs) {
 
   const chatMessages = chat.messages;
 
-  const mostRecentMessage =
-    chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : null;
-
   const messages: ClientMessage[] = chatMessages.map((m) => ({
     ...m,
     isBot: m.type === MessageType.BOT,
   }));
 
+  const mostRecentMessage =
+    messages.length > 0 ? messages[messages.length - 1] : null;
+
   return {
-    chat,
+    // chat,
+    hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
-    namespace,
-    newBotMessage: mostRecentMessage?.type === MessageType.BOT,
-    pendingQuery:
-      mostRecentMessage?.type === MessageType.USER ? mostRecentMessage : null,
+    mostRecentMessage,
+    // namespace,
     title: `Chat with "${title}"`,
   };
 }
 
 export default function ChatDetails() {
-  const { chat, messages, namespace, newBotMessage, pendingQuery, title } =
-    useLoaderData<typeof loader>();
+  const { hasPendingQuery, messages, title } = useLoaderData<typeof loader>();
 
-  const queryFetcher = useFetcher();
-  const responseFetcher = useFetcher<ServerResponse>();
+  const [message, setMessage] = useState("");
 
-  const hasPendingQuery =
-    responseFetcher.data?.errors === null &&
-    responseFetcher.state !== "idle" &&
-    !!pendingQuery;
+  const userMessage = useFetcher();
 
-  const botResponded =
-    responseFetcher.data?.errors === null &&
-    responseFetcher.state === "idle" &&
-    newBotMessage;
+  const botResponded = !hasPendingQuery && userMessage.state === "idle";
 
   const listBottomRef = useScrollIntoView({
     onAnyTrue: [hasPendingQuery, botResponded],
     onLoad: true,
   });
 
-  useEffect(() => {
-    if (
-      !responseFetcher.data?.errors &&
-      pendingQuery &&
-      responseFetcher.state === "idle"
-    ) {
-      const formData = createFormData<BotReply>({
-        chatPublicId: chat.publicId,
-        namespace,
-        query: pendingQuery.text,
-      });
-
-      responseFetcher.submit(formData, {
-        action: appRoutes("/api/responses"),
-        method: "POST",
-      });
-      listBottomRef.current?.scrollIntoView(false);
-    }
-  }, [chat.publicId, listBottomRef, namespace, pendingQuery, responseFetcher]);
-
-  const methods = useRemixForm<NewQuery>({
-    fetcher: queryFetcher,
-    mode: "onSubmit",
-    resolver: newQuerySchema.resolver,
-    stringifyAllValues: false,
-  });
-
-  const {
-    formState: { errors, isSubmitSuccessful, isValid },
-    handleSubmit,
-    register,
-    reset,
-  } = methods;
-
-  useEffect(() => {
-    reset({ message: "" });
-  }, [reset, isSubmitSuccessful]);
-
-  const optimisticQuery = queryFetcher.formData
-    ? queryFetcher.formData.get(KEYS.message)
+  const optimisticMessage = userMessage.formData
+    ? userMessage.formData.get(KEYS.message)
     : null;
+
+  const submitDisabled = userMessage.state !== "idle" || message.trim() === "";
 
   return (
     <div className="relative flex w-full flex-1 flex-col gap-6">
@@ -187,14 +139,14 @@ export default function ChatDetails() {
                 authorName={AUTHOR_NAME_PLACEHOLDER}
               />
             ))}
-            {optimisticQuery && (
+            {optimisticMessage && (
               <ChatListItem
                 createdAt={new Date()}
-                text={optimisticQuery.toString()}
+                text={optimisticMessage.toString()}
                 authorName={AUTHOR_NAME_PLACEHOLDER}
               />
             )}
-            {responseFetcher.state !== "idle" && <ChatListItem isBot loading />}
+            {userMessage.state !== "idle" && <ChatListItem isBot loading />}
           </ListContainer>
         </ScrollContainer>
         <div
@@ -203,24 +155,41 @@ export default function ChatDetails() {
             "bg-background",
           )}
         >
-          <queryFetcher.Form method="POST" onSubmit={handleSubmit}>
+          <userMessage.Form method="POST">
             <div className="flex w-full items-end gap-2">
+              <input
+                type="hidden"
+                name={KEYS.intent}
+                defaultValue={KEYS.message}
+              />
               <textarea
-                {...register("message")}
+                name={KEYS.message}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className={twMerge(INPUT_STYLES, "bg-white")}
                 placeholder={"Message"}
                 rows={1}
               />
               <div className="flex items-center">
                 <button
-                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    const formData = new FormData();
+                    formData.append(KEYS.message, message);
+                    userMessage.submit(formData, {
+                      encType: "multipart/form-data",
+                      method: "post",
+                    });
+                  }}
+                  // type="submit"
                   className={twMerge(
-                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100",
+                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100 disabled:opacity-40",
                     HOVER_TRANSITION,
                   )}
-                  disabled={!isValid}
+                  disabled={submitDisabled}
                 >
-                  {queryFetcher.state !== "idle" ? (
+                  {userMessage.state !== "idle" ? (
                     <Spinner />
                   ) : (
                     <Icon name={"ARROW_UP"} fontSize="24px" />
@@ -228,40 +197,38 @@ export default function ChatDetails() {
                 </button>
               </div>
             </div>
-            {errors.message && <p>{errors.message.message}</p>}
-          </queryFetcher.Form>
+            {/* {errors.message && <p>{errors.message.message}</p>} */}
+          </userMessage.Form>
         </div>
       </div>
     </div>
   );
 }
 
-export async function action(args: ActionFunctionArgs) {
-  const { internalUser } = await requireUser(args);
+export async function action({ params, request }: ActionFunctionArgs) {
+  const { internalUser } = await requireUser({ request });
   try {
     const chatPublicId = requireRouteParam({
       key: KEYS.id,
-      params: args.params,
+      params,
     });
 
     const chat = await prisma.chat.findFirstOrThrow({
+      include: {
+        owner: true,
+      },
       where: {
         publicId: chatPublicId,
       },
     });
 
-    const {
-      data,
-      errors,
-      receivedValues: defaultValues,
-    } = await getValidatedFormData<NewQuery>(
-      args.request,
-      newQuerySchema.resolver,
-    );
-
-    if (errors) {
-      return { defaultValues, errors, ok: false };
+    if (!chat.owner) {
+      console.error("No chat owner");
+      throw new ServerError(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
     }
+
+    const formData = Object.fromEntries(await request.formData());
+    const input = userMessageSchema.parse(formData);
 
     await prisma.message.create({
       data: {
@@ -269,14 +236,30 @@ export async function action(args: ActionFunctionArgs) {
         chatId: chat.id,
         createdAt: new Date(),
         publicId: generateId(),
-        text: data.message,
+        text: input.message,
       },
     });
 
-    return {
+    // TODO: be consistent: bot vs Agent
+    const botAnswer = await answerQuery({
+      namespace: getNameSpace("user", chat.owner.publicId),
+      query: input.message,
+    });
+
+    await prisma.message.create({
+      data: {
+        chatId: chat.id,
+        createdAt: new Date(),
+        publicId: generateId(),
+        text: botAnswer,
+        type: MessageType.BOT,
+      },
+    });
+
+    return data({
       errors: null,
       ok: true,
-    } satisfies ServerResponse;
+    } satisfies ServerResponse);
   } catch (error) {
     console.error("new chat message error: ", error);
     return serverError(error);

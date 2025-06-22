@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
@@ -17,7 +17,6 @@ import AppHeader from "~/components/AppHeader";
 import { PageTitle } from "~/components/PageTitle";
 import { ActionButton } from "~/components/ui/ActionButton";
 import { Label } from "~/components/ui/label";
-import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 
@@ -37,12 +36,6 @@ export default function LoginRoute() {
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
-
-  useEffect(() => {
-    if (actionData?.ok && nameValue.trim() !== "") {
-      setNameValue("");
-    }
-  }, [actionData?.ok, nameValue]);
 
   return (
     <AppContainer className="relative">
@@ -65,7 +58,7 @@ export default function LoginRoute() {
         <Form
           method="POST"
           className="flex flex-col gap-6"
-          action={appRoutes("/login")}
+          onSubmit={() => setNameValue("")}
         >
           <div className="flex flex-col gap-2">
             <Label htmlFor={KEYS.email}>Email</Label>

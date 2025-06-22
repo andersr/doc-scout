@@ -89,7 +89,9 @@ export default function Dashboard() {
                     Updated:{" "}
                     {doc.updatedAt
                       ? formatDateTime({ d: doc.updatedAt, withTime: true })
-                      : formatDateTime({ d: doc.createdAt!, withTime: true })}
+                      : doc.createdAt
+                        ? formatDateTime({ d: doc.createdAt, withTime: true })
+                        : ""}
                   </div>
                 </Link>
               ))

@@ -35,12 +35,12 @@ export default defineConfig({
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
     },
+    // currently not testing on webkit due to auth issues, likely related to this: https://github.com/microsoft/playwright/issues/35712
     // {
     //   dependencies: ["setup"],
     //   name: "webkit",
     //   use: { ...devices["Desktop Safari"] },
     // },
-    // currently not testing on webkit due to auth issues, likely related to this: https://github.com/microsoft/playwright/issues/35712
     /* Test against mobile viewports. */
     // {
     //   dependencies: ["setup"],
@@ -68,6 +68,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   testDir: "./e2e",
+  tsconfig: "./tsconfig.playwright.json",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

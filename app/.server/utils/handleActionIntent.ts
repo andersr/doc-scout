@@ -1,26 +1,19 @@
 import { StatusCodes } from "http-status-codes";
 import { AppKeys, KEYS } from "~/shared/keys";
+import type { ActionHandlerArgs, ActionHandlerFn } from "~/types/action";
 import { ServerError } from "~/types/server";
 import { isAppKey } from "./isAppKey";
 import { requireFormValue } from "./requireFormValue";
 import { serverError } from "./serverError";
 
-export type ActionHandlerFn = ({
-  formData,
-  request,
-}: {
-  formData: FormData;
-  request: Request;
-}) => Promise<Response | null>;
-
 export type ActionHandlers = { [k in AppKeys]?: ActionHandlerFn };
 
 export async function handleActionIntent({
   handlers,
+  params,
   request,
-}: {
+}: ActionHandlerArgs & {
   handlers: ActionHandlers;
-  request: Request;
 }) {
   try {
     const clone = request.clone();
@@ -42,7 +35,7 @@ export async function handleActionIntent({
       );
     }
 
-    return await handlers[intent]({ formData, request: clone });
+    return await handlers[intent]({ formData, params, request: clone });
   } catch (error) {
     return serverError(error);
   }

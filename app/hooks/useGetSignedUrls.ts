@@ -40,6 +40,6 @@ export function useGetSignedUrls({
   return {
     getSignedUrlsInit,
     isUpdating: getSignedUrls.state !== "idle",
-    signedUrlsFilesInfo: getSignedUrls?.data?.filesInfo,
+    signedUrlsFilesInfo: getSignedUrls?.data?.filesInfo, // rename to signedUrlsResponse
   };
 }
