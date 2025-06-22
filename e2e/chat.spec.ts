@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { TestActionResponse } from "../app/__test__/actions";
+import type { TestActionResponse } from "../app/__test__/actions";
 import { TEST_KEYS } from "../app/__test__/keys";
-import { CreateChatInput } from "../app/__test__/schemas";
+import type { CreateChatInput } from "../app/__test__/schemas";
 import { getTestEmail, TEST_USERS } from "../app/__test__/users";
 import { appRoutes } from "../app/shared/appRoutes";
+import { generateTestId } from "./utils/generateTestId";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
 const user = TEST_USERS.hasDocCreateChat;
-const sourcePublicId = "docsAskChatQuestion"; // TODO: define all static test ids in one place to ensure uniqueness
 
 test.describe("Chat", () => {
   test.use({ storageState: setAuthStoragePath(user) });
@@ -21,7 +21,7 @@ test.describe("Chat", () => {
       }),
       {
         form: {
-          sourcePublicId,
+          sourcePublicId: generateTestId(),
           username: getTestEmail(user),
         } satisfies CreateChatInput,
       },
@@ -61,6 +61,10 @@ test.describe("Chat", () => {
     // arrange
     const expectedInput = "How did the hawk use traffic to hunt?";
     const expectedReply = "BOT REPLY";
+
+    if (!chatId) {
+      throw new Error("No chat id");
+    }
     await page.goto(
       appRoutes("/chats/:id", {
         id: chatId,
