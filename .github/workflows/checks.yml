@@ -118,9 +118,9 @@ jobs:
       CDN_HOST: ${{ secrets.CDN_HOST }}
       FIRECRAWL_API_KEY: "foo"
       OPENAI_API_KEY: "foo"
-      PINECONE_API_KEY: "foo"
-      PINECONE_HOST: "foo"
-      PINECONE_INDEX_NAME: "foo"
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      PINECONE_HOST: ${{ secrets.PINECONE_HOST }}
+      PINECONE_INDEX_NAME: ${{ secrets.PINECONE_INDEX_NAME }}
       STYTCH_PROJECT_ID: ${{ secrets.STYTCH_PROJECT_ID }}
       STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
