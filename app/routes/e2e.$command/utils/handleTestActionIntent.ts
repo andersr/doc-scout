@@ -39,7 +39,7 @@ export async function handleTestActionIntent({
     const clone = request.clone();
     const formData = await clone.formData();
 
-    return await handlers[command]({ formData, request });
+    return await handlers[command]({ formData, params, request });
   } catch (error) {
     console.error("error: ", error);
   }

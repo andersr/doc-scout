@@ -1,4 +1,9 @@
 {
-  "extends": "./tsconfig.json",
-  "include": ["e2e/**/*"]
+  "compilerOptions": {
+    "paths": {
+      "@services/*": ["./app/__mocks__/services/*"],
+      "~/*": ["./app/*"]
+    }
+  },
+  "extends": "./tsconfig.json"
 }

@@ -125,7 +125,7 @@ jobs:
       STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
-      TEST_ENV: true
+      E2E_ENV: true
       TEST_USERS: ${{ secrets.TEST_USERS }}
       PORT: 8080
 

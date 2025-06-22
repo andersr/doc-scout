@@ -1,7 +1,10 @@
-export type ActionHandlerFn = ({
-  formData,
-  request,
-}: {
-  formData: FormData;
+import type { LoaderFunctionArgs } from "react-router";
+
+export type ActionHandlerArgs = {
+  params: LoaderFunctionArgs["params"];
   request: Request;
-}) => Promise<Response | null>;
+};
+
+export type ActionHandlerFn = (
+  args: ActionHandlerArgs & { formData: FormData },
+) => Promise<Response | null>;

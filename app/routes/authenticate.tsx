@@ -61,7 +61,7 @@ export default function AuthenticateRoute() {
         </div>
       )}
       <div>
-        <Link to={appRoutes("/login")}>Back to Loginn</Link>
+        <Link to={appRoutes("/login")}>Back to Login</Link>
       </div>
     </div>
   );

@@ -62,6 +62,6 @@ export async function action(args: ActionFunctionArgs) {
       files: filesAction,
       urls: urlsAction,
     },
-    request: args.request,
+    ...args,
   });
 }

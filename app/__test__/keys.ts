@@ -1,4 +1,12 @@
-export const TestKeys = ["command", "addDocs", "username"] as const;
+export const TestKeys = [
+  "command",
+  "upsertDoc",
+  "username",
+  "createChat",
+  "deleteChat",
+  "chatPublicId",
+  "testId", // unused?
+] as const;
 
 const keyTuples = TestKeys.map((k) => [k, k]);
 

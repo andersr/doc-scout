@@ -1,17 +1,15 @@
 import type { Source } from "@prisma/client";
 
-// export type SeedUser = Pick<UserInternal, "email"> &
-//   Partial<Pick<User, "name" | "role">>;
-// need user with docs
-
-export const MOCK_FILE_PDF_SOURCE: Pick<
+type MockSource = Pick<
   Source,
-  "title" | "fileName" | "text" | "summary" | "storagePath"
-> = {
+  "title" | "fileName" | "text" | "summary" | "storagePath" | "publicId"
+>;
+
+export const MOCK_SOURCE: Record<keyof MockSource, string> = {
   fileName: "Smart_Hawk.pdf",
-  // publicId: "2Z4mIya4k1kR",
+  publicId: "mockSource",
   storagePath:
-    "users/73tkQ5NCznp6/sources/2Z4mIya4k1kR/smarthawk-1750089013765.pdf",
+    "users/73tkQ5NCznp6/sources/mockSource/smarthawk-1750089013765.pdf",
   summary:
     "Dr. Vladimir Dinets, a zoologist and mathematician, documents an innovative urban hunting behavior of a Cooper’s hawk in a 2025 Frontiers in Ethology article. Observing near his home, he found that the hawk exploited traffic patterns at a pedestrian-crossing intersection, using the sound signal indicating an extended red light to time strikes on birds feeding near a residence. The hawk utilized the queue of cars as cover, demonstrating an understanding of human-generated cues and a mental map of its environment. This behavior highlights the species’ remarkable adaptability to urban habitats despite inherent risks, suggesting intelligence and learning are key to their survival in cities. The article sheds light on broader animal interactions with human infrastructure beyond typical roadkill scenarios.",
   text: `Smart Hawk 
