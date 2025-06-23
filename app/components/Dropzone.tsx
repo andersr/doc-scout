@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
-import { z } from "zod";
-import { FILE_CONFIG, FILETYPES_ACCEPTED } from "~/config/files";
+import {
+  displaySupportedFormats,
+  FILE_CONFIG,
+  FILETYPES_ACCEPTED,
+} from "~/config/files";
 import { LG_ICON_SIZE } from "~/config/icons";
-import { fileSchema } from "~/lib/schemas/files";
 import { cn } from "~/lib/utils";
-import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { Icon } from "./icon";
 
 export function Dropzone({
@@ -13,32 +13,40 @@ export function Dropzone({
 }: {
   onDrop: (acceptedFiles: File[], fileRejections: FileRejection[]) => void;
 }) {
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  // const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-  function validator(file: File) {
-    try {
-      fileSchema.parse(file);
-      return null;
-    } catch (error) {
-      if (error instanceof z.ZodError && error.issues.length > 0) {
-        setErrorMessages(error.issues.map((e) => e.message));
-        return null;
-      } else {
-        console.error("Dropzone error: ", error);
-        return {
-          code: "unknown-error",
-          message: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-        };
-      }
-    }
-  }
+  // function validator(file: File) {
+  //   console.log("file: ", file);
+  //   try {
+  //     fileSchema.parse(file);
+  //     return null;
+  //   } catch (error) {
+  //     if (error instanceof z.ZodError && error.issues.length > 0) {
+  //       setErrorMessages(error.issues.map((e) => e.message));
+  //       return null;
+  //     } else {
+  //       console.error("Dropzone error: ", error);
+  //       return {
+  //         code: "unknown-error",
+  //         message: INTENTIONALLY_GENERIC_ERROR_MESSAGE,
+  //       };
+  //     }
+  //   }
+  // }
+
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: FILETYPES_ACCEPTED,
+    maxFiles: FILE_CONFIG.maxFiles,
     multiple: true,
-    onDragEnter: () => setErrorMessages([]),
+    // onDragLeave: () => setErrorMessages([]),
+    // onDragEnter: () => setErrorMessages([]),
     onDrop,
-    onDropAccepted: () => setErrorMessages([]),
-    validator,
+    // onDropAccepted: () => setErrorMessages([]),
+    // onDropRejected: (fileRejections: FileRejection[], event: DropEvent) => {
+    //   console.log("event: ", event);
+    //   console.log("fileRejections: ", fileRejections);
+    // },
+    // validator,
   });
 
   return (
@@ -93,10 +101,7 @@ export function Dropzone({
             className="text-muted-foreground text-xs"
             id="dropzone-description"
           >
-            Supported formats:{" "}
-            {FILE_CONFIG.allowedExtensions
-              .map((ext) => `.${ext.toUpperCase()}`)
-              .join(", ")}
+            Supported formats: {displaySupportedFormats}
           </div>
           <div
             className="text-muted-foreground text-xs"
@@ -107,7 +112,7 @@ export function Dropzone({
         </div>
       </div>
 
-      {errorMessages.length > 0 && (
+      {/* {errorMessages.length > 0 && (
         <div
           className="border-danger bg-danger/5 mt-4 rounded-md border p-4 text-red-900"
           role="alert"
@@ -128,7 +133,7 @@ export function Dropzone({
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
