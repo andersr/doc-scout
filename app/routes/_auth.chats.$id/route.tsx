@@ -126,8 +126,8 @@ export default function ChatDetails() {
       <div className="flex flex-1 flex-col">
         <ScrollContainer
           listBottomRef={listBottomRef}
-          height="h-[calc(100vh-285px)]"
-          marginBottom=""
+          // height="h-[calc(100vh-285px)]"
+          // marginBottom=""
         >
           <ListContainer>
             {messages.map((m) => (
