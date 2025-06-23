@@ -29,13 +29,11 @@ import { type ClientMessage, MESSAGE_INCLUDE } from "~/types/message";
 import { ServerError, type ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 
-// temporary until user name is added
-const AUTHOR_NAME_PLACEHOLDER = "AUTHOR NAME";
-
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader({ params, request }: LoaderFunctionArgs) {
+  const { clientUser } = await requireUser({ request });
   const publicId = requireRouteParam({
     key: KEYS.id,
-    params: args.params,
+    params,
   });
 
   const chat = await prisma.chat.findUnique({
@@ -69,7 +67,7 @@ export async function loader(args: LoaderFunctionArgs) {
     throw new Error("no chat owner found");
   }
 
-  const namespace = getNameSpace("user", owner.publicId);
+  // const namespace = getNameSpace("user", owner.publicId);
 
   // TODO: currently only chatting with a single source, only current purpose is to display a title
   const sources = chat.sources.map((s) => s.source).filter((s) => s !== null);
@@ -88,6 +86,7 @@ export async function loader(args: LoaderFunctionArgs) {
     messages.length > 0 ? messages[messages.length - 1] : null;
 
   return {
+    clientUser,
     // chat,
     hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
@@ -98,7 +97,8 @@ export async function loader(args: LoaderFunctionArgs) {
 }
 
 export default function ChatDetails() {
-  const { hasPendingQuery, messages, title } = useLoaderData<typeof loader>();
+  const { clientUser, hasPendingQuery, messages, title } =
+    useLoaderData<typeof loader>();
 
   const [message, setMessage] = useState("");
 
@@ -126,8 +126,8 @@ export default function ChatDetails() {
       <div className="flex flex-1 flex-col">
         <ScrollContainer
           listBottomRef={listBottomRef}
-          height="h-[calc(100vh-285px)]"
-          marginBottom=""
+          // height="h-[calc(100vh-285px)]"
+          // marginBottom=""
         >
           <ListContainer>
             {messages.map((m) => (
@@ -136,14 +136,14 @@ export default function ChatDetails() {
                 isBot={m.isBot}
                 createdAt={m.createdAt}
                 text={m.text}
-                authorName={AUTHOR_NAME_PLACEHOLDER}
+                authorName={m.author?.email ?? ""}
               />
             ))}
             {optimisticMessage && (
               <ChatListItem
                 createdAt={new Date()}
                 text={optimisticMessage.toString()}
-                authorName={AUTHOR_NAME_PLACEHOLDER}
+                authorName={clientUser.email ?? ""}
               />
             )}
             {userMessage.state !== "idle" && <ChatListItem isBot loading />}

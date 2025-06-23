@@ -22,8 +22,8 @@ test.describe("Chat", () => {
       }),
       {
         form: {
+          email: getTestEmail(user),
           sourcePublicId: generateTestId(),
-          username: getTestEmail(user),
         } satisfies CreateChatInput,
       },
     );

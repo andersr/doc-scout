@@ -4,7 +4,7 @@ import type { ActionHandlerFn } from "~/types/action";
 import type { FileSourceInput } from "~/types/source";
 import type { TestActionResponse } from "~/types/testActions";
 import { MOCK_SOURCE } from "../../../__mocks__/sources";
-import { upsertSourceSchema } from "../utils/schemas";
+import { upsertSourceSchema } from "../utils/e2eSchemas";
 
 export const upsertDoc: ActionHandlerFn = async ({ formData }) => {
   const formPayload = Object.fromEntries(formData);
@@ -12,7 +12,7 @@ export const upsertDoc: ActionHandlerFn = async ({ formData }) => {
 
   const user = await prisma.user.findFirstOrThrow({
     where: {
-      username: data.username,
+      email: data.email,
     },
   });
 

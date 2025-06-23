@@ -1,7 +1,7 @@
 export type TestActionRequest = {
   chatPublicId?: string;
+  email?: string;
   sourcePublicId?: string;
-  username?: string;
 };
 
 export type TestActionResponse = {

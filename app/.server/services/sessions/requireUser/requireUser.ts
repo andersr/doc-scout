@@ -56,10 +56,7 @@ export async function requireUser({
       });
     }
 
-    const email =
-      resp.user.emails.length > 0 ? resp.user.emails[0].email : null;
-
-    if (!email) {
+    if (!user.email) {
       console.error("No user email");
       throw await logout({
         request,
@@ -67,7 +64,7 @@ export async function requireUser({
     }
 
     return {
-      clientUser: { email, publicId: user.publicId },
+      clientUser: { email: user.email, publicId: user.publicId },
       internalUser: user,
     };
   } catch (error) {

@@ -22,20 +22,17 @@ test.describe("Docs - Start new chat", () => {
       }),
       {
         form: {
+          email: getTestEmail(user),
           sourcePublicId,
-          username: getTestEmail(user),
         } satisfies UpsertSourceInput,
       },
     );
   });
 
   test.afterEach(async ({ page, request }, testInfo) => {
-    // console.log(
-    //   `Finished test: ${testInfo.title} with status: ${testInfo.status}`,
-    // );
     if (testInfo.status !== "passed") {
       await page.screenshot({
-        path: `screenshots/${testInfo.title.replace(/\s/g, "-")}-failure.png`,
+        path: `e2e/screenshots/${testInfo.title.replace(/\s/g, "-")}-failure.png`,
       });
     }
     if (!chatPublicId) {
