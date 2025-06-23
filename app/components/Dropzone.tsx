@@ -81,7 +81,10 @@ export function Dropzone({
               </p>
             ) : (
               <p className="text-lg font-medium">
-                Drag and drop files here, or click to browse files
+                <span className="hidden md:block">
+                  Drag and drop files here, or click to browse files
+                </span>
+                <span className="md:hidden">Click/tap to browse files</span>
               </p>
             )}
           </div>
