@@ -99,13 +99,15 @@ export async function action({ request }: ActionFunctionArgs) {
       };
     }
 
+    const normalizedEmail = email.toLowerCase();
+
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
     const redirectUrl = isPreviewEnv
       ? `${getDomainHost({ request, withProtocol: true })}/authenticate`
       : undefined;
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
-      email,
+      email: normalizedEmail,
       login_magic_link_url: redirectUrl,
       signup_magic_link_url: redirectUrl,
     });
@@ -114,7 +116,7 @@ export async function action({ request }: ActionFunctionArgs) {
       throw new Error("bad stytch response");
     }
 
-    await upsertUser({ stytchId: res.user_id });
+    await upsertUser({ email: normalizedEmail, stytchId: res.user_id });
 
     return { email, ok: true };
   } catch (error) {

@@ -184,17 +184,13 @@ model Source {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  publicId String @unique
+  id       Int     @id @default(autoincrement())
+  publicId String  @unique
+  email    String? @unique
+  stytchId String  @unique
 
-  // clerkId String @unique
-
-  stytchId String @unique
-
-  username String? @unique // used for testing only
-
+  username String? @unique // legacy
   // role      Role      @default(USER)
-  // email     String    @unique
   // name      String?
   // createdAt DateTime?
   // lastLogin DateTime?

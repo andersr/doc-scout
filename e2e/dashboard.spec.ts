@@ -33,8 +33,8 @@ test.describe("Dashboard - Has Docs", () => {
       }),
       {
         form: {
+          email: getTestEmail(user),
           sourcePublicId,
-          username: getTestEmail(user),
         } satisfies TestActionRequest,
       },
     );

@@ -1,6 +1,5 @@
-import { prisma } from "../../app/lib/prisma";
+import { upsertUser } from "~/.server/models/users/upsertUser";
 import { type CreateTestUserInput } from "../../app/types/testUsers";
-import { generateTestId } from "./generateTestId";
 import { getTestEmail } from "./getTestEmail";
 import { upsertStytchUser } from "./upsertStytchUser";
 
@@ -23,15 +22,18 @@ export async function upsertTestUser(userName: string) {
   };
   const stytchId = await upsertStytchUser(user);
 
-  await prisma.user.upsert({
-    create: {
-      publicId: generateTestId(),
-      stytchId,
-      username: user.email,
-    },
-    update: {},
-    where: {
-      stytchId,
-    },
-  });
+  await upsertUser({ email: user.email, stytchId });
+
+  // await prisma.user.upsert({
+  //   create: {
+  //     email: user.email,
+  //     publicId: generateTestId(),
+  //     stytchId,
+  //     username: user.email,
+  //   },
+  //   update: {},
+  //   where: {
+  //     stytchId,
+  //   },
+  // });
 }
