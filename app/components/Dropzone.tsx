@@ -50,9 +50,7 @@ export function Dropzone({
           "bg-background/50 p-8 text-center",
           "hover:bg-accent/50 hover:border-accent-foreground/50",
           "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-          isDragActive
-            ? "border-primary bg-primary/5 text-primary bg-white"
-            : "border-muted-foreground/25 text-muted-foreground",
+          isDragActive ? "border-black bg-white" : "border-gray-400",
         )}
         role="button"
         tabIndex={0}
@@ -82,12 +80,9 @@ export function Dropzone({
                 Drop files here
               </p>
             ) : (
-              <>
-                <p className="text-lg font-medium">Drag and drop files here</p>
-                <p className="text-muted-foreground text-sm">
-                  or click to browse files
-                </p>
-              </>
+              <p className="text-lg font-medium">
+                Drag and drop files here, or click to browse files
+              </p>
             )}
           </div>
 
