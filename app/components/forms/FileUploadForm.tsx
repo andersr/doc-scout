@@ -1,5 +1,7 @@
 import { useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 import { useUploadFiles } from "~/hooks/useUploadFiles";
+import { IconButton } from "../buttons/icon-button";
 import { Dropzone } from "../Dropzone";
 import { ActionButton } from "../ui/ActionButton";
 
@@ -11,9 +13,9 @@ export function FileUploadForm() {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      setSelectedFiles(acceptedFiles);
+      setSelectedFiles([...selectedFiles, ...acceptedFiles]);
     },
-    [setSelectedFiles],
+    [selectedFiles, setSelectedFiles],
   );
 
   return (
@@ -25,13 +27,20 @@ export function FileUploadForm() {
           ))}
         </ul>
       )}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         <Dropzone onDrop={onDrop} />
-        <ul className="p-4 text-green-400">
+        <ul
+          className={twMerge(
+            "flex flex-col gap-2",
+            selectedFiles.length > 0 ? "pb-4" : "",
+          )}
+        >
           {selectedFiles.map((f) => (
-            <li key={f.name}>
-              {f.name} |{" "}
-              <button
+            <li key={f.name} className="flex gap-1">
+              <span className="font-semibold">{f.name}</span>
+              <IconButton
+                name="REMOVE"
+                title="Remove item"
                 onClick={() => {
                   const updated = [...selectedFiles];
                   const index = selectedFiles.findIndex(
@@ -42,9 +51,7 @@ export function FileUploadForm() {
                     setSelectedFiles(updated);
                   }
                 }}
-              >
-                Remove
-              </button>
+              />
             </li>
           ))}
         </ul>
