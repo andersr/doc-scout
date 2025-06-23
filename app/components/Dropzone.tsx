@@ -109,24 +109,18 @@ export function Dropzone({
 
       {errorMessages.length > 0 && (
         <div
-          className="border-destructive/20 bg-destructive/5 mt-4 rounded-md border p-4"
+          className="border-danger bg-danger/5 mt-4 rounded-md border p-4 text-red-900"
           role="alert"
           aria-live="polite"
         >
           <div className="flex items-start gap-2">
-            <div className="text-destructive mt-0.5">
-              <Icon name="DONE" customStyles="rotate-45" label="Error" />
-            </div>
             <div className="flex-1">
-              <h4 className="text-destructive mb-2 text-sm font-medium">
-                Upload Error{errorMessages.length > 1 ? "s" : ""}
+              <h4 className="mb-2 text-sm font-semibold">
+                Add Doc Error{errorMessages.length > 1 ? "s" : ""}:
               </h4>
-              <ul className="text-destructive/80 space-y-1 text-sm">
+              <ul className="space-y-1">
                 {errorMessages.map((message, index) => (
-                  <li
-                    key={`${message}-${index}`}
-                    className="list-inside list-disc"
-                  >
+                  <li key={`${message}-${index}`} className="list-inside">
                     {message}
                   </li>
                 ))}
