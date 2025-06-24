@@ -23,17 +23,4 @@ export async function upsertTestUser(userName: string) {
   const stytchId = await upsertStytchUser(user);
 
   await upsertUser({ email: user.email, stytchId });
-
-  // await prisma.user.upsert({
-  //   create: {
-  //     email: user.email,
-  //     publicId: generateTestId(),
-  //     stytchId,
-  //     username: user.email,
-  //   },
-  //   update: {},
-  //   where: {
-  //     stytchId,
-  //   },
-  // });
 }

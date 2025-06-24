@@ -1,4 +1,4 @@
-const TEST_DOMAIN = "test.com";
+const TEST_DOMAIN = "anders.co";
 
 export const getTestEmail = (user: string) =>
-  `${user}${process.env.CI ? ".ci" : ""}@${TEST_DOMAIN}`;
+  `${user}${process.env.CI ? "+ci" : ""}@${TEST_DOMAIN}`;
