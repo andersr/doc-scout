@@ -8,26 +8,13 @@ export async function upsertUser({
 }: Pick<User, "stytchId"> & { email: string }) {
   const existingUser = await prisma.user.findFirst({
     where: {
-      OR: [
-        {
-          email: {
-            equals: email,
-            mode: "insensitive",
-          },
-        },
-        {
-          stytchId,
-        },
-      ],
+      email: {
+        equals: email,
+        mode: "insensitive",
+      },
+      stytchId,
     },
   });
-
-  // if (existingUser && existingUser?.stytchId !== stytchId) {
-  //   console.warn(
-  //     `Existing Stytch id for user ${email} does not match incoming stytch id.`,
-  //   );
-  //   throw new ServerError(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
-  // }
 
   if (!existingUser) {
     await prisma.user.create({
