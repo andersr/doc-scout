@@ -13,6 +13,7 @@ export const deleteMessagesAction: ActionHandlerFn = async ({ formData }) => {
     throw new Error("no sourcePublicId");
   }
 
+  // TODO: similar to requireSourceAndSourceChat
   const source = await prisma.source.findFirstOrThrow({
     include: SOURCE_INCLUDE,
     where: {
@@ -20,11 +21,6 @@ export const deleteMessagesAction: ActionHandlerFn = async ({ formData }) => {
     },
   });
 
-  // const sourceChat = source.chats.length > 0 ? source.chats[0].chat : undefined;
-
-  // if (!sourceChat) {
-  //   throw new ServerError("No source chat found.");
-  // }
   const sourceChat = requireSourceChat({ source });
 
   await prisma.message.deleteMany({

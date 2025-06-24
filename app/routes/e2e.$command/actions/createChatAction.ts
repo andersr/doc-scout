@@ -6,6 +6,7 @@ import { createChatSchema } from "~/routes/e2e.$command/utils/e2eSchemas";
 import type { ActionHandlerFn } from "~/types/action";
 import type { TestActionResponse } from "~/types/testActions";
 
+// TODO: unused?
 export const createChatAction: ActionHandlerFn = async ({ formData }) => {
   const formPayload = Object.fromEntries(formData);
   const data = createChatSchema.parse(formPayload);

@@ -2,8 +2,6 @@ export const TestKeys = [
   "command",
   "upsertDoc",
   "username",
-  "createChat", // unused?
-  // "deleteChat",
   "deleteMessages",
   "chatPublicId",
   "sourcePublicId",
