@@ -1,4 +1,4 @@
-import type { Source } from "@prisma/client";
+import type { Prisma, Source } from "@prisma/client";
 import { z } from "zod";
 import { ID_DEFAULT_LENGTH } from "~/config/ids";
 
@@ -25,3 +25,26 @@ export type SourceInput = z.infer<typeof sourceInputSchema>;
 export const sourceInputArraySchema = z
   .array(sourceInputSchema)
   .refine((list) => list.length > 0, "No sources selected");
+
+export const SOURCE_INCLUDE = {
+  chats: {
+    include: {
+      chat: {
+        include: {
+          messages: {
+            include: {
+              author: true,
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+        },
+      },
+    },
+  },
+} as const;
+
+export type SourceWithRelations = Prisma.SourceGetPayload<{
+  include: typeof SOURCE_INCLUDE;
+}>;

@@ -6,6 +6,7 @@ import { ENV } from "~/.server/ENV";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
+import { requireSourceChat } from "~/.server/utils/requireSourceChat";
 import { serverError } from "~/.server/utils/serverError";
 import BotChat from "~/components/chat/BotChat";
 import { Icon } from "~/components/icon";
@@ -16,6 +17,7 @@ import { userMessageSchema } from "~/lib/schemas/userMessage";
 import { KEYS } from "~/shared/keys";
 import type { ClientMessage } from "~/types/message";
 import { ServerError, type ServerResponse } from "~/types/server";
+import { SOURCE_INCLUDE } from "~/types/source";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
 
@@ -28,36 +30,20 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   // TODO: add error boundary to handle thrown errors
   const source = await prisma.source.findFirstOrThrow({
-    include: {
-      chats: {
-        include: {
-          chat: {
-            include: {
-              messages: {
-                include: {
-                  author: true,
-                },
-                orderBy: {
-                  createdAt: "asc",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    include: SOURCE_INCLUDE,
     where: {
       publicId: sourcePublicId,
     },
   });
 
-  // TODO: assumes first chat is primary chat, add explicit ref to primary source chat, eg add primary boolean to ChatSource
-  const sourceChat = source.chats.length > 0 ? source.chats[0].chat : undefined;
+  // turn into requireSourceChat util
+  // const sourceChat = source.chats.length > 0 ? source.chats[0].chat : undefined;
 
-  if (!sourceChat) {
-    throw new ServerError("No source chat found.");
-  }
+  // if (!sourceChat) {
+  //   throw new ServerError("No source chat found.");
+  // }
 
+  const sourceChat = requireSourceChat({ source });
   // TODO: move to separate function associated with BotChat component
   const chatMessages = sourceChat.messages;
 
