@@ -96,6 +96,8 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   };
 }
 
+// height="h-[calc(100vh-285px)]"
+// marginBottom=""
 export default function ChatDetails() {
   const { clientUser, hasPendingQuery, messages, title } =
     useLoaderData<typeof loader>();
@@ -124,11 +126,12 @@ export default function ChatDetails() {
         <PageTitle title={title} />
       </div>
       <div className="flex flex-1 flex-col">
-        <ScrollContainer
-          listBottomRef={listBottomRef}
-          // height="h-[calc(100vh-285px)]"
-          // marginBottom=""
-        >
+        <ScrollContainer listBottomRef={listBottomRef}>
+          {messages.length === 0 && !optimisticMessage && (
+            <div className="flex size-full items-center justify-center">
+              Ask a question below to get started.
+            </div>
+          )}
           <ListContainer>
             {messages.map((m) => (
               <ChatListItem
@@ -148,7 +151,7 @@ export default function ChatDetails() {
             )}
             {userMessage.state !== "idle" && <ChatListItem isBot loading />}
           </ListContainer>
-        </ScrollContainer>
+        </ScrollContainer>{" "}
         <div
           className={twMerge(
             "fixed right-4 bottom-4 left-4 z-10 md:mx-auto md:max-w-5xl",

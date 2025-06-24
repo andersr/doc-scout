@@ -13,5 +13,6 @@ export const APP_ICONS = {
   DONE: "done",
   LOGOUT: "logout",
   NEW_WINDOW: "open_in_new",
+  REMOVE: "close_small",
   UPLOAD_FILE: "upload_file",
 };

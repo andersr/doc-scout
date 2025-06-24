@@ -19,7 +19,7 @@ export const fileNameListSchema = z
   );
 
 export const fileSchema = z
-  .instanceof(File)
+  .instanceof(File, { message: "Invalid file type." })
   .refine((file) => file.name.trim() !== "", {
     message: `File name cannot be empty`,
   })

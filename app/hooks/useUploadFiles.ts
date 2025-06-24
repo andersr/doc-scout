@@ -44,6 +44,7 @@ export function useUploadFiles() {
     handleSubmit,
     isUpdating: isUpdating || getSignedUrlsUpdating || createSourcesUpdating,
     selectedFiles,
+    setErrors,
     setSelectedFiles,
   };
 }

@@ -1,9 +1,9 @@
 export function Spinner() {
   return (
-    <div role="status">
+    <span role="status" className="inline-block">
       <svg
         aria-hidden="true"
-        className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+        className="fill-navy-blue/70 h-8 w-8 animate-spin text-gray-200 dark:text-gray-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -18,6 +18,6 @@ export function Spinner() {
         />
       </svg>
       <span className="sr-only">Loading...</span>
-    </div>
+    </span>
   );
 }

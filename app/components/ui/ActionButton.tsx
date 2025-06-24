@@ -3,14 +3,15 @@ import { BUTTON_STYLES } from "~/styles/buttons";
 
 interface Props {
   children: React.ReactNode;
+  customStyles?: string;
 }
 
 export function ActionButton(
   props: Props & { disabled?: boolean; onClick?: () => void; type?: "submit" },
 ) {
-  const { children, ...rest } = props;
+  const { children, customStyles, ...rest } = props;
   return (
-    <button {...rest} className={twMerge(BUTTON_STYLES)}>
+    <button {...rest} className={twMerge(BUTTON_STYLES, customStyles)}>
       {children}
     </button>
   );
