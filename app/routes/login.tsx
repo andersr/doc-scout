@@ -118,14 +118,14 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
-    const redirectUrl = isPreviewEnv
+    const redirectUrlIfPreview = isPreviewEnv
       ? `${getDomainHost({ request, withProtocol: true })}/authenticate`
       : undefined;
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
       email: normalizedEmail,
-      login_magic_link_url: redirectUrl,
-      signup_magic_link_url: redirectUrl,
+      login_magic_link_url: redirectUrlIfPreview,
+      signup_magic_link_url: redirectUrlIfPreview,
     });
 
     if (!res || !res.user_id) {
