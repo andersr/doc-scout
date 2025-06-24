@@ -6,6 +6,7 @@ import AppHeader from "~/components/AppHeader";
 import { Avatar } from "~/components/Avatar";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
+import { MainContentContainer } from "~/components/MainContentContainer";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
@@ -50,9 +51,9 @@ export default function AuthLayout() {
           )}
         </div>
       </AppHeader>
-      <main className="mx-auto flex w-full flex-1 flex-col gap-6 py-6 md:max-w-5xl md:min-w-3xl md:py-12">
+      <MainContentContainer>
         <Outlet />
-      </main>
+      </MainContentContainer>
     </AppContainer>
   );
 }
