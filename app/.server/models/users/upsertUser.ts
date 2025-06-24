@@ -6,23 +6,16 @@ export async function upsertUser({
   email,
   stytchId,
 }: Pick<User, "stytchId"> & { email: string }) {
-  const existingUser = await prisma.user.findFirst({
+  await prisma.user.upsert({
+    create: {
+      email,
+      publicId: generateId(),
+      stytchId,
+    },
+    update: {},
     where: {
-      email: {
-        equals: email,
-        mode: "insensitive",
-      },
+      email,
       stytchId,
     },
   });
-
-  if (!existingUser) {
-    await prisma.user.create({
-      data: {
-        email,
-        publicId: generateId(),
-        stytchId,
-      },
-    });
-  }
 }
