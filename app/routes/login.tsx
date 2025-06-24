@@ -3,6 +3,7 @@ import {
   type ActionFunctionArgs,
   Form,
   type LoaderFunctionArgs,
+  redirect,
   useActionData,
   useLoaderData,
   useNavigation,
@@ -11,12 +12,14 @@ import { upsertUser } from "~/.server/models/users/upsertUser";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+import { isAllowedUser } from "~/.server/utils/isAllowedUser";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
 import { PageTitle } from "~/components/PageTitle";
 import { ActionButton } from "~/components/ui/ActionButton";
 import { Label } from "~/components/ui/label";
+import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 
@@ -101,15 +104,28 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const normalizedEmail = email.toLowerCase();
 
+    const isAllowed = isAllowedUser(normalizedEmail);
+
+    if (!isAllowed) {
+      return redirect(
+        `${getDomainHost({ request, withProtocol: true })}${appRoutes(
+          "/request-access",
+          {
+            email: normalizedEmail,
+          },
+        )}`,
+      );
+    }
+
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
-    const redirectUrl = isPreviewEnv
+    const redirectUrlIfPreview = isPreviewEnv
       ? `${getDomainHost({ request, withProtocol: true })}/authenticate`
       : undefined;
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
       email: normalizedEmail,
-      login_magic_link_url: redirectUrl,
-      signup_magic_link_url: redirectUrl,
+      login_magic_link_url: redirectUrlIfPreview,
+      signup_magic_link_url: redirectUrlIfPreview,
     });
 
     if (!res || !res.user_id) {

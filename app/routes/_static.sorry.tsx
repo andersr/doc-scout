@@ -1,19 +1,20 @@
 import { Link } from "react-router";
+import { PageTitle } from "~/components/PageTitle";
 import { appRoutes } from "~/shared/appRoutes";
-
-export function meta() {
-  return [{ title: "Sorry" }];
-}
+import { LINK_STYLES } from "~/styles/links";
 
 export default function SorryRoute() {
   return (
-    <div className="flex h-full flex-col items-center justify-center">
+    <div>
+      <div className="text-center">
+        <PageTitle title={"Sorry!"} />
+      </div>
       <div>
         Sorry, something went wrong. This could be due to a bad request or
         insufficient permissions. Please contact the site owner for more
         details.
       </div>
-      <Link className="text-blue-600 underline" to={appRoutes("/")}>
+      <Link className={LINK_STYLES} to={appRoutes("/")}>
         Back to Home
       </Link>
     </div>

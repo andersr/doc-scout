@@ -1,12 +1,14 @@
 import { Link, type LoaderFunctionArgs, useLoaderData } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { PageTitle } from "~/components/PageTitle";
 import {
   STYTCH_SESSION_DURATION_MINUTES,
   STYTCH_SESSION_TOKEN,
 } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
+import { LINK_STYLES } from "~/styles/links";
 
 export async function loader(args: LoaderFunctionArgs) {
   const { request } = args;
@@ -55,13 +57,18 @@ export default function AuthenticateRoute() {
   const { errorMessage } = useLoaderData<typeof loader>();
   return (
     <div>
+      <div className="text-center">
+        <PageTitle title={"Auth Error"} />
+      </div>
       {errorMessage && (
         <div className="mt-4 text-center font-semibold text-red-400">
           {errorMessage}
         </div>
       )}
       <div>
-        <Link to={appRoutes("/login")}>Back to Login</Link>
+        <Link className={LINK_STYLES} to={appRoutes("/login")}>
+          Back to Login
+        </Link>
       </div>
     </div>
   );
