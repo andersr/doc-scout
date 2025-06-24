@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import { createSourcesAndAddToVectorStore } from "~/.server/models/sources/createSourcesAndAddToVectorStore";
+import { createSourcesChatsVectorStore } from "~/.server/models/sources/createSourcesChatsVectorStore";
 import { setCreateSourcesRedirectRoute } from "~/.server/models/sources/setCreateSourcesRedirectRoute";
 import { throwIfExistingSources } from "~/.server/models/sources/throwIfExistingSources";
 import { generateSummary } from "~/.server/services/agents/docSummary/generateSummary";
@@ -62,9 +62,9 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
     });
   }
 
-  const sources = await createSourcesAndAddToVectorStore({
+  const sources = await createSourcesChatsVectorStore({
     data: sourcesInput,
-    userPublicId: internalUser.publicId,
+    internalUser,
   });
 
   const redirectRoute = setCreateSourcesRedirectRoute(sources);

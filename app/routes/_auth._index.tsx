@@ -1,20 +1,32 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, redirect, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { PageTitle } from "~/components/PageTitle";
+import { ActionLink } from "~/components/ui/ActionLink";
+import { PageHeading } from "~/components/ui/PageHeading";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { formatDateTime } from "~/utils/formatDateTime";
+import { setSourceTitle } from "~/utils/setSourceTitle";
 
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
 
-  const userDocs = await prisma.source.count({
+  // const userDocs = await prisma.source.count({
+  //   where: {
+  //     ownerId: internalUser.id,
+  //   },
+  // });
+
+  const docs = await prisma.source.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     where: {
       ownerId: internalUser.id,
     },
   });
-  if (userDocs === 0) {
+
+  if (docs.length === 0) {
     return redirect(appRoutes("/docs/new"));
   }
 
@@ -48,19 +60,39 @@ export async function loader(args: LoaderFunctionArgs) {
   ]);
 
   return {
+    docs,
     recentChats,
     recentDocs,
-    title: "Dashboard",
+    title: "My Docs",
   };
 }
 
 export default function Dashboard() {
-  const { recentChats, recentDocs, title } = useLoaderData<typeof loader>();
+  const { docs, title } = useLoaderData<typeof loader>();
 
   return (
     <div className="space-y-8">
-      <PageTitle title={title} />
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <PageHeading pageTitle={title}>
+        <ActionLink to={appRoutes("/docs/new")}>Add Docs</ActionLink>
+      </PageHeading>
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {docs.map((d) => (
+          <Link
+            key={d.publicId}
+            to={appRoutes("/docs/:id", { id: d.publicId })}
+            className="rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
+          >
+            <h2 className="text-lg font-medium">{setSourceTitle(d)}</h2>
+            <div className="mt-2 text-xs text-gray-400">
+              Created:{" "}
+              {d.createdAt
+                ? formatDateTime({ d: d.createdAt, withTime: true })
+                : "N/A"}
+            </div>
+          </Link>
+        ))}
+      </ul>
+      {/* <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Recent Documents</h2>
@@ -154,7 +186,7 @@ export default function Dashboard() {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

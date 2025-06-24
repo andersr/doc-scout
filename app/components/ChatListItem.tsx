@@ -35,14 +35,16 @@ export function ChatListItem({
       >
         {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
       </div>
-      <div className={twMerge("text-stone-500")}>
-        {isBot ? BOT_NAME : authorName},&nbsp;
-        {createdAt &&
-          formatDateTime({
-            d: createdAt,
-            withTime: true,
-          })}
-      </div>
+      {!loading && (
+        <div className={twMerge("text-stone-500")}>
+          {isBot ? BOT_NAME : authorName},&nbsp;
+          {createdAt &&
+            formatDateTime({
+              d: createdAt,
+              withTime: true,
+            })}
+        </div>
+      )}
     </li>
   );
 }

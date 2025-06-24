@@ -15,10 +15,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   return data({ user: clientUser });
 }
 
-const NAV_LINKS: { label: string; route: string }[] = [
-  { label: "Docs", route: appRoutes("/docs") },
-  { label: "Chats", route: appRoutes("/chats") },
-];
+// const NAV_LINKS: { label: string; route: string }[] = [
+//   { label: "Docs", route: appRoutes("/docs") },
+//   { label: "Chats", route: appRoutes("/chats") },
+// ];
 
 export default function AuthLayout() {
   const { user } = useLoaderData<typeof loader>();
@@ -26,11 +26,11 @@ export default function AuthLayout() {
   return (
     <AppContainer>
       <AppHeader>
-        {NAV_LINKS.map((l) => (
+        {/* {NAV_LINKS.map((l) => (
           <Link className="md:text-2xl" key={l.label} to={l.route}>
             {l.label}
           </Link>
-        ))}
+        ))} */}
         <div className="pl-1">
           {user ? (
             <DropdownMenu

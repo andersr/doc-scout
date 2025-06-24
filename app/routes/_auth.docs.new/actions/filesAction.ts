@@ -1,7 +1,7 @@
 import path from "path";
 import { redirect } from "react-router";
 import { ENV } from "~/.server/ENV";
-import { createSourcesAndAddToVectorStore } from "~/.server/models/sources/createSourcesAndAddToVectorStore";
+import { createSourcesChatsVectorStore } from "~/.server/models/sources/createSourcesChatsVectorStore";
 import { setCreateSourcesRedirectRoute } from "~/.server/models/sources/setCreateSourcesRedirectRoute";
 import { generateSummary } from "~/.server/services/agents/docSummary/generateSummary";
 import { extractTextFromCloudStorePdf } from "~/.server/services/pdfExtract/extractTextFromCloudStorePdf";
@@ -51,9 +51,9 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
     });
   }
 
-  const sources = await createSourcesAndAddToVectorStore({
+  const sources = await createSourcesChatsVectorStore({
     data: sourcesInput,
-    userPublicId: internalUser.publicId,
+    internalUser,
   });
 
   const redirectRoute = setCreateSourcesRedirectRoute(sources);
