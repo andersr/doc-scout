@@ -3,6 +3,7 @@ import { Link, redirect, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { ActionLink } from "~/components/ui/ActionLink";
 import { PageHeading } from "~/components/ui/PageHeading";
+import { DASHBOARD_TITLE } from "~/config/titles";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { formatDateTime } from "~/utils/formatDateTime";
@@ -10,12 +11,6 @@ import { setSourceTitle } from "~/utils/setSourceTitle";
 
 export async function loader(args: LoaderFunctionArgs) {
   const { internalUser } = await requireUser(args);
-
-  // const userDocs = await prisma.source.count({
-  //   where: {
-  //     ownerId: internalUser.id,
-  //   },
-  // });
 
   const docs = await prisma.source.findMany({
     orderBy: {
@@ -63,7 +58,7 @@ export async function loader(args: LoaderFunctionArgs) {
     docs,
     recentChats,
     recentDocs,
-    title: "My Docs",
+    title: DASHBOARD_TITLE,
   };
 }
 

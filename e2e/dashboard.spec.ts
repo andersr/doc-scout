@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { DASHBOARD_TITLE } from "~/config/titles";
 import { appRoutes } from "../app/shared/appRoutes";
 import { TEST_KEYS } from "../app/shared/testKeys";
 import type { TestActionRequest } from "../app/types/testActions";
@@ -42,6 +43,8 @@ test.describe("Dashboard - Has Docs", () => {
     await page.goto(appRoutes("/"));
 
     // assert
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/My Docs/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      DASHBOARD_TITLE,
+    );
   });
 });
