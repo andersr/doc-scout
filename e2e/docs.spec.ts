@@ -1,21 +1,22 @@
 import { expect, test } from "@playwright/test";
+import { generateId } from "~/.server/utils/generateId";
+import type { TestActionRequest } from "~/types/testActions";
 import { MOCK_SOURCE } from "../app/__mocks__/sources";
-import type { UpsertSourceInput } from "../app/routes/e2e.$command/utils/schemas";
+import type { UpsertSourceInput } from "../app/routes/e2e.$command/utils/e2eSchemas";
 import { appRoutes } from "../app/shared/appRoutes";
 import { TEST_KEYS } from "../app/shared/testKeys";
-import type { TestActionRequest } from "../app/types/testActions";
 import { TEST_USERS } from "../app/types/testUsers";
 import { getTestEmail } from "./utils/getTestEmail";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
 const user = TEST_USERS.hasDocCreateChat;
-const sourcePublicId = "docsStartNewChat";
-let chatPublicId = "";
+let sourcePublicId = "";
 
-test.describe("Docs - Start new chat", () => {
+test.describe("Docs - Chat", () => {
   test.use({ storageState: setAuthStoragePath(user) });
 
   test.beforeEach(async ({ request }) => {
+    sourcePublicId = generateId();
     await request.post(
       appRoutes("/e2e/:command", {
         command: TEST_KEYS.upsertDoc,
@@ -27,6 +28,16 @@ test.describe("Docs - Start new chat", () => {
         } satisfies UpsertSourceInput,
       },
     );
+    await request.post(
+      appRoutes("/e2e/:command", {
+        command: TEST_KEYS.deleteMessages,
+      }),
+      {
+        form: {
+          sourcePublicId,
+        } satisfies TestActionRequest,
+      },
+    );
   });
 
   test.afterEach(async ({ page, request }, testInfo) => {
@@ -35,43 +46,46 @@ test.describe("Docs - Start new chat", () => {
         path: `e2e/screenshots/${testInfo.title.replace(/\s/g, "-")}-failure.png`,
       });
     }
-    if (!chatPublicId) {
-      throw new Error("no chat public id, cannot delete");
-    }
+
     await request.post(
       appRoutes("/e2e/:command", {
-        command: TEST_KEYS.deleteChat,
+        command: TEST_KEYS.deleteMessages,
       }),
       {
         form: {
-          chatPublicId,
+          sourcePublicId,
         } satisfies TestActionRequest,
       },
     );
   });
 
-  test(`allows for starting a new chat from doc details`, async ({ page }) => {
+  test(`allows for asking a question and getting a bot response`, async ({
+    page,
+  }) => {
+    // arrange
+    const expectedInput = "How did the hawk use traffic to hunt?";
+    const expectedReply = "BOT REPLY";
+
+    // act
     await page.goto(
       appRoutes("/docs/:id", {
         id: sourcePublicId,
       }),
     );
+    await page.getByRole("textbox", { name: "Message" }).fill(expectedInput);
+    await page.getByRole("button", { name: "arrow_upward" }).click();
 
     await expect(
       page.getByRole("heading", { level: 1, name: MOCK_SOURCE.title }),
     ).toBeVisible();
-    // TODO: set "New Doc Chat" as a config and import
-    await page.getByRole("button", { name: "New Doc Chat" }).click();
+
+    // assert
     await expect(
-      page.getByRole("heading", {
-        level: 1,
-        name: `Chat with "${MOCK_SOURCE.title}"`,
-      }),
+      page.locator("span").filter({ hasText: expectedInput }),
     ).toBeVisible();
-    // TODO: turn into util
-    const currentUrl = page.url();
-    const parts = currentUrl.split("/");
-    const publicId = parts[parts.length - 1];
-    chatPublicId = publicId;
+
+    await expect(
+      page.locator("span").filter({ hasText: expectedReply }),
+    ).toBeVisible();
   });
 });

@@ -42,32 +42,6 @@ test.describe("Dashboard - Has Docs", () => {
     await page.goto(appRoutes("/"));
 
     // assert
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      /Dashboard/,
-    );
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/My Docs/);
   });
 });
-
-// test.describe("Dashboard - Recent Items", () => {
-//   test.use({ storageState: setStoragePath(TEST_USERS.hasDocs) });
-
-//   test.fixme(`Diplays recent docs`, async ({ page, request }) => {
-//     // act
-//     await page.goto(appRoutes("/"));
-
-//     // assert
-//     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-//       /Dashboard/,
-//     );
-//   });
-
-//   test.fixme(`Diplays recent chats`, async ({ page, request }) => {
-//     // act
-//     await page.goto(appRoutes("/"));
-
-//     // assert
-//     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-//       /Dashboard/,
-//     );
-//   });
-// });
