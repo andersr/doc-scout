@@ -106,7 +106,7 @@
     "e2e:dev": "PORT=8080 dotenv  -e .env.test -- npm run dev:rr",
     "e2e:run": "PORT=8080 dotenv -e .env.test -- run-s e2e:db:reset build pw:test",
     "e2e:start": "PORT=8080 dotenv -e .env.test -- npm start",
-    "e2e:ui": "PORT=8080 npx playwright test --ui",
+    "e2e:ui": "PORT=8080 dotenv -e .env.test -- npx playwright test --ui",
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
     "lint": "eslint",
