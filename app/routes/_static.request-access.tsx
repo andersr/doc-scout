@@ -1,5 +1,6 @@
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { PageTitle } from "~/components/PageTitle";
+import { appRoutes } from "~/shared/appRoutes";
 import { LINK_STYLES } from "~/styles/links";
 
 export default function RequestAccessRoute() {
@@ -24,6 +25,11 @@ export default function RequestAccessRoute() {
           </a>
         </p>
         <p>Thanks for your interest in Doc Scout.</p>
+        <p>
+          <Link className={LINK_STYLES} to={appRoutes("/login")}>
+            Back to Login
+          </Link>
+        </p>
       </div>
     </div>
   );
