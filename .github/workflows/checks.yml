@@ -107,7 +107,7 @@ jobs:
           - 5432:5432
 
     env:
-      ALLOWED_USERS: "foo@bar.com"
+      ALLOWED_USERS: "any"
       ADOBE_PDF_SERVICES_CLIENT_ID: "foo"
       ADOBE_PDF_SERVICES_CLIENT_SECRET: "foo"
       AUTH_SESSION_SECRET: ${{ secrets.AUTH_SESSION_SECRET }}
