@@ -1,6 +1,20 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { appRoutes } from "~/shared/appRoutes";
 
 test.describe("Login", () => {
+  test(`redirects unauthorized users to request access page`, async ({
+    page,
+  }) => {
+    // act
+    await page.goto(appRoutes("/login"));
+    await page.getByRole("textbox", { name: "Email" }).fill("foo@bar.com");
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    // assert
+    await expect(
+      page.getByRole("heading", { name: "Please Request Access" }),
+    ).toBeVisible();
+  });
   test.skip(`allows for signing in with an email address`, async ({ page }) => {
     // ensure user is not auth
     // go to login

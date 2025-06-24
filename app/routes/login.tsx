@@ -101,6 +101,22 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const normalizedEmail = email.toLowerCase();
 
+    // const isAllowedUser=
+
+    // if (ENV.ALLOWED_USERS) {
+    //   const allowedUsers = ENV.ALLOWED_USERS.split(",");
+    //   if (!allowedUsers.includes(normalizedEmail)) {
+    //     return redirect(
+    //       `${getDomainHost({ request, withProtocol: true })}${appRoutes(
+    //         "/request-access",
+    //         {
+    //           email: normalizedEmail,
+    //         },
+    //       )}`,
+    //     );
+    //   }
+    // }
+
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
     const redirectUrl = isPreviewEnv
       ? `${getDomainHost({ request, withProtocol: true })}/authenticate`
