@@ -13,7 +13,7 @@ export async function upsertUser({
       stytchId,
     },
     update: {
-      email,
+      // email,
     },
     where: {
       stytchId,
