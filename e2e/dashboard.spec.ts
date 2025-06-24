@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { DASHBOARD_TITLE } from "~/config/titles";
 import { appRoutes } from "../app/shared/appRoutes";
 import { TEST_KEYS } from "../app/shared/testKeys";
 import type { TestActionRequest } from "../app/types/testActions";
@@ -43,31 +44,7 @@ test.describe("Dashboard - Has Docs", () => {
 
     // assert
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      /Dashboard/,
+      DASHBOARD_TITLE,
     );
   });
 });
-
-// test.describe("Dashboard - Recent Items", () => {
-//   test.use({ storageState: setStoragePath(TEST_USERS.hasDocs) });
-
-//   test.fixme(`Diplays recent docs`, async ({ page, request }) => {
-//     // act
-//     await page.goto(appRoutes("/"));
-
-//     // assert
-//     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-//       /Dashboard/,
-//     );
-//   });
-
-//   test.fixme(`Diplays recent chats`, async ({ page, request }) => {
-//     // act
-//     await page.goto(appRoutes("/"));
-
-//     // assert
-//     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-//       /Dashboard/,
-//     );
-//   });
-// });

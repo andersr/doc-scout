@@ -9,4 +9,5 @@ export type TestActionResponse = {
   docPublicId?: string;
   firstSourcePublicId?: string;
   ok: boolean;
+  sourcePublicId?: string;
 };
