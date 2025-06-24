@@ -3,10 +3,9 @@ import { answerQuery } from "@services/agents/docQuery/answerQuery";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, useLoaderData } from "react-router";
 import { ENV } from "~/.server/ENV";
+import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSourceAndSourceChat";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
-import { requireRouteParam } from "~/.server/utils/requireRouteParam";
-import { requireSourceChat } from "~/.server/utils/requireSourceChat";
 import { serverError } from "~/.server/utils/serverError";
 import BotChat from "~/components/chat/BotChat";
 import { Icon } from "~/components/icon";
@@ -14,36 +13,16 @@ import { PageHeading } from "~/components/ui/PageHeading";
 import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";
 import { userMessageSchema } from "~/lib/schemas/userMessage";
-import { KEYS } from "~/shared/keys";
 import type { ClientMessage } from "~/types/message";
-import { ServerError, type ServerResponse } from "~/types/server";
-import { SOURCE_INCLUDE } from "~/types/source";
+import { type ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { clientUser } = await requireUser({ request });
-  const sourcePublicId = requireRouteParam({
-    key: KEYS.id,
-    params,
-  });
 
-  // TODO: add error boundary to handle thrown errors
-  const source = await prisma.source.findFirstOrThrow({
-    include: SOURCE_INCLUDE,
-    where: {
-      publicId: sourcePublicId,
-    },
-  });
+  const { source, sourceChat } = await requireSourceAndSourceChat({ params });
 
-  // turn into requireSourceChat util
-  // const sourceChat = source.chats.length > 0 ? source.chats[0].chat : undefined;
-
-  // if (!sourceChat) {
-  //   throw new ServerError("No source chat found.");
-  // }
-
-  const sourceChat = requireSourceChat({ source });
   // TODO: move to separate function associated with BotChat component
   const chatMessages = sourceChat.messages;
 
@@ -98,43 +77,7 @@ export default function DocDetailsLayout() {
 export async function action({ params, request }: Route.ActionArgs) {
   const { internalUser } = await requireUser({ request });
   try {
-    // TODO: nearly identical to loader, wrapped in try/catch here
-    const sourcePublicId = requireRouteParam({
-      key: KEYS.id,
-      params,
-    });
-
-    const source = await prisma.source.findFirstOrThrow({
-      include: {
-        chats: {
-          include: {
-            chat: {
-              include: {
-                messages: {
-                  include: {
-                    author: true,
-                  },
-                  orderBy: {
-                    createdAt: "asc",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      where: {
-        publicId: sourcePublicId,
-      },
-    });
-
-    // TODO: assumes first chat is primary chat, add explicit ref to primary source chat, eg add primary boolean to ChatSource
-    const sourceChat =
-      source.chats.length > 0 ? source.chats[0].chat : undefined;
-
-    if (!sourceChat) {
-      throw new ServerError("No source chat found.");
-    }
+    const { sourceChat } = await requireSourceAndSourceChat({ params });
 
     const formData = Object.fromEntries(await request.formData());
     const input = userMessageSchema.parse(formData);
