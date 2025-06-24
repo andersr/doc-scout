@@ -2,7 +2,7 @@ import { ENV } from "../ENV";
 
 export function isAllowedUser(email: string) {
   const envVar = ENV.ALLOWED_USERS;
-  if (envVar == "any") {
+  if (envVar === "any") {
     return true;
   }
 
