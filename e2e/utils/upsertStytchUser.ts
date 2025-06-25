@@ -1,5 +1,5 @@
 import { requireEnvVar } from "~/.server/utils/requireEnvVar";
-import { getStytchUser } from "../../app/.server/services/auth/getStytchUser";
+import { getStytchUserByEmail } from "~/.server/vendors/stytch/getStytchUserByEmail";
 import { stytchClient } from "../../app/.server/vendors/stytch/client";
 import { type CreateTestUserInput } from "../../app/types/testUsers";
 
@@ -9,7 +9,7 @@ export async function upsertStytchUser(
   try {
     let stytchUserId = "";
 
-    const stytchUser = await getStytchUser({ email: user.email });
+    const stytchUser = await getStytchUserByEmail(user.email);
 
     stytchUserId = stytchUser ? stytchUser.user_id : "";
 

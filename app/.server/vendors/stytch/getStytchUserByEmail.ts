@@ -1,23 +1,12 @@
 import type { User as StytchUser } from "stytch";
-import { stytchClient } from "../../vendors/stytch/client";
+import { stytchClient } from "./client";
 
-export async function getStytchUser({
-  email,
-  stytchId,
-}: {
-  email?: string;
-  stytchId?: string;
-}): Promise<StytchUser | undefined> {
+export async function getStytchUserByEmail(
+  email: string,
+): Promise<StytchUser | undefined> {
   try {
-    if (stytchId) {
-      return await stytchClient.users.get({
-        user_id: stytchId,
-      });
-    }
-
     const searchRes = await stytchClient.users.search({
       cursor: "",
-      // limit: 2,
       query: {
         operands: [
           {
