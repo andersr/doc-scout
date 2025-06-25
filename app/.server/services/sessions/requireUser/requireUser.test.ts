@@ -262,46 +262,6 @@ describe("requireUser", () => {
     expect(mockLogout).toHaveBeenCalledWith({ request: mockRequest });
   });
 
-  // it("logs out user when no email in stytch response", async () => {
-  //   // Arrange
-  //   mockStytchAuthenticate.mockResolvedValue({
-  //     status_code: 200,
-  //     user: {
-  //       emails: [],
-  //       user_id: "user-123",
-  //     },
-  //   });
-
-  //   // Act & Assert
-  //   await expect(requireUser({ request: mockRequest })).rejects.toEqual(
-  //     new Response(null, { status: 302 }),
-  //   );
-
-  //   expect(console.error).toHaveBeenCalledWith("No user email");
-  //   expect(mockLogout).toHaveBeenCalledWith({ request: mockRequest });
-  // });
-
-  it.skip("uses first email when multiple emails exist", async () => {
-    // Arrange
-    const responseWithMultipleEmails: MockStytchResponse = {
-      status_code: 200,
-      user: {
-        emails: [
-          { email: "test@example.com" },
-          { email: "secondary@example.com" },
-        ],
-        user_id: "user-123",
-      },
-    };
-    mockStytchAuthenticate.mockResolvedValue(responseWithMultipleEmails);
-
-    // Act
-    const result = await requireUser({ request: mockRequest });
-
-    // Assert
-    // expect(result.clientUser.email).toBe("test@example.com");
-  });
-
   it("logs out user when stytch authentication throws error", async () => {
     // Arrange
     const error = new Error("Stytch error");

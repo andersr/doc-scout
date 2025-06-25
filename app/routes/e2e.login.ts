@@ -9,7 +9,6 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
 // TODO: turn into e2e.$command ?
-// TODO: reduce session duration ?
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -18,7 +17,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const authRes = await stytchClient.passwords.authenticate({
       email,
       password: requireEnvVar("TEST_USER_PWD"),
-      session_duration_minutes: 60,
+      session_duration_minutes: 30,
     });
 
     return createSession({

@@ -56,13 +56,6 @@ export async function requireUser({
       });
     }
 
-    // if (!user.email) {
-    //   console.error("No user email");
-    //   throw await logout({
-    //     request,
-    //   });
-    // }
-
     return {
       clientUser: { publicId: user.publicId },
       internalUser: user,
