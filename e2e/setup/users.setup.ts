@@ -6,12 +6,12 @@ import { setAuthStoragePath } from "../utils/setAuthStoragePath";
 import { upsertTestUser } from "../utils/upsertTestUsers";
 const port = process.env.PORT;
 
-const testUserPwd: string = process.env.TEST_USER_PWD ?? "";
+// const testUserPwd: string = process.env.TEST_USER_PWD ?? "";
 
 setup("test users setup", async ({ request }) => {
-  if (testUserPwd === "") {
-    throw new Error("No test user password");
-  }
+  // if (testUserPwd === "") {
+  //   throw new Error("No test user password");
+  // }
 
   if (!port) {
     throw new Error("No port env var found");
@@ -32,9 +32,10 @@ async function authenticateTestUsers({
 
     const storagePath = setAuthStoragePath(userName);
 
+    // console.log('testUserPwd: ', testUserPwd);
     const loginRoute = appRoutes("/e2e/login", {
       email: getTestEmail(userName),
-      password: testUserPwd,
+      // password: testUserPwd,
     });
 
     await request.post(`http://localhost:${port}${loginRoute}`);

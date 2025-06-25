@@ -1,3 +1,5 @@
+import { requireEnvVar } from "~/.server/utils/requireEnvVar";
+import { getStytchUser } from "../../app/.server/services/auth/getStytchUser";
 import { stytchClient } from "../../app/.server/vendors/stytch/client";
 import { type CreateTestUserInput } from "../../app/types/testUsers";
 
@@ -6,38 +8,23 @@ export async function upsertStytchUser(
 ): Promise<string> {
   try {
     let stytchUserId = "";
-    const searchRes = await stytchClient.users.search({
-      cursor: "",
-      limit: 2,
-      query: {
-        operands: [
-          {
-            filter_name: "email_address",
-            filter_value: [user.email],
-          },
-        ],
-        operator: "AND",
-      },
-    });
 
-    if (searchRes.results.length > 1) {
-      throw new Error(
-        `Multiple matches found for ${user.email} in stytch search.`,
-      );
-    }
+    const stytchUser = await getStytchUser({ email: user.email });
 
-    stytchUserId =
-      searchRes.results.length === 1 ? searchRes.results[0].user_id : "";
+    stytchUserId = stytchUser ? stytchUser.user_id : "";
 
     if (!stytchUserId) {
-      const userRes = await stytchClient.passwords.create(user);
+      const userRes = await stytchClient.passwords.create({
+        email: user.email,
+        password: requireEnvVar("TEST_USER_PWD"),
+      });
 
       stytchUserId = userRes.user_id;
     }
 
     return stytchUserId;
   } catch (error) {
-    console.error("error: ", error);
+    console.error("upsertStytchUser error: ", error);
     throw new Error("error upserting stytch user");
   }
 }

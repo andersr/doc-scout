@@ -1,6 +1,7 @@
 import type { TestUserNames } from "~/types/testUsers";
 
 const isCI = process.env.CI;
+console.info("getTestEmail process.env.CI: ", process.env.CI);
 const TEST_DOMAIN = "test.com";
 
 export const getTestEmail = (username: TestUserNames) => {

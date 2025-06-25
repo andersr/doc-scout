@@ -34,4 +34,4 @@ export type UserInternal = Prisma.UserGetPayload<{
 //   };
 // }>;
 
-export type UserClient = Pick<User, "publicId"> & { email: string };
+export type UserClient = Pick<User, "publicId">; //  & { email: string }

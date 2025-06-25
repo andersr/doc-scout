@@ -132,7 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
       throw new Error("bad stytch response");
     }
 
-    await upsertUser({ email: normalizedEmail, stytchId: res.user_id });
+    await upsertUser({ stytchId: res.user_id });
 
     return { email, ok: true };
   } catch (error) {

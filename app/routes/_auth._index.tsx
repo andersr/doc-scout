@@ -25,39 +25,39 @@ export async function loader(args: LoaderFunctionArgs) {
     return redirect(appRoutes("/docs/new"));
   }
 
-  const [recentDocs, recentChats] = await Promise.all([
-    prisma.source.findMany({
-      orderBy: {
-        updatedAt: "desc",
-      },
-      take: 5,
-      where: {
-        ownerId: internalUser.id,
-      },
-    }),
-    prisma.chat.findMany({
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: "asc",
-          },
-          take: 1,
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      take: 5,
-      where: {
-        ownerId: internalUser.id,
-      },
-    }),
-  ]);
+  // const [recentDocs, recentChats] = await Promise.all([
+  //   prisma.source.findMany({
+  //     orderBy: {
+  //       updatedAt: "desc",
+  //     },
+  //     take: 5,
+  //     where: {
+  //       ownerId: internalUser.id,
+  //     },
+  //   }),
+  //   prisma.chat.findMany({
+  //     include: {
+  //       messages: {
+  //         orderBy: {
+  //           createdAt: "asc",
+  //         },
+  //         take: 1,
+  //       },
+  //     },
+  //     orderBy: {
+  //       updatedAt: "desc",
+  //     },
+  //     take: 5,
+  //     where: {
+  //       ownerId: internalUser.id,
+  //     },
+  //   }),
+  // ]);
 
   return {
     docs,
-    recentChats,
-    recentDocs,
+    // recentChats,
+    // recentDocs,
     title: DASHBOARD_TITLE,
   };
 }

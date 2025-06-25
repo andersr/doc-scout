@@ -19,9 +19,9 @@ export async function upsertTestUsers(userNames: TestUserNames[]) {
 }
 
 export async function upsertTestUser(userName: TestUserNames) {
+  // console.log("upsertTestUser testUserPwd: ", testUserPwd);
   const user: CreateTestUserInput = {
     email: getTestEmail(userName),
-    password: testUserPwd,
   };
   const stytchId = await upsertStytchUser(user);
 

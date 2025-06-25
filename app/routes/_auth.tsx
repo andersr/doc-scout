@@ -8,12 +8,15 @@ import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
 import { MainContentContainer } from "~/components/MainContentContainer";
 import { appRoutes } from "~/shared/appRoutes";
+import { getStytchUser } from "../.server/services/auth/getStytchUser";
 import type { Route } from "./+types/_auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { clientUser } = await requireUser({ request });
+  const { internalUser } = await requireUser({ request });
+  const stytchUser = await getStytchUser({ stytchId: internalUser.stytchId });
 
-  return data({ user: clientUser });
+  const email = stytchUser?.emails[0].email ?? "";
+  return data({ user: { email } });
 }
 
 // const NAV_LINKS: { label: string; route: string }[] = [
@@ -36,9 +39,9 @@ export default function AuthLayout() {
           {user ? (
             <DropdownMenu
               items={[
-                <div className="truncate p-2" key={user.email}>
-                  {user.email}
-                </div>,
+                // <div className="truncate p-2" key={user.email}>
+                //   {user.email}
+                // </div>,
                 <Logout key="logout" />,
               ]}
             >

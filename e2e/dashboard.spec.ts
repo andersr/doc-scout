@@ -23,7 +23,7 @@ test.describe("Dashboard - Has Docs", () => {
   const sourcePublicId = "docsDashboardHasDocs";
   test.use({ storageState: setAuthStoragePath(user) });
 
-  test.skip(`redirects to the dashboard if user has docs`, async ({
+  test(`redirects to the dashboard if user has docs`, async ({
     page,
     request,
   }) => {

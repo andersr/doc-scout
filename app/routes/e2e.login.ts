@@ -9,14 +9,18 @@ import { KEYS } from "~/shared/keys";
 
 // TODO: turn into e2e.$command ?
 // TODO: reduce session duration ?
+
+const testUserPwd: string = process.env.TEST_USER_PWD ?? "";
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
+    if (testUserPwd === "") {
+      throw new Error("No test user password");
+    }
     const email = requireSearchParam({ key: KEYS.email, request });
-    const password = requireSearchParam({ key: KEYS.password, request });
 
     const authRes = await stytchClient.passwords.authenticate({
       email,
-      password,
+      password: testUserPwd,
       session_duration_minutes: 60,
     });
 
@@ -27,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       token: authRes.session_token,
     });
   } catch (error) {
-    console.error("error: ", error);
+    console.error("E2E login error: ", error);
     throw data({ error: ReasonPhrases.BAD_REQUEST }, StatusCodes.BAD_REQUEST);
   }
 };
