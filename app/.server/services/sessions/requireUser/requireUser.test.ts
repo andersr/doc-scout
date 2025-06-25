@@ -142,7 +142,6 @@ describe("requireUser", () => {
     // Assert
     expect(result).toEqual({
       clientUser: {
-        // email: "test@example.com",
         publicId: "pub-123",
       },
       internalUser: mockUser,
