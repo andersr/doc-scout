@@ -1,4 +1,7 @@
+import type { TestUserNames } from "~/types/testUsers";
+
 const TEST_DOMAIN = "test.com";
 
-export const getTestEmail = (user: string) =>
-  `${user}${process.env.CI ? ".ci" : ""}@${TEST_DOMAIN}`;
+export const getTestEmail = (username: TestUserNames) => {
+  return `${username}@${TEST_DOMAIN}`;
+};

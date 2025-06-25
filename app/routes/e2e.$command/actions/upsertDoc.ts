@@ -1,4 +1,5 @@
 import { createSourcesChatsVectorStore } from "~/.server/models/sources/createSourcesChatsVectorStore";
+import { getStytchUserByEmail } from "~/.server/vendors/stytch/getStytchUserByEmail";
 import { prisma } from "~/lib/prisma";
 import type { ActionHandlerFn } from "~/types/action";
 import type { FileSourceInput } from "~/types/source";
@@ -11,10 +12,12 @@ export const upsertDoc: ActionHandlerFn = async ({ formData }) => {
   const formPayload = Object.fromEntries(formData);
   const data = upsertSourceSchema.parse(formPayload);
 
+  const stytchUser = await getStytchUserByEmail(data.email);
+
   const internalUser = await prisma.user.findFirstOrThrow({
     include: USER_INTERNAL_INCLUDE,
     where: {
-      email: data.email,
+      stytchId: stytchUser?.user_id ?? "",
     },
   });
 

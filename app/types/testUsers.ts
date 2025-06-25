@@ -1,9 +1,10 @@
-import type { User } from "@prisma/client";
+/**
+ * Will be turned into email addressess and should be all lowercase
+ * Each env should have its own instance of test users
+ */
+export const TestUserNames = ["has_docs", "no_docs"] as const;
 
-export const TestUserNames = ["hasDocs", "hasDocCreateChat", "noDocs"] as const;
-
-export type CreateTestUserInput = { email: string; password: string };
-export type DbTestUserInput = Pick<User, "stytchId" | "username">;
+export type CreateTestUserInput = { email: string };
 
 const keyTuples = TestUserNames.map((k) => [k, k]);
 

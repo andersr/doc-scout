@@ -10,8 +10,8 @@ import {
 } from "react-router";
 import { upsertUser } from "~/.server/models/users/upsertUser";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
-
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+
 import { isAllowedUser } from "~/.server/utils/isAllowedUser";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/AppContainer";
@@ -132,7 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
       throw new Error("bad stytch response");
     }
 
-    await upsertUser({ email: normalizedEmail, stytchId: res.user_id });
+    await upsertUser({ stytchId: res.user_id });
 
     return { email, ok: true };
   } catch (error) {

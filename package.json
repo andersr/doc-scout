@@ -103,7 +103,7 @@
     "e2e:codegen": "PORT=8080 dotenv -e .env.test -- npx playwright codegen --load-storage=playwright/.auth/hasDocs.json http://localhost:8080",
     "e2e:db:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "e2e:db:studio": "dotenv -e .env.test -- prisma studio",
-    "e2e:dev": "PORT=8080 dotenv  -e .env.test -- npm run dev:rr",
+    "e2e:dev": "PORT=8080 dotenv -e .env.test -- npm run dev:rr",
     "e2e:run": "PORT=8080 dotenv -e .env.test -- run-s e2e:db:reset build pw:test",
     "e2e:start": "PORT=8080 dotenv -e .env.test -- npm start",
     "e2e:ui": "PORT=8080 dotenv -e .env.test -- npx playwright test --ui",

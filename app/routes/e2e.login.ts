@@ -1,6 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type ActionFunctionArgs, data } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
+import { requireEnvVar } from "~/.server/utils/requireEnvVar";
 import { requireSearchParam } from "~/.server/utils/requireSearchParam";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
@@ -8,15 +9,15 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
 // TODO: turn into e2e.$command ?
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const email = requireSearchParam({ key: KEYS.email, request });
-    const password = requireSearchParam({ key: KEYS.password, request });
 
     const authRes = await stytchClient.passwords.authenticate({
       email,
-      password,
-      session_duration_minutes: 60,
+      password: requireEnvVar("TEST_USER_PWD"),
+      session_duration_minutes: 30,
     });
 
     return createSession({
@@ -26,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       token: authRes.session_token,
     });
   } catch (error) {
-    console.error("error: ", error);
+    console.error("E2E login error: ", error);
     throw data({ error: ReasonPhrases.BAD_REQUEST }, StatusCodes.BAD_REQUEST);
   }
 };

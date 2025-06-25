@@ -7,7 +7,6 @@ export function isAllowedUser(email: string) {
   }
 
   const allowedUsers = envVar.split(",");
-  if (!allowedUsers.includes(email)) {
-    return false;
-  }
+
+  return allowedUsers.includes(email);
 }

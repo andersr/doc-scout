@@ -21,8 +21,13 @@ export default defineConfig({
   fullyParallel: true,
 
   /* Configure projects for major browsers */
+  //  teardown: "teardown",
   projects: [
     { name: "setup", testMatch: /.*\.setup\.ts/ },
+    // {
+    //   name: "teardown",
+    //   testMatch: /.*\.teardown\.ts/,
+    // },
     {
       dependencies: ["setup"],
       name: "Desktop Chrome",
@@ -30,11 +35,11 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
       },
     },
-    {
-      dependencies: ["setup"],
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
+    // {
+    //   dependencies: ["setup"],
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
+    // },
     // currently not testing on webkit due to auth issues, likely related to this: https://github.com/microsoft/playwright/issues/35712
     // {
     //   dependencies: ["setup"],

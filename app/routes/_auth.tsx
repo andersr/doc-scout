@@ -1,6 +1,7 @@
 import { data, Link, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/services/sessions/requireUser";
+import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
 import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
 import { Avatar } from "~/components/Avatar";
@@ -11,9 +12,11 @@ import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { clientUser } = await requireUser({ request });
+  const { internalUser } = await requireUser({ request });
+  const stytchUser = await getStytchUserById(internalUser.stytchId);
 
-  return data({ user: clientUser });
+  const email = stytchUser?.emails[0].email ?? "";
+  return data({ user: { email } });
 }
 
 // const NAV_LINKS: { label: string; route: string }[] = [

@@ -186,7 +186,7 @@ model Source {
 model User {
   id       Int     @id @default(autoincrement())
   publicId String  @unique
-  email    String? @unique
+  email    String? @unique // legacy, use email from provider (Stytch)
   stytchId String  @unique
 
   username String? @unique // legacy
