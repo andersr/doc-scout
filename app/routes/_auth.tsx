@@ -39,9 +39,9 @@ export default function AuthLayout() {
           {user ? (
             <DropdownMenu
               items={[
-                // <div className="truncate p-2" key={user.email}>
-                //   {user.email}
-                // </div>,
+                <div className="truncate p-2" key={user.email}>
+                  {user.email}
+                </div>,
                 <Logout key="logout" />,
               ]}
             >
