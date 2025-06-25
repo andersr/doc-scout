@@ -15,6 +15,5 @@ export async function answerQuery({
     question: query,
   });
 
-  // TODO: also return context?
   return result.answer;
 }
