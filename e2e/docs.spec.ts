@@ -59,7 +59,7 @@ test.describe("Docs - Chat", () => {
     );
   });
 
-  test.skip(`allows for asking a question and getting a bot response`, async ({
+  test(`allows for asking a question and getting a bot response`, async ({
     page,
   }) => {
     // arrange

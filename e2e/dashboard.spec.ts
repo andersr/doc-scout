@@ -14,7 +14,9 @@ test.describe("Dashboard - No Docs", () => {
     page,
   }) => {
     await page.goto(appRoutes("/"));
-    await expect(page.getByRole("heading")).toHaveText(/Add Docs/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      /Add Docs/,
+    );
   });
 });
 

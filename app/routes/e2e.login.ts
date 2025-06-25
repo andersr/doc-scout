@@ -1,6 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type ActionFunctionArgs, data } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
+import { requireEnvVar } from "~/.server/utils/requireEnvVar";
 import { requireSearchParam } from "~/.server/utils/requireSearchParam";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_TOKEN } from "~/config/auth";
@@ -10,17 +11,13 @@ import { KEYS } from "~/shared/keys";
 // TODO: turn into e2e.$command ?
 // TODO: reduce session duration ?
 
-const testUserPwd: string = process.env.TEST_USER_PWD ?? "";
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
-    if (testUserPwd === "") {
-      throw new Error("No test user password");
-    }
     const email = requireSearchParam({ key: KEYS.email, request });
 
     const authRes = await stytchClient.passwords.authenticate({
       email,
-      password: testUserPwd,
+      password: requireEnvVar("TEST_USER_PWD"),
       session_duration_minutes: 60,
     });
 

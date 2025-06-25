@@ -17,7 +17,7 @@ export async function getStytchUser({
 
     const searchRes = await stytchClient.users.search({
       cursor: "",
-      limit: 2,
+      // limit: 2,
       query: {
         operands: [
           {
