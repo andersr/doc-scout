@@ -8,7 +8,7 @@ export async function upsertStytchUser(
     let stytchUserId = "";
     const searchRes = await stytchClient.users.search({
       cursor: "",
-      limit: 1,
+      limit: 2,
       query: {
         operands: [
           {
@@ -20,8 +20,14 @@ export async function upsertStytchUser(
       },
     });
 
+    if (searchRes.results.length > 1) {
+      throw new Error(
+        `Multiple matches found for ${user.email} in stytch search.`,
+      );
+    }
+
     stytchUserId =
-      searchRes.results.length > 0 ? searchRes.results[0].user_id : "";
+      searchRes.results.length === 1 ? searchRes.results[0].user_id : "";
 
     if (!stytchUserId) {
       const userRes = await stytchClient.passwords.create(user);

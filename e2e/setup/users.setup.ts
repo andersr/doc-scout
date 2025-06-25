@@ -25,7 +25,7 @@ async function authenticateTestUsers({
   usernames,
 }: {
   request: APIRequestContext;
-  usernames: readonly string[];
+  usernames: readonly TestUserNames[];
 }) {
   for await (const userName of usernames) {
     await upsertTestUser(userName);

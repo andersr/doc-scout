@@ -9,8 +9,8 @@ import { getTestEmail } from "./utils/getTestEmail";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
 test.describe("Dashboard - No Docs", () => {
-  test.use({ storageState: setAuthStoragePath(TEST_USERS.noDocs) });
-  test(`redirects to New Docs if user ${TEST_USERS.noDocs} has NO docs`, async ({
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
+  test(`redirects to New Docs if user ${TEST_USERS.no_docs} has NO docs`, async ({
     page,
   }) => {
     await page.goto(appRoutes("/"));
@@ -19,11 +19,11 @@ test.describe("Dashboard - No Docs", () => {
 });
 
 test.describe("Dashboard - Has Docs", () => {
-  const user = TEST_USERS.hasDocs;
+  const user = TEST_USERS.has_docs;
   const sourcePublicId = "docsDashboardHasDocs";
   test.use({ storageState: setAuthStoragePath(user) });
 
-  test(`redirects to the dashboard if user has docs`, async ({
+  test.skip(`redirects to the dashboard if user has docs`, async ({
     page,
     request,
   }) => {

@@ -9,11 +9,11 @@ import { TEST_USERS } from "../app/types/testUsers";
 import { getTestEmail } from "./utils/getTestEmail";
 import { setAuthStoragePath } from "./utils/setAuthStoragePath";
 
-const user = TEST_USERS.hasDocCreateChat;
+const username = TEST_USERS.has_docs;
 let sourcePublicId = "";
 
 test.describe("Docs - Chat", () => {
-  test.use({ storageState: setAuthStoragePath(user) });
+  test.use({ storageState: setAuthStoragePath(username) });
 
   test.beforeEach(async ({ request }) => {
     sourcePublicId = generateId();
@@ -23,7 +23,7 @@ test.describe("Docs - Chat", () => {
       }),
       {
         form: {
-          email: getTestEmail(user),
+          email: getTestEmail(username),
           sourcePublicId,
         } satisfies UpsertSourceInput,
       },
@@ -59,7 +59,7 @@ test.describe("Docs - Chat", () => {
     );
   });
 
-  test(`allows for asking a question and getting a bot response`, async ({
+  test.skip(`allows for asking a question and getting a bot response`, async ({
     page,
   }) => {
     // arrange

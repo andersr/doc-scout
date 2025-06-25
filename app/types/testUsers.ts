@@ -1,6 +1,13 @@
 import type { User } from "@prisma/client";
 
-export const TestUserNames = ["hasDocs", "hasDocCreateChat", "noDocs"] as const;
+/**
+ * Will be turned into email addressess and should be all lowercase
+ */
+export const TestUserNames = [
+  "has_docs",
+  // "hasDocCreateChat",
+  "no_docs",
+] as const;
 
 export type CreateTestUserInput = { email: string; password: string };
 export type DbTestUserInput = Pick<User, "stytchId" | "username">;

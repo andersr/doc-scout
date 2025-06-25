@@ -8,6 +8,7 @@ import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
 // TODO: turn into e2e.$command ?
+// TODO: reduce session duration ?
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const email = requireSearchParam({ key: KEYS.email, request });
