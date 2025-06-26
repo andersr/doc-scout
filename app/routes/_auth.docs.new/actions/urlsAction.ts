@@ -17,7 +17,6 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
 
   const urlsInput = String(formData.get(KEYS.urls) || "");
 
-  // TODO: confirm still erroring if no urls submitted
   const maybeUrls = splitCsvText(urlsInput);
 
   const urls = urlListSchema.parse(maybeUrls);
@@ -35,7 +34,6 @@ export const urlsAction: ActionHandlerFn = async ({ formData, request }) => {
     const title = urlData.metadata?.title ?? "";
     if (!title) {
       console.warn(`no title found for: ${urlData.metadata}`);
-      // TODO: generate a title
     }
     const text = urlData.markdown;
     if (!text) {

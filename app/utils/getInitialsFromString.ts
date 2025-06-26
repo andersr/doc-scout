@@ -1,5 +1,3 @@
-// TODO: better handling of getting initials from email - current approach is a hack
-
 export function getInitialsFromString(str: string) {
   const parts = str.split(" ");
   return parts.length > 1

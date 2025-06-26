@@ -13,7 +13,6 @@ export const deleteMessagesAction: ActionHandlerFn = async ({ formData }) => {
     throw new Error("no sourcePublicId");
   }
 
-  // TODO: similar to requireSourceAndSourceChat
   const source = await prisma.source.findFirstOrThrow({
     include: SOURCE_INCLUDE,
     where: {

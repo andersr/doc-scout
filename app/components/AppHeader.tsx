@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router";
 import { appRoutes } from "~/shared/appRoutes";
 import { LogoWithText } from "./brand/LogoWithText";
 
-// TODO: use of children to display right-hand links is not intuitive, use an explictly named prop
 export default function AppHeader({
   children,
 }: {

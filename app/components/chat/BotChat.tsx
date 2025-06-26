@@ -12,14 +12,14 @@ import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage } from "~/types/message";
-import type { UserClient } from "~/types/user";
+// import type { UserClient } from "~/types/user";
 
 export default function BotChat({
-  clientUser,
+  // clientUser,
   hasPendingQuery,
   messages,
 }: {
-  clientUser: UserClient;
+  // clientUser: UserClient;
   hasPendingQuery: boolean;
   messages: ClientMessage[];
 }) {

@@ -8,7 +8,6 @@ export function setSecureCookieHeader({
   value: string;
 }) {
   const headers = new Headers();
-  // TODO: add secure if env is not dev
   headers.set("Set-Cookie", `${key}=${value};HttpOnly;`);
 
   return headers;
