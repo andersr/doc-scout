@@ -1,14 +1,15 @@
-import { generateGraph } from "./generateGraph";
+import { generateGraph, type GenerateGraphInput } from "./generateGraph";
 
 export async function answerQuery({
   namespace,
   query,
-}: {
-  namespace: string;
+  sourceIds,
+}: GenerateGraphInput & {
   query: string;
 }) {
   const graph = await generateGraph({
     namespace,
+    sourceIds,
   });
 
   const result = await graph.invoke({

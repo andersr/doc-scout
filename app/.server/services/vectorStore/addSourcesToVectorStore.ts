@@ -3,6 +3,7 @@ import { addDocsToVectorStore } from "./addDocsToVectorStore";
 
 import { getNameSpace } from "~/config/namespaces";
 import type { LCDocument } from "~/types/document";
+import type { VectorDocMetadata } from "~/types/vectorDoc";
 
 export async function addSourcesToVectorStore({
   sources,
@@ -19,11 +20,11 @@ export async function addSourcesToVectorStore({
       console.warn(`No text found for ${source.name}, id: ${source.id}`);
       continue;
     }
+
+    const sourceIdMetadata: VectorDocMetadata = { sourceId: source.publicId };
+
     vectorDocs.push({
-      metadata: {
-        sourceId: source.publicId,
-        title: source.fileName,
-      },
+      metadata: sourceIdMetadata,
       pageContent: source.text,
     });
   }

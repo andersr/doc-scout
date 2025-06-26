@@ -5,13 +5,19 @@ import { RAG_TEMPLATE } from "~/config/prompts";
 import { llm } from "../../llm/llm";
 import { getVectorStore } from "../../vectorStore/vectorStore";
 
+export interface GenerateGraphInput {
+  namespace: string;
+  sourceIds: string[];
+}
+
 export async function generateGraph({
   namespace,
-  sources,
-}: {
-  namespace: string;
-  sources?: string[];
-}) {
+  sourceIds,
+}: GenerateGraphInput) {
+  if (sourceIds.length === 0) {
+    throw new Error("No source ids provided, cannot complete query.");
+  }
+
   const prompt = PromptTemplate.fromTemplate(RAG_TEMPLATE);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -32,9 +38,7 @@ export async function generateGraph({
     const retrievedDocs = await vectorStore.similaritySearch(
       state.question,
       4, // default value
-      sources && sources.length > 0
-        ? { sourceId: { $in: sources } }
-        : undefined,
+      { sourceId: { $in: sourceIds } },
     );
     return { context: retrievedDocs };
   };
