@@ -1,16 +1,10 @@
 import "material-symbols/outlined.css";
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
-import { PageTitle } from "./components/PageTitle";
 import { APP_NAME } from "./config/app";
+import { ErrorBoundaryInfo } from "./lib/errorBoundary/ErrorBoundaryInfo";
+import { useErrorBoundary } from "./lib/errorBoundary/useErrorBoundary";
 import "./styles/app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -65,30 +59,11 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
+  const output = useErrorBoundary(error);
 
   return (
     <main className="container mx-auto p-4 pt-16">
-      <PageTitle title={message} />
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full overflow-x-auto p-4">
-          <code>{stack}</code>
-        </pre>
-      )}
+      <ErrorBoundaryInfo {...output} />
     </main>
   );
 }

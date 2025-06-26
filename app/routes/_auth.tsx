@@ -8,9 +8,14 @@ import { Avatar } from "~/components/Avatar";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
 import { MainContentContainer } from "~/components/MainContentContainer";
+import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
+import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import { appRoutes } from "~/shared/appRoutes";
 import type { Route } from "./+types/_auth";
 
+interface TmpUser {
+  email: string;
+}
 export async function loader({ request }: Route.LoaderArgs) {
   const { internalUser } = await requireUser({ request });
   const stytchUser = await getStytchUserById(internalUser.stytchId);
@@ -24,8 +29,16 @@ export async function loader({ request }: Route.LoaderArgs) {
 //   { label: "Chats", route: appRoutes("/chats") },
 // ];
 
-export default function AuthLayout() {
-  const { user } = useLoaderData<typeof loader>();
+function Layout({
+  children,
+  isError,
+  user,
+}: {
+  children: React.ReactNode;
+  isError?: boolean;
+  user: TmpUser | null;
+}) {
+  // const { user } = useLoaderData<typeof loader>();
 
   return (
     <AppContainer>
@@ -47,16 +60,33 @@ export default function AuthLayout() {
             >
               <Avatar email={user.email} />
             </DropdownMenu>
-          ) : (
+          ) : isError ? null : (
             <div>
               <Link to={appRoutes("/login")}>Sign In</Link>
             </div>
           )}
         </div>
       </AppHeader>
-      <MainContentContainer>
-        <Outlet />
-      </MainContentContainer>
+      <MainContentContainer>{children}</MainContentContainer>
     </AppContainer>
+  );
+}
+
+export default function AuthLayout() {
+  const { user } = useLoaderData<typeof loader>();
+  return (
+    <Layout user={user}>
+      <Outlet />
+    </Layout>
+  );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const output = useErrorBoundary(error);
+
+  return (
+    <Layout user={null} isError>
+      <ErrorBoundaryInfo {...output} />
+    </Layout>
   );
 }
