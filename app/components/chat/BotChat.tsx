@@ -12,20 +12,18 @@ import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage } from "~/types/message";
-// import type { UserClient } from "~/types/user";
+import type { ServerResponse } from "~/types/server";
 
 export default function BotChat({
-  // clientUser,
   hasPendingQuery,
   messages,
 }: {
-  // clientUser: UserClient;
   hasPendingQuery: boolean;
   messages: ClientMessage[];
 }) {
   const [message, setMessage] = useState("");
 
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<ServerResponse>();
 
   const botResponded = !hasPendingQuery && fetcher.state === "idle";
 
@@ -80,6 +78,13 @@ export default function BotChat({
           "bg-background",
         )}
       >
+        {fetcher.data?.errors &&
+          fetcher.data?.errors.length > 0 &&
+          fetcher.data.errors.map((e) => (
+            <p className="text-danger py-2" key={e}>
+              {e}
+            </p>
+          ))}
         <fetcher.Form method="POST">
           <div className="flex w-full items-end gap-2">
             <textarea
@@ -107,7 +112,6 @@ export default function BotChat({
               </button>
             </div>
           </div>
-          {/* {errors.message && <p>{errors.message.message}</p>} */}
         </fetcher.Form>
       </div>
     </div>
