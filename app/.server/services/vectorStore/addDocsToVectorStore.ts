@@ -1,6 +1,6 @@
 import type { LCDocument } from "~/types/document";
-import { getResetVectorStore } from "./getResetVectorStore";
 import { splitDocuments } from "./splitDocuments";
+import { getVectorStore } from "./vectorStore";
 
 export async function addDocsToVectorStore({
   docs,
@@ -12,7 +12,7 @@ export async function addDocsToVectorStore({
   try {
     const allSplits = await splitDocuments(docs);
 
-    const vectorStore = await getResetVectorStore(namespace);
+    const vectorStore = await getVectorStore(namespace);
 
     await vectorStore.addDocuments(allSplits);
   } catch (error) {
