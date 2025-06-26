@@ -6,7 +6,7 @@
   --color-navy-blue: #021372;
   --color-pompadour: #6e0051;
   --color-bronze: #6f3d06;
-  --color-danger: var(--color-red-500);
+  --color-danger: var(--color-red-700);
   --color-success: var(--color-green-200);
   --color-background: var(--color-stone-100);
 }
