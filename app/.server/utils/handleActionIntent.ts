@@ -20,7 +20,6 @@ export async function handleActionIntent({
     const formData = await clone.formData();
     const intent = requireFormValue({ formData, key: KEYS.intent });
 
-    // TODO: needs to be tested
     if (!isAppKey(intent)) {
       throw new ServerError(
         `Unknown intent: ${intent}`,

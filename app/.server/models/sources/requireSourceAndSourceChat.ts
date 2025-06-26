@@ -15,7 +15,6 @@ export async function requireSourceAndSourceChat({
     params,
   });
 
-  // TODO: add error boundary to handle thrown errors
   const source = await prisma.source.findFirstOrThrow({
     include: SOURCE_INCLUDE,
     where: {

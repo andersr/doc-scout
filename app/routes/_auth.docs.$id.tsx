@@ -18,12 +18,9 @@ import { type ServerResponse } from "~/types/server";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 import type { Route } from "./+types/_auth.docs.$id";
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
-  const { clientUser } = await requireUser({ request });
-
+export async function loader({ params }: LoaderFunctionArgs) {
   const { source, sourceChat } = await requireSourceAndSourceChat({ params });
 
-  // TODO: move to separate function associated with BotChat component
   const chatMessages = sourceChat.messages;
 
   const messages: ClientMessage[] = chatMessages.map((m) => ({
@@ -36,7 +33,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   return {
     cdn: ENV.CDN_HOST,
-    clientUser,
+    // clientUser,
     hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
     mostRecentMessage,
@@ -46,7 +43,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export default function DocDetailsLayout() {
-  const { cdn, clientUser, hasPendingQuery, messages, source, title } =
+  const { cdn, hasPendingQuery, messages, source, title } =
     useLoaderData<typeof loader>();
 
   return (
@@ -65,11 +62,7 @@ export default function DocDetailsLayout() {
           </a>
         )}
       </div>
-      <BotChat
-        clientUser={clientUser}
-        messages={messages}
-        hasPendingQuery={hasPendingQuery}
-      />
+      <BotChat messages={messages} hasPendingQuery={hasPendingQuery} />
     </div>
   );
 }
@@ -92,8 +85,6 @@ export async function action({ params, request }: Route.ActionArgs) {
       },
     });
 
-    // TODO: be consistent: bot vs Agent
-    // TOO: should namespace be specific to the source and not the user?
     const botAnswer = await answerQuery({
       namespace: getNameSpace("user", internalUser.publicId),
       query: input.message,

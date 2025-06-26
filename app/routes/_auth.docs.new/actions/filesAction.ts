@@ -30,7 +30,6 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
     if (fileExtension === ".pdf") {
       text = await extractTextFromCloudStorePdf(formData.storagePath);
     } else {
-      // TODO: replace this with direct bucket GET
       const extractedText = await getMarkdownFromUrl(
         `${ENV.CDN_HOST}/${formData.storagePath}`,
       );
@@ -47,7 +46,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
       storagePath: formData.storagePath,
       summary,
       text,
-      title: formData.fileName, // TODO: get from file content or suggest via bot
+      title: formData.fileName,
     });
   }
 

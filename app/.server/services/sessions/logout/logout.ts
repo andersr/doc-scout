@@ -10,7 +10,6 @@ export async function logout({
   error?: boolean;
   request: Request;
 }) {
-  // TODO: if error getting session, throw and add error param to logout
   const session = await getSession({
     request,
   });

@@ -2,7 +2,6 @@ import { z } from "zod";
 import { FILE_CONFIG as CONFIG } from "~/config/files";
 import { formatBytes } from "~/utils/formatBytes";
 
-// TODO: move all schemas to types
 export const fileNameSchema = z
   .string()
   .min(5)

@@ -13,7 +13,6 @@ export function UrlForm() {
 
   const hasValidUrls = urlInput.trim().length > 0;
 
-  // TODO: use zod schema
   const handleUrlBlur = () => {
     if (!urlInput.trim()) {
       setValidationError("");

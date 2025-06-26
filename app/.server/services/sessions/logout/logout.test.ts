@@ -144,8 +144,7 @@ describe("logout", () => {
     );
   });
 
-  // TODO: not actually propagating these errors yet
-  it.skip("propagates errors from getSession", async () => {
+  it("propagates errors from getSession", async () => {
     // Arrange
     const error = new Error("Failed to get session");
     mockGetSession.mockRejectedValue(error);
@@ -161,7 +160,6 @@ describe("logout", () => {
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 
-  // TODO: not actually propagating these errors yet
   it.skip("propagates errors from destroySession", async () => {
     // Arrange
     const error = new Error("Failed to destroy session");
@@ -216,7 +214,6 @@ describe("logout", () => {
     );
   });
 
-  // TODO: add ability to conditionally pass logout error param
   it("redirects to login with error=true parameter if error option is set to true", async () => {
     // Arrange
     const loginUrl = "/custom-login?error=true&redirect=/dashboard";
@@ -226,7 +223,6 @@ describe("logout", () => {
     await logout({ error: true, request: mockRequest });
 
     // Assert
-    // expect(mockAppRoutes).toHaveBeenCalledWith("/login", { error: "true" });
     expect(mockRedirect).toHaveBeenCalledWith(loginUrl, {
       headers: {
         "Set-Cookie": "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
