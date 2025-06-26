@@ -15,10 +15,13 @@ export function serverError(error: unknown) {
   }
 
   if (error instanceof ZodError) {
-    return new Response(JSON.stringify(error), {
-      status: 400,
-      statusText: "zod error",
-    });
+    return data(
+      {
+        errors: error.issues.map((e) => `${e.path[0]}: ${e.message}`),
+        ok: false,
+      } satisfies ServerResponse,
+      StatusCodes.BAD_REQUEST,
+    );
   }
 
   if (error instanceof Error) {
