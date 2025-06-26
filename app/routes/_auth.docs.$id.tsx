@@ -70,7 +70,7 @@ export default function DocDetailsLayout() {
 export async function action({ params, request }: Route.ActionArgs) {
   const { internalUser } = await requireUser({ request });
   try {
-    const { sourceChat } = await requireSourceAndSourceChat({ params });
+    const { source, sourceChat } = await requireSourceAndSourceChat({ params });
 
     const formData = Object.fromEntries(await request.formData());
     const input = userMessageSchema.parse(formData);
@@ -88,6 +88,7 @@ export async function action({ params, request }: Route.ActionArgs) {
     const botAnswer = await answerQuery({
       namespace: getNameSpace("user", internalUser.publicId),
       query: input.message,
+      sourceIds: [source.publicId],
     });
 
     await prisma.message.create({
