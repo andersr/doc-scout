@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { TabButton, TabContent, Tabs, TabsList, useTabs } from "./TabsTmp";
+import { TabButton, TabContent, Tabs, TabsList, useTabs } from "./Tabs";
 
 // Test component that uses the useTabs hook
 function TestTabs({ defaultValue }: { defaultValue: string }) {
