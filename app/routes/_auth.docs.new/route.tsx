@@ -10,7 +10,7 @@ import {
   Tabs,
   TabsList,
   useTabs,
-} from "~/components/ui/tabsTmp";
+} from "~/components/ui/tabs";
 import { KEYS } from "~/shared/keys";
 import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";
