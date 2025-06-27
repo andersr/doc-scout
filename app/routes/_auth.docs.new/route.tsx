@@ -22,32 +22,34 @@ export default function NewDocsRoute() {
   return (
     <div>
       <PageTitle title="Add Docs" />
-      <Tabs value={value} onValueChange={onValueChange}>
-        <TabsList>
-          <TabButton
-            value={KEYS.files}
-            currentValue={value}
-            onValueChange={onValueChange}
-          >
-            Files
-          </TabButton>
-          <TabButton
-            value={KEYS.urls}
-            currentValue={value}
-            onValueChange={onValueChange}
-          >
-            Via URL
-          </TabButton>
-        </TabsList>
-        <TabContent value={KEYS.files} currentValue={value}>
-          <FileUploadForm />
-        </TabContent>
-        <TabContent value={KEYS.urls} currentValue={value}>
-          <UrlForm />
-        </TabContent>
-      </Tabs>
+      <div className="pt-4">
+        <Tabs value={value} onValueChange={onValueChange}>
+          <TabsList>
+            <TabButton
+              value={KEYS.files}
+              currentValue={value}
+              onValueChange={onValueChange}
+            >
+              Files
+            </TabButton>
+            <TabButton
+              value={KEYS.urls}
+              currentValue={value}
+              onValueChange={onValueChange}
+            >
+              Via URL
+            </TabButton>
+          </TabsList>
+          <TabContent value={KEYS.files} currentValue={value}>
+            <FileUploadForm />
+          </TabContent>
+          <TabContent value={KEYS.urls} currentValue={value}>
+            <UrlForm />
+          </TabContent>
+        </Tabs>
+      </div>
       {actionData?.errors && (
-        <ul className="mt-4 text-center font-semibold text-red-400">
+        <ul className="text-danger mt-4 text-center font-semibold">
           {actionData?.errors.map((e) => <li key={e}>{e}</li>)}
         </ul>
       )}

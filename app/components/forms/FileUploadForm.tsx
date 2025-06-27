@@ -51,9 +51,6 @@ export function FileUploadForm() {
           >
             <div className="flex items-start gap-2">
               <div className="flex-1">
-                {/* <h4 className="mb-2 text-sm font-semibold">
-                  Add Doc Error{errors.length > 1 ? "s" : ""}:
-                </h4> */}
                 <ul className="space-y-1">
                   {errors.map((message, index) => (
                     <li key={`${message}-${index}`} className="list-inside">

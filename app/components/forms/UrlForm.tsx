@@ -47,7 +47,7 @@ export function UrlForm() {
           value={urlInput}
           onChange={(e) => handleUrlChange(e.target.value)}
           onBlur={handleUrlBlur}
-          placeholder="Enter URLs, one per line or comma-separated&#10;https://example.com/doc1&#10;https://example.com/doc2"
+          placeholder="https://example.com/doc1&#10;https://example.com/doc2"
           rows={6}
           required
           aria-invalid={!!validationError}
@@ -58,18 +58,20 @@ export function UrlForm() {
             {validationError}
           </div>
         )}
-        <p id={KEYS.description} className="text-muted-foreground text-sm">
-          Enter URLs one per line or comma-separated
+        <p id={KEYS.description} className="text-sm">
+          Enter URLs one per line or comma-separated.
         </p>
       </div>
-      <ActionButton
-        type="submit"
-        disabled={
-          navigation.state !== "idle" || !hasValidUrls || !!validationError
-        }
-      >
-        {navigation.state === "submitting" ? "Processing..." : "Continue"}
-      </ActionButton>
+      <div>
+        <ActionButton
+          type="submit"
+          disabled={
+            navigation.state !== "idle" || !hasValidUrls || !!validationError
+          }
+        >
+          {navigation.state === "submitting" ? "Processing..." : "Continue"}
+        </ActionButton>
+      </div>
     </Form>
   );
 }

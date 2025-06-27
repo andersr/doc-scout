@@ -57,7 +57,7 @@ describe("UrlForm", () => {
       screen.getByRole("button", { name: "Continue" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Enter URLs one per line or comma-separated"),
+      screen.getByText("Enter URLs one per line or comma-separated."),
     ).toBeInTheDocument();
   });
 
@@ -315,10 +315,6 @@ describe("UrlForm", () => {
     render(<RouterStub />);
 
     const textarea = screen.getByRole("textbox", { name: "URLs" });
-    expect(textarea).toHaveAttribute(
-      "placeholder",
-      expect.stringContaining("Enter URLs, one per line or comma-separated"),
-    );
     expect(textarea).toHaveAttribute(
       "placeholder",
       expect.stringContaining("https://example.com/doc1"),
