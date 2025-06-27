@@ -13,6 +13,7 @@ import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
 
 import { isAllowedUser } from "~/.server/utils/isAllowedUser";
+import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
@@ -22,6 +23,7 @@ import { Label } from "~/components/ui/label";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
+import type { ServerResponse } from "~/types/server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAnon({ request });
@@ -36,9 +38,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 export default function LoginRoute() {
   const { error, title } = useLoaderData<typeof loader>();
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
+
+  const errors = actionData?.errors
+    ? [...actionData.errors]
+    : error
+      ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
+      : [];
 
   return (
     <AppContainer className="relative">
@@ -49,15 +57,14 @@ export default function LoginRoute() {
         </div>
       )}
       <div className="flex h-2/3 flex-col items-center justify-center">
-        {error && (
-          <div className="mt-4 text-center font-semibold text-red-400">
-            {INTENTIONALLY_GENERIC_ERROR_MESSAGE}
-          </div>
-        )}
-
         <div className="mb-4">
           <PageTitle title={title} />
         </div>
+        {errors.map((e) => (
+          <div key={e} className="text-danger py-2 text-center">
+            {e}
+          </div>
+        ))}
         <Form
           method="POST"
           className="flex flex-col gap-6"
@@ -79,12 +86,6 @@ export default function LoginRoute() {
             {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
-
-        {actionData?.errorMessage && (
-          <div className="mt-4 text-center font-semibold text-red-400">
-            {actionData.errorMessage}
-          </div>
-        )}
       </div>
     </AppContainer>
   );
@@ -134,16 +135,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     await upsertUser({ stytchId: res.user_id });
 
-    return { email, ok: true };
+    return { email, errors: null, ok: true };
   } catch (error) {
-    console.error("error: ", error);
-    return {
-      email: null,
-      errorMessage:
-        error instanceof Error && error.message
-          ? error.message
-          : INTENTIONALLY_GENERIC_ERROR_MESSAGE,
-      ok: false,
-    };
+    return serverError(error);
   }
 }

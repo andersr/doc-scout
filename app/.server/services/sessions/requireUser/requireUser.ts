@@ -42,6 +42,11 @@ export async function requireUser({
       throw redirect(appRoutes("/login"));
     }
 
+    if (!resp.user || !resp.user.user_id) {
+      console.error("No user found");
+      throw redirect(appRoutes("/login"));
+    }
+
     const user = await prisma.user.findUnique({
       include: USER_INTERNAL_INCLUDE,
       where: {
@@ -57,7 +62,7 @@ export async function requireUser({
     }
 
     return {
-      clientUser: { publicId: user.publicId },
+      clientUser: { email: resp.user.emails[0].email, publicId: user.publicId },
       internalUser: user,
     };
   } catch (error) {

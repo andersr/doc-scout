@@ -15,6 +15,7 @@ export const AppKeys = [
   "username",
   "urls",
   "password",
+  "token",
 ] as const;
 
 const keyTuples = AppKeys.map((k) => [k, k]);

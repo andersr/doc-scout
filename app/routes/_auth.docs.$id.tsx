@@ -33,7 +33,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   return {
     cdn: ENV.CDN_HOST,
-    // clientUser,
     hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
     mostRecentMessage,
@@ -106,7 +105,6 @@ export async function action({ params, request }: Route.ActionArgs) {
       ok: true,
     } satisfies ServerResponse);
   } catch (error) {
-    console.error("new chat message error: ", error);
     return serverError(error);
   }
 }

@@ -1,10 +1,22 @@
+import { twMerge } from "tailwind-merge";
 import { setWindowTitle } from "~/utils/setWindowTitle";
 
-export function PageTitle({ title }: { title: string }) {
+export function PageTitle({
+  danger,
+  title,
+}: {
+  danger?: boolean;
+  title: string;
+}) {
   return (
     <>
       <title>{setWindowTitle(title)}</title>
-      <h1 className="text-3xl leading-tight text-stone-600 font-stretch-75% md:text-5xl md:font-semibold md:font-stretch-50%">
+      <h1
+        className={twMerge(
+          "text-3xl leading-tight text-stone-600 font-stretch-75% md:text-5xl md:font-semibold md:font-stretch-50%",
+          danger ? "text-danger" : "text-stone-600",
+        )}
+      >
         {title}
       </h1>
     </>

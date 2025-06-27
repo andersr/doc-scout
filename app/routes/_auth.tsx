@@ -8,7 +8,10 @@ import { Avatar } from "~/components/Avatar";
 import { DropdownMenu } from "~/components/DropdownMenu";
 import { Logout } from "~/components/logout";
 import { MainContentContainer } from "~/components/MainContentContainer";
+import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
+import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import { appRoutes } from "~/shared/appRoutes";
+import type { UserClient } from "~/types/user";
 import type { Route } from "./+types/_auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -16,7 +19,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   const stytchUser = await getStytchUserById(internalUser.stytchId);
 
   const email = stytchUser?.emails[0].email ?? "";
-  return data({ user: { email } });
+  return data<{ user: UserClient }>({
+    user: { email, publicId: internalUser.publicId },
+  });
 }
 
 // const NAV_LINKS: { label: string; route: string }[] = [
@@ -24,9 +29,15 @@ export async function loader({ request }: Route.LoaderArgs) {
 //   { label: "Chats", route: appRoutes("/chats") },
 // ];
 
-export default function AuthLayout() {
-  const { user } = useLoaderData<typeof loader>();
-
+function Layout({
+  children,
+  isError,
+  user,
+}: {
+  children: React.ReactNode;
+  isError?: boolean;
+  user: UserClient | null;
+}) {
   return (
     <AppContainer>
       <AppHeader>
@@ -47,16 +58,33 @@ export default function AuthLayout() {
             >
               <Avatar email={user.email} />
             </DropdownMenu>
-          ) : (
+          ) : isError ? null : (
             <div>
               <Link to={appRoutes("/login")}>Sign In</Link>
             </div>
           )}
         </div>
       </AppHeader>
-      <MainContentContainer>
-        <Outlet />
-      </MainContentContainer>
+      <MainContentContainer>{children}</MainContentContainer>
     </AppContainer>
+  );
+}
+
+export default function AuthRoutes() {
+  const { user } = useLoaderData<typeof loader>();
+  return (
+    <Layout user={user}>
+      <Outlet />
+    </Layout>
+  );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const output = useErrorBoundary(error);
+
+  return (
+    <Layout user={null} isError>
+      <ErrorBoundaryInfo {...output} />
+    </Layout>
   );
 }
