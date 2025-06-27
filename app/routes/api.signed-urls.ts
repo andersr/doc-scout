@@ -48,7 +48,6 @@ export async function action(args: Route.ActionArgs) {
 
     return data({ filesInfo } satisfies SignedUrlResponse, { status: 200 });
   } catch (error) {
-    console.error("error: ", error);
     return serverError(error);
   }
 }
