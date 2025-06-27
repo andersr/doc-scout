@@ -4,39 +4,30 @@ import { ZodError } from "zod";
 import { ServerError, type ServerResponse } from "~/types/server";
 
 export function serverError(error: unknown) {
+  const res: ServerResponse = {
+    errors: [ReasonPhrases.INTERNAL_SERVER_ERROR],
+    ok: false,
+  };
+  let statusCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
+  let stack: string | undefined = "";
+
   if (error instanceof ServerError) {
-    return data(
-      {
-        errors: [error.message],
-        ok: false,
-      } satisfies ServerResponse,
-      error.statusCode,
-    );
+    res.errors = [error.message];
+    statusCode = error.statusCode;
+    stack = error.stack;
   }
 
   if (error instanceof ZodError) {
-    return data(
-      {
-        errors: error.issues.map((e) => `${e.path[0]}: ${e.message}`),
-        ok: false,
-      } satisfies ServerResponse,
-      StatusCodes.BAD_REQUEST,
-    );
+    res.errors = error.issues.map((e) => `${e.path[0]}: ${e.message}`);
+    statusCode = StatusCodes.BAD_REQUEST;
   }
 
   if (error instanceof Error) {
-    return new Response(JSON.stringify(error.stack), {
-      status: 500,
-      statusText: error.message,
-    });
+    res.errors = [`${error.name}: ${error.message}`];
+    stack = error.stack;
   }
 
-  console.error("unknown error: ", JSON.stringify(error));
-  return data(
-    {
-      errors: [ReasonPhrases.INTERNAL_SERVER_ERROR],
-      ok: false,
-    } satisfies ServerResponse,
-    StatusCodes.INTERNAL_SERVER_ERROR,
-  );
+  console.error("server error: ", error);
+  console.error("stack trace: ", stack);
+  return data(res, statusCode);
 }
