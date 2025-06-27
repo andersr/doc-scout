@@ -60,6 +60,12 @@ export default function LoginRoute() {
         <div className="mb-4">
           <PageTitle title={title} />
         </div>
+        {actionData?.errors &&
+          actionData?.errors.map((e) => (
+            <div key={e} className="text-danger py-2 text-center font-semibold">
+              {e}
+            </div>
+          ))}
         <Form
           method="POST"
           className="flex flex-col gap-6"
@@ -81,15 +87,6 @@ export default function LoginRoute() {
             {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
-        {actionData?.errors &&
-          actionData?.errors.map((e) => (
-            <div
-              key={e}
-              className="mt-4 text-center font-semibold text-red-400"
-            >
-              {e}
-            </div>
-          ))}
       </div>
     </AppContainer>
   );
