@@ -10,9 +10,11 @@ import {
 } from "@adobe/pdfservices-node-sdk";
 import AdmZip from "adm-zip";
 import fs from "fs";
+import { StatusCodes } from "http-status-codes";
 import path from "path";
 import { pdfClient } from "~/.server/vendors/adobe/pdfClient";
 import { VERCEL_TMP_DIR } from "~/config/files";
+import { ServerError } from "~/types/server";
 
 export async function extractPdfData(filePath: string): Promise<string> {
   let readStream;
@@ -67,7 +69,10 @@ export async function extractPdfData(filePath: string): Promise<string> {
     );
 
     if (!structuredDataEntry) {
-      throw new Error("structuredData.json not found in the extracted ZIP");
+      throw new ServerError(
+        "structuredData.json not found in the extracted ZIP",
+        StatusCodes.BAD_GATEWAY,
+      );
     }
 
     const jsonData = JSON.parse(structuredDataEntry.getData().toString("utf8"));
@@ -82,11 +87,15 @@ export async function extractPdfData(filePath: string): Promise<string> {
       err instanceof ServiceApiError
     ) {
       console.error("Adobe PDF Services error:", err);
-      throw new Error(`PDF extraction failed: ${err.message}`);
+      throw new ServerError(
+        `PDF extraction failed: ${err.message}`,
+        StatusCodes.BAD_GATEWAY,
+      );
     } else {
       console.error("Exception encountered while executing operation", err);
-      throw new Error(
+      throw new ServerError(
         `PDF extraction failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+        StatusCodes.BAD_GATEWAY,
       );
     }
   } finally {
