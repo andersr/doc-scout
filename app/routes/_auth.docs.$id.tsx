@@ -8,7 +8,7 @@ import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
 import BotChat from "~/components/chat/BotChat";
-import { Icon } from "~/components/icon";
+import { Icon } from "~/components/Icon";
 import { PageHeading } from "~/components/ui/PageHeading";
 import { getNameSpace } from "~/config/namespaces";
 import { prisma } from "~/lib/prisma";

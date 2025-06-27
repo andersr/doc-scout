@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { ChatListItem } from "~/components/ChatListItem";
 import { ListContainer } from "~/components/containers/ListContainer";
 import { ScrollContainer } from "~/components/containers/ScrollContainer";
-import { Icon } from "~/components/icon";
+import { Icon } from "~/components/Icon";
 import { Spinner } from "~/components/Spinner";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { KEYS } from "~/shared/keys";
