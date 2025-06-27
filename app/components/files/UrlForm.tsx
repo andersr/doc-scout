@@ -3,8 +3,8 @@ import { Form, useNavigation } from "react-router";
 import { KEYS } from "~/shared/keys";
 import { isValidUrl } from "~/utils/isValidUrl";
 import { splitCsvText } from "~/utils/splitCsvText";
-import { ActionButton } from "../ui/ActionButton";
-import { Textarea } from "../ui/textarea";
+import { ActionButton } from "../ui/buttons/ActionButton";
+import { Textarea } from "../ui/Textarea";
 
 export function UrlForm() {
   const navigation = useNavigation();

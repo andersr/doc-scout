@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { twMerge } from "tailwind-merge";
 
-import { ChatListItem } from "~/components/ChatListItem";
-import { ListContainer } from "~/components/containers/ListContainer";
-import { ScrollContainer } from "~/components/containers/ScrollContainer";
-import { Icon } from "~/components/Icon";
-import { Spinner } from "~/components/Spinner";
+import { ChatListItem } from "~/components/chat/ChatListItem";
+import { ListContainer } from "~/components/layout/ListContainer";
+import { ScrollContainer } from "~/components/layout/ScrollContainer";
+import { Icon } from "~/components/ui/Icon";
+import { Spinner } from "~/components/ui/progress/Spinner";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { KEYS } from "~/shared/keys";
 import { HOVER_TRANSITION } from "~/styles/animations";

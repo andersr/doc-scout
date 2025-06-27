@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import { BOT_NAME } from "~/config/bot";
 import { formatDateTime } from "~/utils/formatDateTime";
-import { DotsLoading } from "./DotsLoading";
+import { DotsLoading } from "../ui/progress/DotsLoading";
 
 interface ChatListItemProps {
   authorName?: string;

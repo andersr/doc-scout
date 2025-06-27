@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router";
-import { PageTitle } from "~/components/PageTitle";
+import { PageTitle } from "~/components/layout/PageTitle";
 import { appRoutes } from "~/shared/appRoutes";
 import { LINK_STYLES } from "~/styles/links";
 

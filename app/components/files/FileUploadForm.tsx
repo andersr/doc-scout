@@ -4,9 +4,9 @@ import { twMerge } from "tailwind-merge";
 import { DROPZONE_ERROR_CODES } from "~/config/files";
 import { useUploadFiles } from "~/hooks/useUploadFiles";
 import { truncateString } from "~/utils/truncateString";
-import { IconButton } from "../buttons/icon-button";
-import { Dropzone } from "../Dropzone";
-import { ActionButton } from "../ui/ActionButton";
+import { ActionButton } from "../ui/buttons/ActionButton";
+import { IconButton } from "../ui/buttons/IconButton";
+import { Dropzone } from "./Dropzone";
 
 export function FileUploadForm() {
   const {

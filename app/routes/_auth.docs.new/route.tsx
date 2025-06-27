@@ -1,16 +1,16 @@
 import { type ActionFunctionArgs, useActionData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
-import { FileUploadForm } from "~/components/forms/FileUploadForm";
-import { UrlForm } from "~/components/forms/UrlForm";
-import { PageTitle } from "~/components/PageTitle";
+import { FileUploadForm } from "~/components/files/FileUploadForm";
+import { UrlForm } from "~/components/files/UrlForm";
+import { PageTitle } from "~/components/layout/PageTitle";
 import {
   TabButton,
   TabContent,
   Tabs,
   TabsList,
   useTabs,
-} from "~/components/ui/Tabs";
+} from "~/components/ui/tabs";
 import { KEYS } from "~/shared/keys";
 import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";

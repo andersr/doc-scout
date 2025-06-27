@@ -1,8 +1,8 @@
 import { Outlet } from "react-router";
 
-import { AppContainer } from "~/components/AppContainer";
-import AppHeader from "~/components/AppHeader";
-import { MainContentContainer } from "~/components/MainContentContainer";
+import { AppContainer } from "~/components/layout/AppContainer";
+import AppHeader from "~/components/layout/AppHeader";
+import { MainContentContainer } from "~/components/layout/MainContentContainer";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import type { Route } from "./+types/_static";
