@@ -4,12 +4,12 @@ import type { UseErrorBoundaryOutput } from "./types";
 
 export function ErrorBoundaryInfo({
   details,
-  message,
   stack,
+  title,
 }: UseErrorBoundaryOutput) {
   return (
     <>
-      <PageTitle title={message} danger />
+      <PageTitle title={title} danger />
       <p>{details}</p>
       {stack ? (
         <pre className="w-full overflow-x-auto p-4">

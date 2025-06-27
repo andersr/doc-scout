@@ -6,12 +6,13 @@ import {
 import type { UseErrorBoundaryOutput } from "./types";
 
 export function useErrorBoundary(error: unknown): UseErrorBoundaryOutput {
-  let message = DEFAULT_ERROR_MESSAGE_TITLE;
+  let title = DEFAULT_ERROR_MESSAGE_TITLE;
   let details = DEFAULT_ERROR_MESSAGE_DETAILS;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    title =
+      error.status === 404 ? "Page Not Found" : DEFAULT_ERROR_MESSAGE_TITLE;
     details =
       error.status === 404
         ? "The requested page could not be found."
@@ -21,5 +22,5 @@ export function useErrorBoundary(error: unknown): UseErrorBoundaryOutput {
     stack = error.stack;
   }
 
-  return { details, message, stack };
+  return { details, stack, title };
 }
