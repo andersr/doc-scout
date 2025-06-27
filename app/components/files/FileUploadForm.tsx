@@ -4,9 +4,9 @@ import { twMerge } from "tailwind-merge";
 import { DROPZONE_ERROR_CODES } from "~/config/files";
 import { useUploadFiles } from "~/hooks/useUploadFiles";
 import { truncateString } from "~/utils/truncateString";
-import { IconButton } from "../buttons/icon-button";
-import { Dropzone } from "../Dropzone";
-import { ActionButton } from "../ui/ActionButton";
+import { ActionButton } from "../ui/buttons/ActionButton";
+import { IconButton } from "../ui/buttons/IconButton";
+import { Dropzone } from "./Dropzone";
 
 export function FileUploadForm() {
   const {
@@ -51,9 +51,6 @@ export function FileUploadForm() {
           >
             <div className="flex items-start gap-2">
               <div className="flex-1">
-                {/* <h4 className="mb-2 text-sm font-semibold">
-                  Add Doc Error{errors.length > 1 ? "s" : ""}:
-                </h4> */}
                 <ul className="space-y-1">
                   {errors.map((message, index) => (
                     <li key={`${message}-${index}`} className="list-inside">

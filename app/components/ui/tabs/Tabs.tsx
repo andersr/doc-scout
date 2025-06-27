@@ -57,7 +57,7 @@ function TabsList({ children, className }: TabsListProps) {
     <div
       role="tablist"
       className={cn(
-        "bg-muted text-muted-foreground inline-flex h-9 items-center justify-center rounded-lg p-1",
+        "inline-flex items-center border-b border-stone-300 bg-transparent",
         className,
       )}
     >
@@ -90,10 +90,10 @@ function TabButton({
       aria-selected={isSelected}
       onClick={() => onValueChange(value)}
       className={cn(
-        "ring-offset-background focus-visible:ring-ring inline-flex cursor-pointer items-center justify-center rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        "focus-visible:ring-pompadour relative -mb-[2px] inline-flex cursor-pointer items-center justify-center border-b-2 px-6 py-3 text-sm font-semibold whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
         isSelected
-          ? "bg-background text-foreground shadow"
-          : "hover:bg-background/50 hover:text-foreground",
+          ? "text-pompadour border-pompadour rounded-t-lg bg-white shadow-sm"
+          : "hover:text-pompadour border-transparent bg-stone-50 text-stone-600 hover:border-stone-300 hover:bg-white",
         className,
       )}
     >
@@ -123,7 +123,7 @@ function TabContent({
     <div
       role="tabpanel"
       className={cn(
-        "ring-offset-background focus-visible:ring-ring mt-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+        "focus-visible:ring-pompadour rounded-tr-lg rounded-b-lg border border-t-0 border-stone-300 bg-white p-6 shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
         className,
       )}
     >

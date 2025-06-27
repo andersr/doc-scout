@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 
 import { appRoutes } from "~/shared/appRoutes";
-import { LogoWithText } from "./brand/LogoWithText";
+import { LogoWithText } from "../brand/LogoWithText";
 
 export default function AppHeader({
   children,

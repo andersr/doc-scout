@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { Link, redirect, useLoaderData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
+import { PageHeading } from "~/components/layout/PageHeading";
 import { ActionLink } from "~/components/ui/ActionLink";
-import { PageHeading } from "~/components/ui/PageHeading";
 import { DASHBOARD_TITLE } from "~/config/titles";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";

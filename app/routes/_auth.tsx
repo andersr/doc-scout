@@ -2,12 +2,13 @@ import { data, Link, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
-import { AppContainer } from "~/components/AppContainer";
-import AppHeader from "~/components/AppHeader";
-import { Avatar } from "~/components/Avatar";
-import { DropdownMenu } from "~/components/DropdownMenu";
-import { Logout } from "~/components/logout";
-import { MainContentContainer } from "~/components/MainContentContainer";
+// import AppHeader from "~/components/AppHeader";
+import { AppContainer } from "~/components/layout/AppContainer";
+import AppHeader from "~/components/layout/AppHeader";
+import { MainContentContainer } from "~/components/layout/MainContentContainer";
+import { DropdownMenu } from "~/components/ui/DropdownMenu";
+import { Avatar } from "~/components/user/Avatar";
+import { LogoutBtn } from "~/components/user/LogoutBtn";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import { appRoutes } from "~/shared/appRoutes";
@@ -53,7 +54,7 @@ function Layout({
                 <div className="truncate p-2" key={user.email}>
                   {user.email}
                 </div>,
-                <Logout key="logout" />,
+                <LogoutBtn key="logout" />,
               ]}
             >
               <Avatar email={user.email} />

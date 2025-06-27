@@ -1,9 +1,9 @@
 import { type ActionFunctionArgs, useActionData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
-import { FileUploadForm } from "~/components/forms/FileUploadForm";
-import { UrlForm } from "~/components/forms/UrlForm";
-import { PageTitle } from "~/components/PageTitle";
+import { FileUploadForm } from "~/components/files/FileUploadForm";
+import { UrlForm } from "~/components/files/UrlForm";
+import { PageTitle } from "~/components/layout/PageTitle";
 import {
   TabButton,
   TabContent,
@@ -22,32 +22,34 @@ export default function NewDocsRoute() {
   return (
     <div>
       <PageTitle title="Add Docs" />
-      <Tabs value={value} onValueChange={onValueChange}>
-        <TabsList>
-          <TabButton
-            value={KEYS.files}
-            currentValue={value}
-            onValueChange={onValueChange}
-          >
-            Files
-          </TabButton>
-          <TabButton
-            value={KEYS.urls}
-            currentValue={value}
-            onValueChange={onValueChange}
-          >
-            Via URL
-          </TabButton>
-        </TabsList>
-        <TabContent value={KEYS.files} currentValue={value}>
-          <FileUploadForm />
-        </TabContent>
-        <TabContent value={KEYS.urls} currentValue={value}>
-          <UrlForm />
-        </TabContent>
-      </Tabs>
+      <div className="pt-4">
+        <Tabs value={value} onValueChange={onValueChange}>
+          <TabsList>
+            <TabButton
+              value={KEYS.files}
+              currentValue={value}
+              onValueChange={onValueChange}
+            >
+              Files
+            </TabButton>
+            <TabButton
+              value={KEYS.urls}
+              currentValue={value}
+              onValueChange={onValueChange}
+            >
+              Via URL
+            </TabButton>
+          </TabsList>
+          <TabContent value={KEYS.files} currentValue={value}>
+            <FileUploadForm />
+          </TabContent>
+          <TabContent value={KEYS.urls} currentValue={value}>
+            <UrlForm />
+          </TabContent>
+        </Tabs>
+      </div>
       {actionData?.errors && (
-        <ul className="mt-4 text-center font-semibold text-red-400">
+        <ul className="text-danger mt-4 text-center font-semibold">
           {actionData?.errors.map((e) => <li key={e}>{e}</li>)}
         </ul>
       )}

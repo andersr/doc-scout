@@ -1,4 +1,4 @@
-import { PageTitle } from "~/components/PageTitle";
+import { PageTitle } from "~/components/layout/PageTitle";
 import { DEFAULT_MORE_HELP } from "~/config/errors";
 import type { UseErrorBoundaryOutput } from "./types";
 

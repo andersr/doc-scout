@@ -2,7 +2,7 @@ import { Form } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
 
-export function Logout() {
+export function LogoutBtn() {
   return (
     <Form
       method="POST"

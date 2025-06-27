@@ -1,5 +1,5 @@
 import type { APP_ICONS } from "~/config/icons";
-import { Icon } from "../icon";
+import { Icon } from "../Icon";
 
 interface Props {
   children?: React.ReactNode;

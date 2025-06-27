@@ -6,7 +6,7 @@ import {
 } from "~/config/files";
 import { LG_ICON_SIZE } from "~/config/icons";
 import { cn } from "~/lib/utils";
-import { Icon } from "./icon";
+import { Icon } from "../ui/Icon";
 
 export function Dropzone({
   onDrop,
