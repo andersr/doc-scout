@@ -11,17 +11,17 @@ import { MainContentContainer } from "~/components/MainContentContainer";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import { appRoutes } from "~/shared/appRoutes";
+import type { UserClient } from "~/types/user";
 import type { Route } from "./+types/_auth";
 
-interface TmpUser {
-  email: string;
-}
 export async function loader({ request }: Route.LoaderArgs) {
   const { internalUser } = await requireUser({ request });
   const stytchUser = await getStytchUserById(internalUser.stytchId);
 
   const email = stytchUser?.emails[0].email ?? "";
-  return data({ user: { email } });
+  return data<{ user: UserClient }>({
+    user: { email, publicId: internalUser.publicId },
+  });
 }
 
 // const NAV_LINKS: { label: string; route: string }[] = [
@@ -36,10 +36,8 @@ function Layout({
 }: {
   children: React.ReactNode;
   isError?: boolean;
-  user: TmpUser | null;
+  user: UserClient | null;
 }) {
-  // const { user } = useLoaderData<typeof loader>();
-
   return (
     <AppContainer>
       <AppHeader>
@@ -72,7 +70,7 @@ function Layout({
   );
 }
 
-export default function AuthLayout() {
+export default function AuthRoutes() {
   const { user } = useLoaderData<typeof loader>();
   return (
     <Layout user={user}>

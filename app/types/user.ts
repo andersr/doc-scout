@@ -9,4 +9,6 @@ export type UserInternal = Prisma.UserGetPayload<{
   include: typeof USER_INTERNAL_INCLUDE;
 }>;
 
-export type UserClient = Pick<User, "publicId">;
+export type UserClient = Pick<User, "publicId"> & {
+  email: string;
+};
