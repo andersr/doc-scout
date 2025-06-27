@@ -42,6 +42,12 @@ export default function LoginRoute() {
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
 
+  const errors = actionData?.errors
+    ? [...actionData.errors]
+    : error
+      ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
+      : [];
+
   return (
     <AppContainer className="relative">
       <AppHeader />
@@ -51,21 +57,14 @@ export default function LoginRoute() {
         </div>
       )}
       <div className="flex h-2/3 flex-col items-center justify-center">
-        {error && (
-          <div className="mt-4 text-center font-semibold text-red-400">
-            {INTENTIONALLY_GENERIC_ERROR_MESSAGE}
-          </div>
-        )}
-
         <div className="mb-4">
           <PageTitle title={title} />
         </div>
-        {actionData?.errors &&
-          actionData?.errors.map((e) => (
-            <div key={e} className="text-danger py-2 text-center font-semibold">
-              {e}
-            </div>
-          ))}
+        {errors.map((e) => (
+          <div key={e} className="text-danger py-2 text-center">
+            {e}
+          </div>
+        ))}
         <Form
           method="POST"
           className="flex flex-col gap-6"
