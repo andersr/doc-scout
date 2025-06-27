@@ -6,7 +6,7 @@ import { AppContainer } from "~/components/AppContainer";
 import AppHeader from "~/components/AppHeader";
 import { Avatar } from "~/components/Avatar";
 import { DropdownMenu } from "~/components/DropdownMenu";
-import { Logout } from "~/components/logout";
+import { LogoutBtn } from "~/components/LogoutBtn";
 import { MainContentContainer } from "~/components/MainContentContainer";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
@@ -53,7 +53,7 @@ function Layout({
                 <div className="truncate p-2" key={user.email}>
                   {user.email}
                 </div>,
-                <Logout key="logout" />,
+                <LogoutBtn key="logout" />,
               ]}
             >
               <Avatar email={user.email} />
