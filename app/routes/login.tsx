@@ -19,7 +19,7 @@ import { AppContainer } from "~/components/layout/AppContainer";
 import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
-import { Label } from "~/components/ui/LabelTmp";
+import { Label } from "~/components/ui/Label";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
