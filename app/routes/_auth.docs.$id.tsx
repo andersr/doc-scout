@@ -2,6 +2,7 @@ import { MessageType } from "@prisma/client";
 import { answerQuery } from "@services/agents/docQuery/answerQuery";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, useLoaderData } from "react-router";
+import { twMerge } from "tailwind-merge";
 import { ENV } from "~/.server/ENV";
 import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSourceAndSourceChat";
 import { requireUser } from "~/.server/services/sessions/requireUser";
@@ -47,20 +48,29 @@ export default function DocDetailsLayout() {
 
   return (
     <div className="relative flex w-full flex-1 flex-col gap-6">
-      <PageHeading pageTitle={title}></PageHeading>
-      <div className="">
-        {source.storagePath && (
-          <a
-            href={`${cdn}/${source.storagePath}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 text-blue-500"
-          >
-            <div className="underline">{source.fileName}</div>{" "}
-            <Icon name="NEW_WINDOW" fontSize="20px" />
-          </a>
-        )}
-      </div>
+      <PageHeading
+        pageTitle={title}
+        headingContent={
+          source.storagePath && (
+            <a
+              href={`${cdn}/${source.storagePath}`}
+              target="_blank"
+              rel="noreferrer"
+              className={twMerge(
+                "inline-flex items-center gap-1",
+                "text-blue-600",
+              )}
+            >
+              <span className="underline">View Doc</span>{" "}
+              <Icon
+                name="NEW_WINDOW"
+                fontSize="20px"
+                customStyles="no-underline"
+              />
+            </a>
+          )
+        }
+      />
       <BotChat messages={messages} hasPendingQuery={hasPendingQuery} />
     </div>
   );

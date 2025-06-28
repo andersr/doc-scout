@@ -1,15 +1,15 @@
 import { PageTitle } from "~/components/layout/PageTitle";
 
 interface Props {
-  children?: React.ReactNode;
+  headingContent?: React.ReactNode;
   pageTitle: string;
 }
 
-export function PageHeading({ children, pageTitle }: Props) {
+export function PageHeading({ headingContent, pageTitle }: Props) {
   return (
-    <div className="flex items-center justify-between gap-2 pt-2 pb-6">
+    <div className="flex items-center justify-between gap-2">
       <PageTitle title={pageTitle} />
-      {children}
+      {headingContent}
     </div>
   );
 }
