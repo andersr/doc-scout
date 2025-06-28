@@ -1,5 +1,7 @@
 # Doc Scout
 
+This app allows for chatting with documents that you can add either via file upload or a URL. For example, you can upload some long regulatory document and then ask questions about specific regulations.
+
 ## Development Setup
 
 ### Environment Variables
