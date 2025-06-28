@@ -108,23 +108,23 @@ jobs:
 
     env:
       ALLOWED_USERS: "allowed@user.com"
-      ADOBE_PDF_SERVICES_CLIENT_ID: "foo"
-      ADOBE_PDF_SERVICES_CLIENT_SECRET: "foo"
-      AUTH_SESSION_SECRET: ${{ secrets.AUTH_SESSION_SECRET }}
-      AWS_DATA_BUCKET_NAME: "foo"
-      AWS_REGION: "foo"
-      AWS_S3_ACCESS_KEY: "foo"
-      AWS_S3_SECRET: "foo"
-      AWS_CDN: ${{ secrets.AWS_CDN }}
+      ADOBE_PDF_SERVICES_CLIENT_ID: foo
+      ADOBE_PDF_SERVICES_CLIENT_SECRET: foo
+      AUTH_SESSION_SECRET: "foo123"
+      AWS_DATA_BUCKET_NAME: foo
+      AWS_REGION: foo
+      AWS_S3_ACCESS_KEY: foo
+      AWS_S3_SECRET: foo
+      AWS_CDN: https://foo.net
       CI: true
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
       E2E_ENV: true
-      FIRECRAWL_API_KEY: "foo"
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-      PINECONE_HOST: ${{ secrets.PINECONE_HOST }}
-      PINECONE_INDEX_NAME: ${{ secrets.PINECONE_INDEX_NAME }}
+      FIRECRAWL_API_KEY: foo
+      OPENAI_API_KEY: foo123
+      PINECONE_API_KEY: foo123
+      PINECONE_HOST: https://foo.com
+      PINECONE_INDEX_NAME: foo
       PORT: 8080
       STYTCH_PROJECT_ID: ${{ secrets.STYTCH_PROJECT_ID }}
       STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
