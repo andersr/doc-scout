@@ -1,4 +1,4 @@
-# Muni Admin
+# Doc Scout
 
 ## Development Setup
 
@@ -12,35 +12,42 @@
 
 2. Fill in the required environment variables:
 
+   #### Authentication
+
+   - `AUTH_SESSION_SECRET`: Generate a secret key (e.g., using `openssl rand -hex 32`)
+   - `ALLOWED_USERS`: For production, add comma-separated emails for authorized users. For development, set to "any" to allow access with any email address
+
+   #### Adobe PDF Services
+
+   - `ADOBE_PDF_SERVICES_CLIENT_ID`: Your Adobe PDF Services client ID
+   - `ADOBE_PDF_SERVICES_CLIENT_SECRET`: Your Adobe PDF Services client secret
+
+   Set up a PDF services project at: <https://developer.adobe.com/document-services/apis/pdf-services/>
+
    #### AWS
 
    - `AWS_DATA_BUCKET_NAME`: Name of your AWS S3 bucket
-   - `AWS_S3_ACCESS_KEY`: Your AWS access key
+   - `AWS_S3_ACCESS_KEY`: Your AWS access key (create IAM user with AmazonS3FullAccess and AWSCloudFormationFullAccess)
    - `AWS_S3_SECRET`: Your AWS secret key
    - `AWS_REGION`: AWS region (e.g., us-east-1)
-
-   #### Clerk
-
-   - `VITE_CLERK_PUBLISHABLE_KEY`: Your Clerk publishable key (from Clerk dashboard)
-   - `CLERK_SECRET_KEY`: Your Clerk secret key (from Clerk dashboard)
-   - `CLERK_WEBHOOK_SIGNING_SECRET`: Your Clerk webhook signing secret (from Clerk dashboard)
-
-   #### Development
-
-   - `DEV_HOST`: Your ngrok domain (e.g., your-tunnel-id.ngrok.io)
+   - `AWS_CDN`: CDN URL for document web links
 
    #### Database
 
-   - `DATABASE_URL`: Your PostgreSQL connection string
+   - `DATABASE_URL`: Your PostgreSQL connection string (append `?pgbouncer=true` parameter)
    - `DIRECT_URL`: Direct URL to your PostgreSQL database
 
    #### Firecrawl
 
    - `FIRECRAWL_API_KEY`: Your Firecrawl API key
 
+   Get an API key at: <https://www.firecrawl.dev/>
+
    #### OpenAI
 
    - `OPENAI_API_KEY`: Your OpenAI API key
+
+   Get an API key at: <https://platform.openai.com/>
 
    #### Pinecone
 
@@ -48,49 +55,11 @@
    - `PINECONE_HOST`: Your Pinecone host URL
    - `PINECONE_INDEX_NAME`: Your Pinecone index name
 
-### Running with Ngrok for Clerk Webhooks
+   Get API key and create a vector store at: <https://www.pinecone.io/>
 
-To receive webhooks from Clerk when users are created, updated, or deleted, you need to expose your local development server to the internet using ngrok:
+   #### Stytch
 
-1. Install ngrok if you haven't already:
+   - `STYTCH_PROJECT_ID`: Your Stytch project ID
+   - `STYTCH_SECRET`: Your Stytch secret key
 
-   ```bash
-   npm install -g ngrok
-   # or
-   brew install ngrok
-   ```
-
-2. Start your development server:
-
-   ```bash
-   npm run dev
-   ```
-
-3. In a separate terminal, start ngrok to create a tunnel to your local server:
-
-   ```bash
-   ngrok http 3000
-   ```
-
-4. Copy the HTTPS URL provided by ngrok (e.g., https://your-tunnel-id.ngrok.io)
-
-5. Add this URL to your `.env` file:
-
-   ```
-   DEV_HOST=your-tunnel-id.ngrok.io
-   ```
-
-6. Restart your development server to apply the new DEV_HOST value
-
-7. In your Clerk dashboard:
-   - Go to Webhooks
-   - Add a new webhook endpoint with the URL: `https://your-tunnel-id.ngrok.io/webhooks/clerk`
-   - Select the events you want to receive (at minimum: `user.created` and `user.deleted`)
-   - Save the webhook endpoint
-   - Copy the "Signing Secret" and add it to your `.env` file as `CLERK_WEBHOOK_SIGNING_SECRET`
-
-Now your local development server will receive webhook events from Clerk when users are created, updated, or deleted.
-
-## Deployment
-
-- [Vercel Project](https://vercel.com/starlinghome/research-tool)
+   Create a project at: <https://stytch.com/>
