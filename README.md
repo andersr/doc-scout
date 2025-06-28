@@ -2,6 +2,8 @@
 
 This app allows for chatting with documents that you can add either via file upload or a URL. For example, you can upload some long regulatory document and then ask questions about specific regulations.
 
+A live version of the app can be found at <https://www.docscout.app/>
+
 ## Development Setup
 
 ### Environment Variables
