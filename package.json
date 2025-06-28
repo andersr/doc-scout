@@ -1,4 +1,8 @@
 {
+  "author": "Anders Ramsay <819213+andersr@users.noreply.github.com> (https://www.anders.co/)",
+  "bugs": {
+    "url": "https://github.com/andersr/doc-scout/issues"
+  },
   "dependencies": {
     "@adobe/pdfservices-node-sdk": "^4.1.0",
     "@aws-sdk/client-s3": "^3.799.0",
@@ -46,6 +50,7 @@
     "uuid": "^11.1.0",
     "zod": "^3.24.4"
   },
+  "description": "Chat with documents that you can add either via file upload or a URL.",
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
@@ -88,8 +93,13 @@
     "vitest": "^3.1.4",
     "vitest-mock-extended": "^3.1.0"
   },
+  "engines": {
+    "node": "22.x",
+    "npm": "11.x"
+  },
+  "homepage": "https://github.com/andersr/doc-scout",
   "license": "MIT",
-  "name": "research-tool",
+  "name": "doc-scout",
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
