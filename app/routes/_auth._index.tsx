@@ -36,9 +36,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <PageHeading pageTitle={title}>
-        <ActionLink to={appRoutes("/docs/new")}>Add Docs</ActionLink>
-      </PageHeading>
+      <PageHeading
+        pageTitle={title}
+        headingContent={
+          <ActionLink to={appRoutes("/docs/new")}>Add Docs</ActionLink>
+        }
+      />
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {docs.map((d) => (
           <Link

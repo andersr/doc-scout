@@ -11,7 +11,7 @@ export function ScrollContainer({
   return (
     <div
       className={twMerge(
-        "mb-12 flex flex-1 flex-col justify-end rounded border border-stone-300 p-4 md:mb-6",
+        "mb-12 flex flex-1 flex-col justify-end rounded border border-stone-300 p-4",
       )}
     >
       {children}
