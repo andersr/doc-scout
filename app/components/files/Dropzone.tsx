@@ -1,6 +1,7 @@
 import { type FileRejection, useDropzone } from "react-dropzone";
 import {
   displaySupportedFormats,
+  DROPZONE_ID,
   FILE_CONFIG,
   FILETYPES_ACCEPTED,
 } from "~/config/files";
@@ -33,6 +34,7 @@ export function Dropzone({
         )}
         role="button"
         tabIndex={0}
+        id={DROPZONE_ID}
         aria-label="File upload area"
       >
         <input {...getInputProps()} aria-describedby="dropzone-description" />

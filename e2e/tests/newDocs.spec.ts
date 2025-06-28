@@ -1,15 +1,28 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { dragAndDropFile } from "e2e/helpers/dragAndDropFile";
+import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
+import { DROPZONE_ID } from "~/config/files";
+import { appRoutes } from "~/shared/appRoutes";
+import { TEST_USERS } from "~/types/testUsers";
 
 test.describe("New Docs via File", () => {
-  test.skip(`allows for adding many files via drag and drop`, async ({
-    page,
-  }) => {
-    // expect to be on new docs page
-    // drag many pdf files
-    // expect to see list of added files
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
+
+  test(`allows for adding a file via drag and drop`, async ({ page }) => {
+    // arrange
+    const fileName = "test1.pdf";
+
+    // act
+    await page.goto(appRoutes("/docs/new"));
+    await dragAndDropFile(page, {
+      fileName,
+      filePath: "./e2e/assets/files/test1.pdf",
+      mimeType: "application/pdf",
+      selector: `#${DROPZONE_ID}`,
+    });
+
+    // assert
+    await expect(page.getByText(fileName)).toBeVisible();
   });
 
   test.skip(`allows for adding many files via finder/explorer`, async ({
