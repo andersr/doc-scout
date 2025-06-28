@@ -88,6 +88,7 @@
     "vitest": "^3.1.4",
     "vitest-mock-extended": "^3.1.0"
   },
+  "license": "MIT",
   "name": "research-tool",
   "prisma": {
     "seed": "tsx prisma/seed.ts"
