@@ -141,14 +141,14 @@ npm run e2e:db:studio
 
 #### Test Scripts Reference
 
-| Script | Description |
-|--------|-------------|
-| `npm test` | Run unit tests in watch mode |
-| `npm run test:run` | Run unit tests once |
-| `npm run e2e:run` | Full e2e test suite (db reset + build + tests) |
-| `npm run e2e:dev` | Start dev server with test environment |
-| `npm run e2e:ui` | Run e2e tests with Playwright UI |
-| `npm run e2e:codegen` | Record new e2e tests with Playwright |
-| `npm run e2e:db:reset` | Reset test database |
-| `npm run e2e:db:studio` | Open Prisma Studio for test database |
-| `npm run pw:test` | Run Playwright tests only |
+| Script                  | Description                                    |
+| ----------------------- | ---------------------------------------------- |
+| `npm test`              | Run unit tests in watch mode                   |
+| `npm run test:run`      | Run unit tests once                            |
+| `npm run e2e:run`       | Full e2e test suite (db reset + build + tests) |
+| `npm run e2e:dev`       | Start dev server with test environment         |
+| `npm run e2e:ui`        | Run e2e tests with Playwright UI               |
+| `npm run e2e:codegen`   | Record new e2e tests with Playwright           |
+| `npm run e2e:db:reset`  | Reset test database                            |
+| `npm run e2e:db:studio` | Open Prisma Studio for test database           |
+| `npm run pw:test`       | Run Playwright tests only                      |
