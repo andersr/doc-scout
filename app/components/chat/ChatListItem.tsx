@@ -36,8 +36,8 @@ export function ChatListItem({
         {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
       </div>
       {!loading && (
-        <div className={twMerge("text-stone-500")}>
-          {isBot ? BOT_NAME : authorName},&nbsp;
+        <div className={twMerge("text-sm text-stone-500")}>
+          {isBot ? BOT_NAME : authorName}
           {createdAt &&
             formatDateTime({
               d: createdAt,
