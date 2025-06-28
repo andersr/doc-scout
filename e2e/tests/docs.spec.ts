@@ -63,7 +63,7 @@ test.describe("Docs - Chat", () => {
     page,
   }) => {
     // arrange
-    const expectedInput = "How did the hawk use traffic to hunt?";
+    const expectedInput = "Fake bot question";
     const expectedReply = "BOT REPLY";
 
     // act
