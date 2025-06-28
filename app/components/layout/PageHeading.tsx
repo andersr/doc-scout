@@ -7,7 +7,7 @@ interface Props {
 
 export function PageHeading({ headingContent, pageTitle }: Props) {
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex flex-wrap items-baseline justify-between gap-2">
       <PageTitle title={pageTitle} />
       {headingContent}
     </div>
