@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 
 import { DASHBOARD_TITLE } from "~/config/titles";
-import { appRoutes } from "../app/shared/appRoutes";
-import { TEST_KEYS } from "../app/shared/testKeys";
-import type { TestActionRequest } from "../app/types/testActions";
-import { TEST_USERS } from "../app/types/testUsers";
-import { getTestEmail } from "./utils/getTestEmail";
-import { setAuthStoragePath } from "./utils/setAuthStoragePath";
+import { appRoutes } from "../../app/shared/appRoutes";
+import { TEST_KEYS } from "../../app/shared/testKeys";
+import type { TestActionRequest } from "../../app/types/testActions";
+import { TEST_USERS } from "../../app/types/testUsers";
+import { getTestEmail } from "../utils/getTestEmail";
+import { setAuthStoragePath } from "../utils/setAuthStoragePath";
 
 test.describe("Dashboard - No Docs", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
