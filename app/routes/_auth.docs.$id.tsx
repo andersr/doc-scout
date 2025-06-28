@@ -32,7 +32,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     messages.length > 0 ? messages[messages.length - 1] : null;
 
   return {
-    cdn: ENV.CDN_HOST,
+    cdn: ENV.AWS_CDN,
     hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
     mostRecentMessage,

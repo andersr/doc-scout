@@ -31,7 +31,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
       text = await extractTextFromCloudStorePdf(formData.storagePath);
     } else {
       const extractedText = await getMarkdownFromUrl(
-        `${ENV.CDN_HOST}/${formData.storagePath}`,
+        `${ENV.AWS_CDN}/${formData.storagePath}`,
       );
       text = extractedText || "";
     }
