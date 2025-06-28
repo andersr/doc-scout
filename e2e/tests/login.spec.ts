@@ -15,6 +15,7 @@ test.describe("Login", () => {
       page.getByRole("heading", { name: "Please Request Access" }),
     ).toBeVisible();
   });
+
   test.skip(`allows for signing in with an email address`, async ({ page }) => {
     // ensure user is not auth
     // go to login
@@ -24,9 +25,11 @@ test.describe("Login", () => {
     // expect to see dashboard
   });
 
-  test.skip(`redirects to login if user is not signed in`, async ({ page }) => {
-    // ensure user is not auth
-    // go to dashboard
-    // expect to see Login header
+  test(`redirects to login if user is not signed in`, async ({ page }) => {
+    // act
+    await page.goto(appRoutes("/"));
+
+    // assert
+    await expect(page.getByRole("heading", { name: "Sign In" })).toBeVisible();
   });
 });

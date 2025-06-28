@@ -22,6 +22,8 @@ export const DROPZONE_ERROR_CODES: Record<string, string> = {
   "too-many-files": "", // handled via FileRejections
 };
 
+export const DROPZONE_ID = "newDocDropzone";
+
 export const INVALID_FILE_ERROR = `Only ${FILE_CONFIG.allowedExtensions.join(", ")} files are allowed`;
 
 /**
