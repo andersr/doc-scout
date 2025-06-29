@@ -15,7 +15,9 @@ test.describe("New Docs via File", () => {
 
   test(`allows for adding a file via drag and drop`, async ({ page }) => {
     // arrange
-    const fileName = MOCK_SOURCE.fileName; // `${faker.system.commonFileName()}.pdf`;
+    const fileName = `${faker.system.fileName({
+      extensionCount: 0,
+    })}.pdf`;
 
     // act
     await page.goto(appRoutes("/docs/new"));
@@ -36,13 +38,17 @@ test.describe("New Docs via File", () => {
   }) => {
     //TODO: Re-use actions from above test
     // arrange
+    const fileName = `${faker.system.fileName({
+      extensionCount: 0,
+    })}.pdf`;
+
     await page.route(
       `https://*.s3.*.amazonaws.com/users/**/*`,
       async (route) => {
         const json = {
           filesInfo: [
             {
-              fileName: MOCK_SOURCE.fileName,
+              fileName,
               signedUrl: "https://foo",
               sourcePublicId: MOCK_SOURCE.publicId,
               storagePath: MOCK_SOURCE.storagePath,
@@ -52,9 +58,6 @@ test.describe("New Docs via File", () => {
         await route.fulfill({ json });
       },
     );
-    const fileName = `${faker.system.fileName({
-      extensionCount: 0,
-    })}.pdf`;
 
     // act
     await page.goto(appRoutes("/docs/new"));
