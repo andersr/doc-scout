@@ -1,4 +1,4 @@
-import { addSourcesToVectorStore } from "~/.server/services/vectorStore/addSourcesToVectorStore";
+import { addSourcesToVectorStore } from "@services/vectorStore/addSourcesToVectorStore";
 import { generateId } from "~/.server/utils/generateId";
 import { prisma } from "~/lib/prisma";
 import type { FileSourceInput, UrlSourceInput } from "~/types/source";

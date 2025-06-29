@@ -20,10 +20,6 @@
     "class:list",
     "className"
   ],
-  "tailwindCSS.experimental.classRegex": [
-    ["'([^']*)'", "_STYLES \\=([^;]*);"],
-    ["\"([^\"]*)\"", "_STYLES \\=([^;]*);"],
-    ["\\`([^\\`]*)\\`", "_STYLES \\=([^;]*);"]
-  ],
+  "tailwindCSS.experimental.classRegex": [["'([^']*)'", "_STYLES \\=([^;]*);"]],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

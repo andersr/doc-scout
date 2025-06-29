@@ -73,7 +73,7 @@ model Message {
 model ChatSource {
   id Int @id @default(autoincrement())
 
-  source   Source? @relation(fields: [sourceId], references: [id])
+  source   Source? @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   sourceId Int?
 
   chat   Chat? @relation(fields: [chatId], references: [id])
