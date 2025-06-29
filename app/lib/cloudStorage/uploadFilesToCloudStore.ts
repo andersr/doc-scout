@@ -29,6 +29,6 @@ export async function uploadFilesToCloudStore({
     handleDone();
   } catch (error) {
     console.error("uploadFiles error: ", error);
-    handleError("Error uploading files.");
+    handleError(`Error uploading files: ${error}`);
   }
 }

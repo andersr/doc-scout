@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { uploadFilesToCloudStore } from "~/services/cloudStorage/uploadFilesToCloudStore";
+import { uploadFilesToCloudStore } from "~/lib/cloudStorage/uploadFilesToCloudStore";
 import { KEYS } from "~/shared/keys";
 import type { HandleErrors } from "~/types/error";
 import type {
