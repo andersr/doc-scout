@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { expect, test } from "@playwright/test";
 import { dragAndDropFile } from "e2e/helpers/dragAndDropFile";
+import { MOCK_SOURCE } from "e2e/mocks/sources/mockSource";
 import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
+import { ENV } from "~/.server/ENV";
 import { DROPZONE_ID } from "~/config/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_KEYS } from "~/shared/testKeys";
@@ -14,7 +16,7 @@ test.describe("New Docs via File", () => {
 
   test(`allows for adding a file via drag and drop`, async ({ page }) => {
     // arrange
-    const fileName = `${faker.system.commonFileName()}.pdf`;
+    const fileName = MOCK_SOURCE.fileName; // `${faker.system.commonFileName()}.pdf`;
 
     // act
     await page.goto(appRoutes("/docs/new"));
@@ -29,12 +31,28 @@ test.describe("New Docs via File", () => {
     await expect(page.getByText(fileName)).toBeVisible();
   });
 
-  test.skip("Redirects to doc details after processing a single document", async ({
+  test("Redirects to doc details after processing a single document", async ({
     page,
     request,
   }) => {
     //TODO: Re-use actions from above test
     // arrange
+    await page.route(
+      `https://${ENV.AWS_DATA_BUCKET_NAME}.s3.${ENV.AWS_REGION}.amazonaws.com/users/**/*`,
+      async (route) => {
+        const json = {
+          filesInfo: [
+            {
+              fileName: MOCK_SOURCE.fileName,
+              signedUrl: "https://foo",
+              sourcePublicId: MOCK_SOURCE.publicId,
+              storagePath: MOCK_SOURCE.storagePath,
+            },
+          ],
+        };
+        await route.fulfill({ json });
+      },
+    );
     const fileName = `${faker.system.fileName({
       extensionCount: 0,
     })}.pdf`;
