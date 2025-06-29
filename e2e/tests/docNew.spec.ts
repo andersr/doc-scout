@@ -12,23 +12,10 @@ test.describe("New Docs via File", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
   let sourcePublicId: string | undefined = "";
 
-  test.afterEach(async ({ request }) => {
-    if (!sourcePublicId) {
-      throw new Error("No source public id, cannot delete.");
-    }
-    await request.post(
-      appRoutes("/e2e/:command", {
-        command: TEST_KEYS.deleteSource,
-      }),
-      {
-        form: {
-          sourcePublicId,
-        } satisfies TestActionRequest,
-      },
-    );
-  });
-
-  test(`allows for adding a file via drag and drop`, async ({ page }) => {
+  test(`allows for adding a file via drag and drop`, async ({
+    page,
+    request,
+  }) => {
     // arrange
     const fileName = `${faker.system.commonFileName()}.pdf`;
 
@@ -47,6 +34,7 @@ test.describe("New Docs via File", () => {
 
   test("Redirects to doc details after processing a single document", async ({
     page,
+    request,
   }) => {
     //TODO: Re-use actions from above test
     // arrange
@@ -70,6 +58,20 @@ test.describe("New Docs via File", () => {
     const url = page.url();
     const parts = url.split("/");
     sourcePublicId = parts.at(-1);
+
+    if (!sourcePublicId) {
+      throw new Error("No source public id, cannot delete.");
+    }
+    await request.post(
+      appRoutes("/e2e/:command", {
+        command: TEST_KEYS.deleteSource,
+      }),
+      {
+        form: {
+          sourcePublicId,
+        } satisfies TestActionRequest,
+      },
+    );
   });
 
   test.skip(`allows for adding many files via finder/explorer`, async ({
