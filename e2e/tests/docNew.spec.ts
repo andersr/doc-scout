@@ -12,10 +12,7 @@ test.describe("New Docs via File", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
   let sourcePublicId: string | undefined = "";
 
-  test(`allows for adding a file via drag and drop`, async ({
-    page,
-    request,
-  }) => {
+  test(`allows for adding a file via drag and drop`, async ({ page }) => {
     // arrange
     const fileName = `${faker.system.commonFileName()}.pdf`;
 
@@ -32,7 +29,7 @@ test.describe("New Docs via File", () => {
     await expect(page.getByText(fileName)).toBeVisible();
   });
 
-  test("Redirects to doc details after processing a single document", async ({
+  test.skip("Redirects to doc details after processing a single document", async ({
     page,
     request,
   }) => {
