@@ -33,7 +33,6 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
       const extractedText = await getMarkdownFromUrl(
         `${ENV.AWS_CDN}/${formData.storagePath}`,
       );
-      // TODO: throw error if empty text - provided doc is empty or there was an error extracting
       text = extractedText || "";
     }
 

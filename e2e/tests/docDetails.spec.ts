@@ -40,14 +40,7 @@ test.describe("Docs - Chat", () => {
     );
   });
 
-  test.afterEach(async ({ page, request }, testInfo) => {
-    // TODO: make standard for all tests or remove
-    if (testInfo.status !== "passed") {
-      await page.screenshot({
-        path: `e2e/screenshots/${testInfo.title.replace(/\s/g, "-")}-failure.png`,
-      });
-    }
-
+  test.afterEach(async ({ request }) => {
     await request.post(
       appRoutes("/e2e/:command", {
         command: TEST_KEYS.deleteMessages,
