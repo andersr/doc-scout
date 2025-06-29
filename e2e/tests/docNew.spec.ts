@@ -36,6 +36,22 @@ test.describe("New Docs via File", () => {
   }) => {
     //TODO: Re-use actions from above test
     // arrange
+    await page.route(
+      `https://*.s3.*.amazonaws.com/users/**/*`,
+      async (route) => {
+        const json = {
+          filesInfo: [
+            {
+              fileName: MOCK_SOURCE.fileName,
+              signedUrl: "https://foo",
+              sourcePublicId: MOCK_SOURCE.publicId,
+              storagePath: MOCK_SOURCE.storagePath,
+            },
+          ],
+        };
+        await route.fulfill({ json });
+      },
+    );
     const fileName = `${faker.system.fileName({
       extensionCount: 0,
     })}.pdf`;
