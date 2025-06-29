@@ -1,12 +1,12 @@
+import { generateSummary } from "@services/agents/docSummary/generateSummary";
+import { extractTextFromCloudStorePdf } from "@services/pdfExtract/extractTextFromCloudStorePdf";
+import { getMarkdownFromUrl } from "@services/webScrape/getMarkdownFromUrl";
 import path from "path";
 import { redirect } from "react-router";
 import { ENV } from "~/.server/ENV";
 import { createSourcesChatsVectorStore } from "~/.server/models/sources/createSourcesChatsVectorStore";
 import { setCreateSourcesRedirectRoute } from "~/.server/models/sources/setCreateSourcesRedirectRoute";
-import { generateSummary } from "~/.server/services/agents/docSummary/generateSummary";
-import { extractTextFromCloudStorePdf } from "~/.server/services/pdfExtract/extractTextFromCloudStorePdf";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { getMarkdownFromUrl } from "~/.server/services/webScrape/getMarkdownFromUrl";
 import { KEYS } from "~/shared/keys";
 import type { ActionHandlerFn } from "~/types/action";
 import { type FileSourceInput, sourceInputArraySchema } from "~/types/source";
@@ -33,6 +33,7 @@ export const filesAction: ActionHandlerFn = async ({ formData, request }) => {
       const extractedText = await getMarkdownFromUrl(
         `${ENV.AWS_CDN}/${formData.storagePath}`,
       );
+      // TODO: throw error if empty text - provided doc is empty or there was an error extracting
       text = extractedText || "";
     }
 
