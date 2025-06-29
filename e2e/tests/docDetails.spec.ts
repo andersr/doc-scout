@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { generateId } from "~/.server/utils/generateId";
 import type { TestActionRequest } from "~/types/testActions";
-import { MOCK_SOURCE } from "../../app/__mocks__/sources";
 import type { UpsertSourceInput } from "../../app/routes/e2e.$command/utils/e2eSchemas";
 import { appRoutes } from "../../app/shared/appRoutes";
 import { TEST_KEYS } from "../../app/shared/testKeys";
 import { TEST_USERS } from "../../app/types/testUsers";
+import { MOCK_SOURCE } from "../mocks/sources/mockSource";
 import { getTestEmail } from "../utils/getTestEmail";
 import { setAuthStoragePath } from "../utils/setAuthStoragePath";
 
