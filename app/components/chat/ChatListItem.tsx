@@ -6,7 +6,7 @@ import { formatDateTime } from "~/utils/formatDateTime";
 import { DotsLoading } from "../ui/progress/DotsLoading";
 
 interface ChatListItemProps {
-  authorName?: string;
+  // authorName?: string;
   createdAt?: Date;
   isBot?: boolean;
   loading?: boolean;
@@ -14,7 +14,7 @@ interface ChatListItemProps {
 }
 
 export function ChatListItem({
-  authorName,
+  // authorName,
   createdAt,
   isBot,
   loading,
@@ -37,7 +37,7 @@ export function ChatListItem({
       </div>
       {!loading && (
         <div className={twMerge("text-sm text-stone-500")}>
-          {isBot ? BOT_NAME : authorName}
+          {isBot ? `${BOT_NAME}, ` : ""}
           {createdAt &&
             formatDateTime({
               d: createdAt,

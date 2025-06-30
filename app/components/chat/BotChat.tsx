@@ -59,7 +59,6 @@ export default function BotChat({
               isBot={m.isBot}
               createdAt={m.createdAt}
               text={m.text}
-              authorName={m.author?.email ?? ""}
             />
           ))}
           {optimisticMessage && (
