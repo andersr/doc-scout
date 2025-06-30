@@ -1,18 +1,18 @@
 import { expect, test } from "@playwright/test";
 import { generateId } from "~/.server/utils/generateId";
 import type { TestActionRequest } from "~/types/testActions";
-import type { UpsertSourceInput } from "../../app/routes/e2e.$command/utils/e2eSchemas";
-import { appRoutes } from "../../app/shared/appRoutes";
-import { TEST_KEYS } from "../../app/shared/testKeys";
-import { TEST_USERS } from "../../app/types/testUsers";
-import { MOCK_SOURCE } from "../mocks/sources/mockSource";
-import { getTestEmail } from "../utils/getTestEmail";
-import { setAuthStoragePath } from "../utils/setAuthStoragePath";
+import type { UpsertSourceInput } from "../../../app/routes/e2e.$command/utils/e2eSchemas";
+import { appRoutes } from "../../../app/shared/appRoutes";
+import { TEST_KEYS } from "../../../app/shared/testKeys";
+import { TEST_USERS } from "../../../app/types/testUsers";
+import { MOCK_SOURCE } from "../../mocks/sources/mockSource";
+import { getTestEmail } from "../../utils/getTestEmail";
+import { setAuthStoragePath } from "../../utils/setAuthStoragePath";
 
 const username = TEST_USERS.has_docs;
 let sourcePublicId = "";
 
-test.describe("Docs - Chat", () => {
+test.describe("Doc Chat", () => {
   test.use({ storageState: setAuthStoragePath(username) });
 
   test.beforeEach(async ({ request }) => {
@@ -53,7 +53,7 @@ test.describe("Docs - Chat", () => {
     );
   });
 
-  test(`allows for asking a question and getting a bot response`, async ({
+  test("allows for asking a question and getting a bot response", async ({
     page,
   }) => {
     // arrange

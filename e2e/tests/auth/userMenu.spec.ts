@@ -6,12 +6,12 @@ import { TEST_USERS } from "~/types/testUsers";
 test.describe("User Menu", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
 
-  test.skip(`displays current user's email address`, async ({ page }) => {
+  test.skip("displays current user's email address", async ({ page }) => {
     // click on user menu
     // expect to see email address
   });
 
-  test(`signs out a user if clicking sign out`, async ({ page }) => {
+  test("signs out a user if clicking sign out", async ({ page }) => {
     // act
     await page.goto(appRoutes("/"));
     await page.getByRole("button", { name: "no_docs@test.com" }).click();
