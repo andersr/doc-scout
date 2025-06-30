@@ -174,54 +174,17 @@ test.describe("New Docs via File", () => {
     },
   );
 
-  test.skip("allows for adding a file via finder/explorer", async ({
-    page,
-  }) => {
-    // expect to be on new docs page
-    // click on dropzone
-    // select many files, click done
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
-  });
+  test.fixme("allows for adding a file via finder/explorer", async () => {});
 
-  test.skip("allows for removing an added file", async ({ page }) => {
-    // expect to be on new docs page
-    // click on dropzone
-    // select many files, click done
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
-  });
+  test.fixme("allows for adding a PDF file", async () => {});
 
-  test.skip("displays an error if file is too large", async ({ page }) => {
-    // expect to be on new docs page
-    // click on dropzone
-    // select many files, click done
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
-  });
-});
+  test.fixme("allows for adding a markdown file", async () => {});
 
-test.describe("New Docs via PDf", () => {
-  test.skip("allows for adding many pdf files", async ({ page }) => {
-    // expect to be on new docs page
-    // drag many pdf files
-    // expect to see list of added files
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
-  });
-});
+  test.fixme("allows for removing an added file", async () => {});
 
-test.describe("New Docs via markdown", () => {
-  test.skip("allows for adding many markdown files", async ({ page }) => {
-    // expect to be on new docs page
-    // drag many pdf files
-    // expect to see list of added files
-    // click submit
-    // expect to see processing
-    // expect to see docs list with the added content
-  });
+  test.fixme("displays an error if file is too large", async () => {});
+
+  test.fixme("displays an error if file is an invalid format", async () => {});
+
+  test.fixme("displays an error if too many files are added", async () => {});
 });
