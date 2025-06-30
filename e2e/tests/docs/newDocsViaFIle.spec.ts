@@ -1,11 +1,11 @@
 import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_USERS } from "~/types/testUsers";
-import { expect, test } from "../../fixtures/test.fixtures";
+import { expect, test } from "../../test.withFixtures";
 
 test.describe("New Docs via File", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
-  const sourcePublicId: string | undefined = "";
+  // const sourcePublicId: string | undefined = "";
 
   test("allows for adding a single file via drag and drop", async ({
     fileFactory,
@@ -13,34 +13,32 @@ test.describe("New Docs via File", () => {
   }) => {
     // arrange
     const pdfFile = fileFactory.newMockFile("pdf");
+
     // act
     await page.goto(appRoutes("/docs/new"));
     await pdfFile.dragAndDrop();
+
     // assert
     await expect(page.getByText(pdfFile.getFilename())).toBeVisible();
   });
 
-  // test.fixme(
-  //   "allows for adding many files via drag and drop",
-  //   async ({ page }) => {
-  //     // arrange
-  //     const fileName = `${faker.system.fileName({
-  //       extensionCount: 0,
-  //     })}.pdf`;
+  test("allows for adding many files via drag and drop", async ({
+    fileFactory,
+    page,
+  }) => {
+    // arrange
+    const pdfFile1 = fileFactory.newMockFile("pdf");
+    const pdfFile2 = fileFactory.newMockFile("pdf");
 
-  //     // act
-  //     await page.goto(appRoutes("/docs/new"));
-  //     await dragAndDropFile(page, {
-  //       fileName,
-  //       filePath: "./e2e/mocks/files/mockFile.pdf",
-  //       mimeType: "application/pdf",
-  //       selector: `#${DROPZONE_ID}`,
-  //     });
+    // act
+    await page.goto(appRoutes("/docs/new"));
+    await pdfFile1.dragAndDrop();
+    await pdfFile2.dragAndDrop();
 
-  //     // assert
-  //     await expect(page.getByText(fileName)).toBeVisible();
-  //   },
-  // );
+    // assert
+    await expect(page.getByText(pdfFile1.getFilename())).toBeVisible();
+    await expect(page.getByText(pdfFile2.getFilename())).toBeVisible();
+  });
 
   // test("Redirects to doc details after processing a single document", async ({
   //   page,
