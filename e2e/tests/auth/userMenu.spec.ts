@@ -6,15 +6,21 @@ import { TEST_USERS } from "~/types/testUsers";
 test.describe("User Menu", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
 
-  test.skip("displays current user's email address", async ({ page }) => {
-    // click on user menu
-    // expect to see email address
+  const USER_EMAIL = "no_docs@test.com";
+
+  test("displays current user's email address", async ({ page }) => {
+    // act
+    await page.goto(appRoutes("/"));
+    await page.getByRole("button", { name: USER_EMAIL }).click();
+
+    // assert
+    await expect(page.getByText(USER_EMAIL)).toBeVisible();
   });
 
   test("signs out a user if clicking sign out", async ({ page }) => {
     // act
     await page.goto(appRoutes("/"));
-    await page.getByRole("button", { name: "no_docs@test.com" }).click();
+    await page.getByRole("button", { name: USER_EMAIL }).click();
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     // assert
