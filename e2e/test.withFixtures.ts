@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test";
-import { MockFileFactory } from "./MockFile";
+import { MockFileFactory } from "./fixtures/MockFile";
 
 type MyFixtures = {
   fileFactory: MockFileFactory;

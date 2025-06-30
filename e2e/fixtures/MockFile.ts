@@ -1,4 +1,3 @@
-// import { faker } from "@faker-js/faker";
 import { faker } from "@faker-js/faker";
 import type { Page } from "@playwright/test";
 import { dragAndDropFile } from "e2e/helpers/dragAndDropFile";
@@ -49,16 +48,7 @@ export class MockFile {
 }
 
 export class MockFileFactory {
-  // public fileName: string;
-  // public fileType: FileType;
-
   constructor(public readonly page: Page) {}
-
-  // generateFilename() {
-  //   return `${faker.system.fileName({
-  //     extensionCount: 0,
-  //   })}.${this.fileType}`;
-  // }
 
   newMockFile(type: FileType) {
     return new MockFile(type, this.page);
