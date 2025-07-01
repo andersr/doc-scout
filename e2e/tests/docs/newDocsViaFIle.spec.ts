@@ -74,7 +74,7 @@ test.describe("Add/Remove Docs", () => {
 //   test.fixme("displays an error if too many files are added", async () => {});
 // });
 
-test.describe("New Docs Redirect", () => {
+test.describe("New Docs Redirect - single doc", () => {
   test.use({
     storageState: setAuthStoragePath(TEST_USERS.new_docs_redirect),
   });
@@ -100,6 +100,12 @@ test.describe("New Docs Redirect", () => {
 
     // teardown
     await apiRequest.deleteDocsByName([pdfFile.getFilename()]);
+  });
+});
+
+test.describe("New Docs Redirect - multiple docs", () => {
+  test.use({
+    storageState: setAuthStoragePath(TEST_USERS.new_docs_redirect_multidoc),
   });
 
   test("Redirects to dashboard after processing multiple documents", async ({

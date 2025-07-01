@@ -5,6 +5,7 @@
 export const TestUserNames = [
   "has_docs",
   "new_docs_redirect",
+  "new_docs_redirect_multidoc",
   "no_docs",
 ] as const;
 
