@@ -3,6 +3,7 @@ import {
   PDF_MOCKFILE_NAME,
 } from "e2e/fixtures/MockFileFactory";
 import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
+import { FILE_CONFIG } from "~/config/files";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_USERS } from "~/types/testUsers";
 import { expect, test } from "../../test.withFixtures";
@@ -57,22 +58,63 @@ test.describe("Add/Remove Docs", () => {
   });
 });
 
-// test.describe("Docs Validation", () => {
-//   test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
-//   test.fixme("allows for adding a file via finder/explorer", async () => {});
+test.describe("Docs Validation", () => {
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
 
-//   test.fixme("allows for adding a PDF file", async () => {});
+  test.fixme(
+    "displays an error if file is too large",
+    async ({ fileFactory, page }) => {
+      // arrange
+      const badFile = fileFactory.newMockFile("xcf");
 
-//   test.fixme("allows for adding a markdown file", async () => {});
+      // act
+      await page.goto(appRoutes("/docs/new"));
+      await badFile.dragAndDrop();
 
-//   test.fixme("allows for removing an added file", async () => {});
+      // assert
+      await expect(
+        page.getByText(`${badFile.getFilename()}: Invalid file type.`),
+      ).toBeVisible();
+    },
+  );
 
-//   test.fixme("displays an error if file is too large", async () => {});
+  test("displays an error if file is invalid type", async ({
+    fileFactory,
+    page,
+  }) => {
+    // arrange
+    const xcfFile = fileFactory.newMockFile("xcf");
 
-//   test.fixme("displays an error if file is an invalid format", async () => {});
+    // act
+    await page.goto(appRoutes("/docs/new"));
+    await xcfFile.dragAndDrop();
 
-//   test.fixme("displays an error if too many files are added", async () => {});
-// });
+    // assert
+    await expect(page.getByText("Invalid file type.")).toBeVisible();
+  });
+
+  test.fixme(
+    "displays an error if too many files are added",
+    async ({ fileFactory, page }) => {
+      // arrange
+      const files = [];
+
+      for (let index = 0; index < FILE_CONFIG.maxFiles + 1; index++) {
+        const file = fileFactory.newMockFile("md");
+        files.push(file);
+      }
+
+      // act
+      await page.goto(appRoutes("/docs/new"));
+      files.forEach(async (f) => {
+        await f.dragAndDrop();
+      });
+
+      // assert
+      await expect(page.getByRole("alert")).toBeVisible();
+    },
+  );
+});
 
 test.describe("New Docs Redirect - single doc", () => {
   test.use({
