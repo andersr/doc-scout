@@ -83,7 +83,7 @@ export default function LoginRoute() {
               required
             />
           </div>
-          <ActionButton type="submit">
+          <ActionButton type="submit" disabled={nameValue.trim() === ""}>
             {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
