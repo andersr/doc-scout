@@ -109,7 +109,7 @@ test.describe("New Docs Redirect - multiple docs", () => {
   });
 
   test("Redirects to dashboard after processing multiple documents", async ({
-    apiRequest,
+    // apiRequest,
     fileFactory,
     page,
   }) => {
@@ -127,9 +127,9 @@ test.describe("New Docs Redirect - multiple docs", () => {
     await expect(page.getByRole("heading", { name: "My Docs" })).toBeVisible();
 
     // teardown
-    await apiRequest.deleteDocsByName([
-      pdfFile1.getFilename(),
-      pdfFile2.getFilename(),
-    ]);
+    // await apiRequest.deleteDocsByName([
+    //   pdfFile1.getFilename(),
+    //   pdfFile2.getFilename(),
+    // ]);
   });
 });
