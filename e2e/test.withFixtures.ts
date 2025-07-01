@@ -1,13 +1,19 @@
 import { test as base } from "@playwright/test";
-import { MockFileFactory } from "./fixtures/MockFile";
+import { ApiRequest } from "./fixtures/ApiRequest";
+import { MockFileFactory } from "./fixtures/MockFileFactory";
 
 type MyFixtures = {
+  apiRequest: ApiRequest;
   fileFactory: MockFileFactory;
 };
 
 export const test = base.extend<MyFixtures>({
-  fileFactory: async ({ page }, use) => {
-    const fileFactory = new MockFileFactory(page);
+  apiRequest: async ({ request }, use) => {
+    const apiRequest = new ApiRequest(request);
+    await use(apiRequest);
+  },
+  fileFactory: async ({ page, request }, use) => {
+    const fileFactory = new MockFileFactory(page, request);
     await use(fileFactory);
   },
 });
