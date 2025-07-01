@@ -86,7 +86,7 @@ test.describe("New Docs Redirect - single doc", () => {
   }) => {
     // arrange
     const pdfFile = fileFactory.newMockFile("pdf");
-    await pdfFile.mockStorageRoute();
+    await apiRequest.mockStorageRoute([pdfFile.getFilename()]);
 
     // act
     await page.goto(appRoutes("/docs/new"));
@@ -109,13 +109,17 @@ test.describe("New Docs Redirect - multiple docs", () => {
   });
 
   test("Redirects to dashboard after processing multiple documents", async ({
-    // apiRequest,
+    apiRequest,
     fileFactory,
     page,
   }) => {
     // arrange
     const pdfFile1 = fileFactory.newMockFile("pdf");
     const pdfFile2 = fileFactory.newMockFile("pdf");
+    await apiRequest.mockStorageRoute([
+      pdfFile1.getFilename(),
+      pdfFile2.getFilename(),
+    ]);
 
     // act
     await page.goto(appRoutes("/docs/new"));
@@ -127,9 +131,9 @@ test.describe("New Docs Redirect - multiple docs", () => {
     await expect(page.getByRole("heading", { name: "My Docs" })).toBeVisible();
 
     // teardown
-    // await apiRequest.deleteDocsByName([
-    //   pdfFile1.getFilename(),
-    //   pdfFile2.getFilename(),
-    // ]);
+    await apiRequest.deleteDocsByName([
+      pdfFile1.getFilename(),
+      pdfFile2.getFilename(),
+    ]);
   });
 });

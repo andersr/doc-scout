@@ -8,8 +8,8 @@ type MyFixtures = {
 };
 
 export const test = base.extend<MyFixtures>({
-  apiRequest: async ({ request }, use) => {
-    const apiRequest = new ApiRequest(request);
+  apiRequest: async ({ page, request }, use) => {
+    const apiRequest = new ApiRequest(page, request);
     await use(apiRequest);
   },
   fileFactory: async ({ page, request }, use) => {

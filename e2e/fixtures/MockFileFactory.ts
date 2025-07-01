@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import type { APIRequestContext, Page } from "@playwright/test";
 import { dragAndDropFile } from "e2e/helpers/dragAndDropFile";
-import { MOCK_SOURCE } from "e2e/mocks/sources/mockSource";
 import { DROPZONE_ID } from "~/config/files";
 
 type FileType = "pdf" | "md";
@@ -46,27 +45,6 @@ export class MockFile {
       mimeType: MIME_TYPES[this.fileType],
       selector: `#${DROPZONE_ID}`,
     });
-  }
-
-  async mockStorageRoute() {
-    await this.page.route(
-      `https://*.s3.*.amazonaws.com/users/**/*`,
-      async (route) => {
-        const json = {
-          filesInfo: [this.getFileInfo()],
-        };
-        await route.fulfill({ json });
-      },
-    );
-  }
-
-  private getFileInfo() {
-    return {
-      fileName: this.getFilename(),
-      signedUrl: "https://foo",
-      sourcePublicId: MOCK_SOURCE.publicId,
-      storagePath: MOCK_SOURCE.storagePath,
-    };
   }
 }
 
