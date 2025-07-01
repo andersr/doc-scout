@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import type { LoaderFunctionArgs } from "react-router";
+import { serverError } from "~/.server/utils/serverError";
 import type { ActionHandlerFn } from "~/types/action";
 import { ServerError } from "~/types/server";
 import { TEST_KEYS, TestKeys } from "../../../shared/testKeys";
@@ -41,7 +42,7 @@ export async function handleTestActionIntent({
 
     return await handlers[command]({ formData, params, request });
   } catch (error) {
-    console.error("error: ", error);
+    throw serverError(error);
   }
 }
 

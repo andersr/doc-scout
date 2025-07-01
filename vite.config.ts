@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@services": path.resolve(
           __dirname,
-          isE2eTestEnv ? "./app/__mocks__/services" : "./app/.server/services",
+          isE2eTestEnv ? "./e2e/mocks/services" : "./app/.server/services",
         ),
         "~": path.resolve(__dirname, "./app"),
       },

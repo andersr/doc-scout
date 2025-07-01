@@ -86,7 +86,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run e2e:start",
+    command: `PORT=${port} dotenv -e .env.test -- npm start`,
     reuseExistingServer: !process.env.CI,
     url: `http://localhost:${port}`,
   },

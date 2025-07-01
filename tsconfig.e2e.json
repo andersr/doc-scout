@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@services/*": ["./app/__mocks__/services/*"],
+      "@services/*": ["./e2e/mocks/services/*"],
       "~/*": ["./app/*"]
     }
   },

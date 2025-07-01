@@ -73,7 +73,7 @@ export default function BotChat({
       </ScrollContainer>{" "}
       <div
         className={twMerge(
-          "fixed right-4 bottom-4 left-4 z-10 md:mx-auto md:max-w-5xl",
+          "fixed right-4 bottom-0 left-4 z-10 pb-4 md:mx-auto md:max-w-5xl",
           "bg-background",
         )}
       >

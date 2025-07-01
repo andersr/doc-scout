@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import playwright from "eslint-plugin-playwright";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { default as pluginReact } from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -50,5 +51,18 @@ export default defineConfig([
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat["jsx-runtime"],
   reactHooks.configs["recommended-latest"],
+  {
+    files: ["e2e/**/*.ts"],
+    rules: {
+      "react-hooks/rules-of-hooks": "off",
+    },
+  },
   eslintPluginPrettierRecommended,
+  {
+    ...playwright.configs["flat/recommended"],
+    files: ["e2e/**"],
+    rules: {
+      ...playwright.configs["flat/recommended"].rules,
+    },
+  },
 ]);
