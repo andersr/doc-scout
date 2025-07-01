@@ -16,12 +16,8 @@ export const deleteSourcesByNameSchema = z.object({
   sourceNames: z
     .string()
     .transform((value) => value.split(","))
-    .pipe(z.string().refine(isValidFilename)),
+    .pipe(z.string().refine(isValidFilename).array()),
 });
-
-export type DeleteSourcesByNameInput = z.infer<
-  typeof deleteSourcesByNameSchema
->;
 
 export const createChatSchema = z.object({
   email: z.string().email(),

@@ -12,7 +12,7 @@ export const deleteSourcesByNameAction: ActionHandlerFn = async ({
   await prisma.source.deleteMany({
     where: {
       name: {
-        in: data.sourceNames.split(","),
+        in: data.sourceNames,
       },
     },
   });

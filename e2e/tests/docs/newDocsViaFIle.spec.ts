@@ -57,6 +57,23 @@ test.describe("Add/Remove Docs", () => {
   });
 });
 
+// test.describe("Docs Validation", () => {
+//   test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
+//   test.fixme("allows for adding a file via finder/explorer", async () => {});
+
+//   test.fixme("allows for adding a PDF file", async () => {});
+
+//   test.fixme("allows for adding a markdown file", async () => {});
+
+//   test.fixme("allows for removing an added file", async () => {});
+
+//   test.fixme("displays an error if file is too large", async () => {});
+
+//   test.fixme("displays an error if file is an invalid format", async () => {});
+
+//   test.fixme("displays an error if too many files are added", async () => {});
+// });
+
 test.describe("New Docs Redirect", () => {
   test.use({
     storageState: setAuthStoragePath(TEST_USERS.new_docs_redirect),
@@ -110,17 +127,3 @@ test.describe("New Docs Redirect", () => {
     ]);
   });
 });
-
-// test.fixme("allows for adding a file via finder/explorer", async () => {});
-
-// test.fixme("allows for adding a PDF file", async () => {});
-
-// test.fixme("allows for adding a markdown file", async () => {});
-
-// test.fixme("allows for removing an added file", async () => {});
-
-// test.fixme("displays an error if file is too large", async () => {});
-
-// test.fixme("displays an error if file is an invalid format", async () => {});
-
-// test.fixme("displays an error if too many files are added", async () => {});

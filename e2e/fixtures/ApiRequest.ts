@@ -1,5 +1,4 @@
 import type { APIRequestContext } from "@playwright/test";
-import type { DeleteSourcesByNameInput } from "~/routes/e2e.$command/utils/e2eSchemas";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_KEYS } from "~/shared/testKeys";
 
@@ -16,7 +15,7 @@ export class ApiRequest {
       {
         form: {
           sourceNames,
-        } satisfies DeleteSourcesByNameInput,
+        },
       },
     );
   }
