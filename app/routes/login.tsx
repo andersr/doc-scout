@@ -23,6 +23,7 @@ import { Label } from "~/components/ui/Label";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
+import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -86,6 +87,13 @@ export default function LoginRoute() {
             {navigation.state === "submitting" ? "Loading..." : "Continue"}
           </ActionButton>
         </Form>
+        <div className="pt-4 text-sm">
+          Don&apos;t have an account?{" "}
+          <a className={LINK_STYLES} href="https://forms.gle/zCJqHCCSBgyrN8EB6">
+            Request access
+          </a>
+          .
+        </div>
       </div>
     </AppContainer>
   );
