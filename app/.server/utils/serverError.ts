@@ -1,5 +1,6 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { data } from "react-router";
+import { StytchError } from "stytch";
 import { ZodError } from "zod";
 import { ServerError, type ServerResponse } from "~/types/server";
 
@@ -11,10 +12,13 @@ export function serverError(error: unknown) {
   let statusCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
   let stack: string | undefined = "";
 
-  if (error instanceof ServerError) {
-    res.errors = [error.message];
-    statusCode = error.statusCode;
+  if (error instanceof Error) {
+    res.errors = [`${error.name}: ${error.message}`];
     stack = error.stack;
+  }
+
+  if (error instanceof ServerError) {
+    statusCode = error.statusCode;
   }
 
   if (error instanceof ZodError) {
@@ -22,12 +26,12 @@ export function serverError(error: unknown) {
     statusCode = StatusCodes.BAD_REQUEST;
   }
 
-  if (error instanceof Error) {
-    res.errors = [`${error.name}: ${error.message}`];
-    stack = error.stack;
+  if (error instanceof StytchError) {
+    res.errors = [error.error_message];
+    statusCode = StatusCodes.BAD_REQUEST;
   }
 
-  console.error("server error: ", error);
+  console.error("error: ", error);
   console.error("stack trace: ", stack);
   return data(res, statusCode);
 }
