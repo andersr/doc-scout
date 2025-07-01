@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { getTestEmail } from "e2e/utils/getTestEmail";
 import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_USERS } from "~/types/testUsers";
@@ -6,7 +7,7 @@ import { TEST_USERS } from "~/types/testUsers";
 test.describe("User Menu", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
 
-  const USER_EMAIL = "no_docs@test.com";
+  const USER_EMAIL = getTestEmail(TEST_USERS.no_docs);
 
   test("displays current user's email address", async ({ page }) => {
     // act
