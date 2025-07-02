@@ -86,7 +86,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `PORT=${port} dotenv -e .env.test -- npm start`,
+    command: `PORT=${port} dotenv -e .env.test -- react-router dev`,
     reuseExistingServer: !process.env.CI,
     url: `http://localhost:${port}`,
   },

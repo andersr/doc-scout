@@ -3,23 +3,72 @@ import { twMerge } from "tailwind-merge";
 
 import { BOT_NAME } from "~/config/bot";
 import { formatDateTime } from "~/utils/formatDateTime";
+import { CopyButton } from "../../lib/copyToClipboard/CopyButton";
+import { useCopyToClipboard } from "../../lib/copyToClipboard/useCopyToClipboard";
 import { DotsLoading } from "../ui/progress/DotsLoading";
 
 interface ChatListItemProps {
-  // authorName?: string;
   createdAt?: Date;
   isBot?: boolean;
   loading?: boolean;
   text?: string;
 }
 
-export function ChatListItem({
-  // authorName,
-  createdAt,
+export function ChatListItem(props: ChatListItemProps) {
+  const { isBot, loading } = props;
+  return (
+    <ChatListItemContainer isBot={isBot}>
+      <ChatContent {...props} />
+      {!loading && <ChatInfo {...props} />}
+    </ChatListItemContainer>
+  );
+}
+
+function ChatContent(props: ChatListItemProps) {
+  const { isBot, loading, text } = props;
+  return (
+    <div
+      className={twMerge(
+        "relative max-w-80 rounded-t-lg px-3 py-2 text-base leading-6 md:max-w-xl",
+        isBot ? "rounded-bl-lg bg-amber-50" : "rounded-br-lg bg-blue-50",
+      )}
+    >
+      {loading ? <DotsLoading /> : isBot ? <BotReply {...props} /> : text}
+    </div>
+  );
+}
+
+function ChatInfo({ createdAt, isBot }: ChatListItemProps) {
+  return (
+    <div className={twMerge("text-sm text-stone-500")}>
+      {isBot ? `${BOT_NAME}, ` : ""}
+      {createdAt &&
+        formatDateTime({
+          d: createdAt,
+          withTime: true,
+        })}
+    </div>
+  );
+}
+
+function BotReply({ text }: ChatListItemProps) {
+  const { didCopy, handleCopyClick } = useCopyToClipboard();
+  return text ? (
+    <div className="prose-sm">
+      <div className="flex justify-end">
+        <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
+      </div>
+      <Markdown>{text}</Markdown>
+    </div>
+  ) : (
+    ""
+  );
+}
+
+function ChatListItemContainer({
+  children,
   isBot,
-  loading,
-  text,
-}: ChatListItemProps) {
+}: { isBot: ChatListItemProps["isBot"] } & { children: React.ReactNode }) {
   return (
     <li
       className={twMerge(
@@ -27,24 +76,7 @@ export function ChatListItem({
         isBot ? "items-end" : "items-start",
       )}
     >
-      <div
-        className={twMerge(
-          "max-w-80 rounded-t-lg px-3 py-2 text-base leading-6 md:max-w-xl",
-          isBot ? "rounded-bl-lg bg-amber-50" : "rounded-br-lg bg-blue-50",
-        )}
-      >
-        {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
-      </div>
-      {!loading && (
-        <div className={twMerge("text-sm text-stone-500")}>
-          {isBot ? `${BOT_NAME}, ` : ""}
-          {createdAt &&
-            formatDateTime({
-              d: createdAt,
-              withTime: true,
-            })}
-        </div>
-      )}
+      {children}
     </li>
   );
 }

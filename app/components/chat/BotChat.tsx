@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { twMerge } from "tailwind-merge";
 
-import { ChatListItem } from "~/components/chat/ChatListItem";
-import { ListContainer } from "~/components/layout/ListContainer";
 import { ScrollContainer } from "~/components/layout/ScrollContainer";
 import { Icon } from "~/components/ui/Icon";
 import { Spinner } from "~/components/ui/progress/Spinner";
@@ -13,24 +11,15 @@ import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage } from "~/types/message";
 import type { ServerResponse } from "~/types/server";
+import { ListContainer } from "../layout/ListContainer";
+import { ChatListItem } from "./ChatListItem";
 
-export default function BotChat({
-  hasPendingQuery,
-  messages,
-}: {
-  hasPendingQuery: boolean;
-  messages: ClientMessage[];
-}) {
+export default function BotChat({ messages }: { messages: ClientMessage[] }) {
   const [message, setMessage] = useState("");
 
   const fetcher = useFetcher<ServerResponse>();
 
-  const botResponded = !hasPendingQuery && fetcher.state === "idle";
-
-  const listBottomRef = useScrollIntoView({
-    onAnyTrue: [hasPendingQuery, botResponded],
-    onLoad: true,
-  });
+  const { listBottomRef, scrollIntoView } = useScrollIntoView();
 
   const optimisticMessage = fetcher.formData
     ? fetcher.formData.get(KEYS.message)
@@ -43,6 +32,12 @@ export default function BotChat({
       setMessage("");
     }
   }, [optimisticMessage, message]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollIntoView();
+    }
+  }, [fetcher.state, messages.length, scrollIntoView]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -65,7 +60,6 @@ export default function BotChat({
             <ChatListItem
               createdAt={new Date()}
               text={optimisticMessage.toString()}
-              // authorName={clientUser.email ?? ""}
             />
           )}
           {fetcher.state !== "idle" && <ChatListItem isBot loading />}

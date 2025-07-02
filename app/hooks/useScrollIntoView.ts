@@ -1,29 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
-export function useScrollIntoView({
-  onAnyTrue,
-  onLoad,
-}: {
-  onAnyTrue: (boolean | null)[];
-  onLoad?: boolean;
-}) {
+export function useScrollIntoView() {
   const listBottomRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (onLoad && listBottomRef.current) {
-      listBottomRef.current?.scrollIntoView();
-    }
-  }, [onLoad]);
+  const scrollIntoView = () => {
+    listBottomRef.current?.scrollIntoView();
+  };
 
-  useEffect(() => {
-    if (
-      onAnyTrue.length > 0 &&
-      onAnyTrue.some((el) => !!el) &&
-      listBottomRef.current
-    ) {
-      listBottomRef.current?.scrollIntoView();
-    }
-  }, [onAnyTrue]);
-
-  return listBottomRef;
+  return { listBottomRef, scrollIntoView };
 }

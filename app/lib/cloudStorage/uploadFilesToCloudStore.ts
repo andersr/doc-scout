@@ -1,4 +1,4 @@
-import { uploadFileToS3 } from "~/lib/uploadFileToS3";
+import { uploadFileToS3 } from "~/lib/cloudStorage/uploadFileToS3";
 import type { SignedUrlResponseFileInfo } from "~/types/files";
 
 export async function uploadFilesToCloudStore({

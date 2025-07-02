@@ -29,22 +29,16 @@ export async function loader({ params }: LoaderFunctionArgs) {
     isBot: m.type === MessageType.BOT,
   }));
 
-  const mostRecentMessage =
-    messages.length > 0 ? messages[messages.length - 1] : null;
-
   return {
     cdn: ENV.AWS_CDN,
-    hasPendingQuery: mostRecentMessage?.type === MessageType.USER,
     messages,
-    mostRecentMessage,
     source,
     title: setSourceTitle(source),
   };
 }
 
 export default function DocDetailsLayout() {
-  const { cdn, hasPendingQuery, messages, source, title } =
-    useLoaderData<typeof loader>();
+  const { cdn, messages, source, title } = useLoaderData<typeof loader>();
 
   return (
     <div className="relative flex w-full flex-1 flex-col gap-6">
@@ -71,7 +65,7 @@ export default function DocDetailsLayout() {
           )
         }
       />
-      <BotChat messages={messages} hasPendingQuery={hasPendingQuery} />
+      <BotChat messages={messages} />
     </div>
   );
 }
