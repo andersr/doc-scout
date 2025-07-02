@@ -36,8 +36,10 @@ function ChatContent({ isBot, loading, text }: ChatListItemProps) {
           : "rounded-br-lg bg-blue-50",
       )}
     >
-      {displayCopyToClipboard && text && (
-        <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
+      {isBot && text && (
+        <div className="flex justify-end">
+          <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
+        </div>
       )}
       {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
     </div>

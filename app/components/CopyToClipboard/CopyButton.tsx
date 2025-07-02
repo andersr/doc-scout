@@ -8,7 +8,7 @@ interface Props {
 export function CopyButton({ didCopy, onClick }: Props) {
   return (
     <button
-      className="absolute top-2 right-3 z-10 flex cursor-pointer items-center rounded-md bg-amber-100/40 p-1 hover:bg-amber-200"
+      className="flex cursor-pointer items-center rounded-md bg-amber-100/40 p-1 hover:bg-amber-200"
       onClick={() => onClick()}
     >
       <Icon

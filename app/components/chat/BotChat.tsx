@@ -65,7 +65,6 @@ export default function BotChat({
             <ChatListItem
               createdAt={new Date()}
               text={optimisticMessage.toString()}
-              // authorName={clientUser.email ?? ""}
             />
           )}
           {fetcher.state !== "idle" && <ChatListItem isBot loading />}
