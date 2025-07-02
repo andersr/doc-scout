@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 
 import { BOT_NAME } from "~/config/bot";
 import { formatDateTime } from "~/utils/formatDateTime";
-import { CopyButton } from "../CopyToClipboard/CopyButton";
-import { useCopyToClipboard } from "../CopyToClipboard/useCopyToClipboard";
+import { CopyButton } from "../../lib/copyToClipboard/CopyButton";
+import { useCopyToClipboard } from "../../lib/copyToClipboard/useCopyToClipboard";
 import { DotsLoading } from "../ui/progress/DotsLoading";
 
 interface ChatListItemProps {
@@ -24,24 +24,16 @@ export function ChatListItem(props: ChatListItemProps) {
   );
 }
 
-function ChatContent({ isBot, loading, text }: ChatListItemProps) {
-  const { didCopy, handleCopyClick } = useCopyToClipboard();
-  const displayCopyToClipboard = isBot && !loading;
+function ChatContent(props: ChatListItemProps) {
+  const { isBot, loading, text } = props;
   return (
     <div
       className={twMerge(
         "relative max-w-80 rounded-t-lg px-3 py-2 text-base leading-6 md:max-w-xl",
-        isBot
-          ? "prose-sm rounded-bl-lg bg-amber-50"
-          : "rounded-br-lg bg-blue-50",
+        isBot ? "rounded-bl-lg bg-amber-50" : "rounded-br-lg bg-blue-50",
       )}
     >
-      {isBot && text && (
-        <div className="flex justify-end">
-          <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
-        </div>
-      )}
-      {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
+      {loading ? <DotsLoading /> : isBot ? <BotReply {...props} /> : text}
     </div>
   );
 }
@@ -56,6 +48,20 @@ function ChatInfo({ createdAt, isBot }: ChatListItemProps) {
           withTime: true,
         })}
     </div>
+  );
+}
+
+function BotReply({ text }: ChatListItemProps) {
+  const { didCopy, handleCopyClick } = useCopyToClipboard();
+  return text ? (
+    <div className="prose-sm">
+      <div className="flex justify-end">
+        <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
+      </div>
+      <Markdown>{text}</Markdown>
+    </div>
+  ) : (
+    ""
   );
 }
 
