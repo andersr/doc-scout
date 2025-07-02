@@ -30,7 +30,9 @@ export function ChatListItem({
       <div
         className={twMerge(
           "max-w-80 rounded-t-lg px-3 py-2 text-base leading-6 md:max-w-xl",
-          isBot ? "rounded-bl-lg bg-amber-50" : "rounded-br-lg bg-blue-50",
+          isBot
+            ? "prose-sm rounded-bl-lg bg-amber-50"
+            : "rounded-br-lg bg-blue-50",
         )}
       >
         {loading ? <DotsLoading /> : text ? <Markdown>{text}</Markdown> : ""}
