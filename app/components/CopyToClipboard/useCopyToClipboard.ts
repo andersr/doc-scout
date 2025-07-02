@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const ERROR_MESSAGE =
   "Sorry, there was a problem copying. Please copy the text manually.";
 
-export function useCopyToClipboard(options?: { withTimeout?: boolean }) {
+export function useCopyToClipboard() {
   const [didCopy, setDidCopy] = useState(false);
 
   const handleCopyClick = async (text: string) => {
@@ -21,12 +21,12 @@ export function useCopyToClipboard(options?: { withTimeout?: boolean }) {
   };
 
   useEffect(() => {
-    if (options?.withTimeout && didCopy) {
+    if (didCopy) {
       setTimeout(() => {
         setDidCopy(false);
       }, 2000);
     }
-  }, [didCopy, options?.withTimeout]);
+  }, [didCopy]);
 
   return {
     didCopy,

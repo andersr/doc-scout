@@ -82,4 +82,33 @@ test.describe("Doc Chat", () => {
       page.locator("span").filter({ hasText: expectedReply }),
     ).toBeVisible();
   });
+
+  test("allows for copying bot response to clipboard", async ({ page }) => {
+    // arrange
+    const expectedInput = "Fake bot question";
+    const expectedReply = "BOT REPLY";
+
+    // act
+    await page.goto(
+      appRoutes("/docs/:id", {
+        id: sourcePublicId,
+      }),
+    );
+    await page.getByRole("textbox", { name: "Message" }).fill(expectedInput);
+    await page.getByRole("button", { name: "arrow_upward" }).click();
+
+    await expect(
+      page.getByRole("heading", { level: 1, name: MOCK_SOURCE.title }),
+    ).toBeVisible();
+
+    // assert
+    await expect(
+      page.locator("span").filter({ hasText: expectedReply }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "arrow_upward" }).click();
+    const clipboardText = await page.evaluate(() =>
+      navigator.clipboard.readText(),
+    );
+    expect(clipboardText).toBe(expectedReply);
+  });
 });
