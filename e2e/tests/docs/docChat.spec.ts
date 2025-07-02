@@ -73,13 +73,8 @@ test.describe("Doc Chat - bot reply", () => {
     ).toBeVisible();
 
     // assert
-    await expect(
-      page.locator("span").filter({ hasText: expectedInput }),
-    ).toBeVisible();
-
-    await expect(
-      page.locator("span").filter({ hasText: expectedReply }),
-    ).toBeVisible();
+    await expect(page.getByText(expectedInput)).toBeVisible();
+    await expect(page.getByText(expectedReply)).toBeVisible();
   });
 });
 
