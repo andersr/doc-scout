@@ -10,7 +10,7 @@ import { getTestEmail } from "../../utils/getTestEmail";
 import { setAuthStoragePath } from "../../utils/setAuthStoragePath";
 
 test.describe("Doc Chat - bot reply", () => {
-  const username = TEST_USERS.has_docs;
+  const username = TEST_USERS.chat_bot_reply;
   let sourcePublicId = "";
   test.use({ storageState: setAuthStoragePath(username) });
 
