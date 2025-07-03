@@ -53,7 +53,7 @@ export default function LoginRoute() {
     <AppContainer className="relative">
       <AppHeader />
       {actionData?.email && (
-        <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2">
+        <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
           Please check the inbox for {actionData.email}
         </div>
       )}
