@@ -54,12 +54,14 @@ function ChatInfo({ createdAt, isBot }: ChatListItemProps) {
 function BotReply({ text }: ChatListItemProps) {
   const { didCopy, handleCopyClick } = useCopyToClipboard();
   return text ? (
-    <div className="prose-sm">
-      <div className="flex justify-end">
+    <>
+      <div className="absolute top-1 right-1 z-10">
         <CopyButton didCopy={didCopy} onClick={() => handleCopyClick(text)} />
       </div>
-      <Markdown>{text}</Markdown>
-    </div>
+      <div className="prose-sm">
+        <Markdown>{text}</Markdown>
+      </div>
+    </>
   ) : (
     ""
   );
