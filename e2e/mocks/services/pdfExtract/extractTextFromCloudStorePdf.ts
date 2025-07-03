@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { StatusCodes } from "http-status-codes";
 import { ServerError } from "~/types/server";
-import { MOCK_SOURCE } from "../../../../e2e/mocks/sources/mockSource";
+import { MOCK_SOURCE } from "../../sources/mockSource";
 
 export async function extractTextFromCloudStorePdf(
   storagePath: string,

@@ -1,13 +1,13 @@
+import { generateId } from "@app/.server/utils/generateId";
+import type { UpsertSourceInput } from "@app/routes/e2e.$command/utils/e2eSchemas";
+import { appRoutes } from "@app/shared/appRoutes";
+import { TEST_KEYS } from "@app/shared/testKeys";
+import type { TestActionRequest } from "@app/types/testActions";
+import { TEST_USERS } from "@app/types/testUsers";
+import { MOCK_SOURCE } from "@e2e/mocks/sources/mockSource";
+import { getTestEmail } from "@e2e/utils/getTestEmail";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
-import { generateId } from "~/.server/utils/generateId";
-import type { TestActionRequest } from "~/types/testActions";
-import type { UpsertSourceInput } from "../../../app/routes/e2e.$command/utils/e2eSchemas";
-import { appRoutes } from "../../../app/shared/appRoutes";
-import { TEST_KEYS } from "../../../app/shared/testKeys";
-import { TEST_USERS } from "../../../app/types/testUsers";
-import { MOCK_SOURCE } from "../../mocks/sources/mockSource";
-import { getTestEmail } from "../../utils/getTestEmail";
-import { setAuthStoragePath } from "../../utils/setAuthStoragePath";
 
 test.describe("Doc Chat - bot reply", () => {
   const username = TEST_USERS.chat_bot_reply;

@@ -1,15 +1,12 @@
 {
   "compilerOptions": {
     "paths": {
+      "@app/*": ["./app/*"],
+      "@e2e/*": ["./e2e/*"],
       "@services/*": ["./e2e/mocks/services/*"],
       "~/*": ["./app/*"]
     }
   },
   "extends": "./tsconfig.json",
-  "include": [
-    ".react-router/types/**/*",
-    "app/**/*",
-    "app/.server/**/*",
-    "e2e/**/*"
-  ]
+  "include": [".react-router/types/**/*"]
 }

@@ -1,8 +1,8 @@
+import { appRoutes } from "@app/shared/appRoutes";
+import { TEST_USERS } from "@app/types/testUsers";
+import { getTestEmail } from "@e2e/utils/getTestEmail";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
-import { getTestEmail } from "e2e/utils/getTestEmail";
-import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
-import { appRoutes } from "~/shared/appRoutes";
-import { TEST_USERS } from "~/types/testUsers";
 
 test.describe("User Menu", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });

@@ -1,11 +1,11 @@
+import { FILE_CONFIG } from "@app/config/files";
+import { appRoutes } from "@app/shared/appRoutes";
+import { TEST_USERS } from "@app/types/testUsers";
 import {
   MOCK_FILEPATHS,
   PDF_MOCKFILE_NAME,
-} from "e2e/fixtures/MockFileFactory";
-import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
-import { FILE_CONFIG } from "~/config/files";
-import { appRoutes } from "~/shared/appRoutes";
-import { TEST_USERS } from "~/types/testUsers";
+} from "@e2e/fixtures/MockFileFactory";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "../../test.withFixtures";
 
 test.describe("Add/Remove Docs", () => {

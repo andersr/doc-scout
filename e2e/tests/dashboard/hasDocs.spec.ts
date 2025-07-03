@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { DASHBOARD_TITLE } from "~/config/titles";
+import { DASHBOARD_TITLE } from "@app/config/titles";
 import { appRoutes } from "../../../app/shared/appRoutes";
 import { TEST_KEYS } from "../../../app/shared/testKeys";
 import type { TestActionRequest } from "../../../app/types/testActions";

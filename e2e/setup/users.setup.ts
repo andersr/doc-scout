@@ -16,6 +16,7 @@ setup("test users setup", async ({ request }) => {
 
     const storagePath = setAuthStoragePath(userName);
 
+    // TODO: move to a command
     const loginRoute = appRoutes("/e2e/login", {
       email: getTestEmail(userName),
     });
