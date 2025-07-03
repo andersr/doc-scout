@@ -1,3 +1,10 @@
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["../app/*"],
+      "@e2e/*": ["./*"]
+    }
+  },
   "extends": "../tsconfig.e2e.json"
 }

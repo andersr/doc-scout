@@ -1,5 +1,5 @@
+import { appRoutes } from "@app/shared/appRoutes";
 import { expect, test } from "@playwright/test";
-import { appRoutes } from "~/shared/appRoutes";
 
 test.describe("Login", () => {
   test("redirects unauthorized users to request access page", async ({

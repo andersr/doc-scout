@@ -1,6 +1,6 @@
+import { TEST_USERS } from "@app/types/testUsers";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { test } from "@playwright/test";
-import { setAuthStoragePath } from "e2e/utils/setAuthStoragePath";
-import { TEST_USERS } from "~/types/testUsers";
 
 test.describe("New Docs via URL", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
