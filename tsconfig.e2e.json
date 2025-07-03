@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@app/*": ["./app/*"],
       "@e2e/*": ["./e2e/*"],
@@ -7,6 +8,7 @@
       "~/*": ["./app/*"]
     }
   },
+  "exclude": ["tmp"],
   "extends": "./tsconfig.json",
-  "include": [".react-router/types/**/*"]
+  "include": [".react-router/types/**/*", "app/**/*", "e2e/**/*"]
 }
