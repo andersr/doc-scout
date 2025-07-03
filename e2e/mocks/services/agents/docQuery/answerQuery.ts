@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import { generateGraph } from "./generateGraph";
 
-const BOT_REPLY = "BOT REPLY";
+const BOT_REPLY = "BOT REPLY"; // TODO: move to common config
 
 export type BotResponse = {
   botResponse: string;
