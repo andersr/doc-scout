@@ -1,10 +1,12 @@
 import { generateId } from "@app/.server/utils/generateId";
-import type { UpsertSourceInput } from "@app/routes/e2e.$command/utils/e2eSchemas";
+import type {
+  DeleteMessagesInput,
+  UpsertSourceInput,
+} from "@app/routes/e2e.$command/utils/e2eSchemas";
 import { appRoutes } from "@app/shared/appRoutes";
 import { TEST_KEYS } from "@app/shared/testKeys";
-import type { TestActionRequest } from "@app/types/testActions";
-import { TEST_USERS } from "@app/types/testUsers";
 import { MOCK_SOURCE } from "@e2e/mocks/sources/mockSource";
+import { TEST_USERS } from "@e2e/types/testUsers";
 import { getTestEmail } from "@e2e/utils/getTestEmail";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
@@ -34,7 +36,7 @@ test.describe("Doc Chat - bot reply", () => {
       {
         form: {
           sourcePublicId,
-        } satisfies TestActionRequest,
+        } satisfies DeleteMessagesInput,
       },
     );
   });
@@ -47,7 +49,7 @@ test.describe("Doc Chat - bot reply", () => {
       {
         form: {
           sourcePublicId,
-        } satisfies TestActionRequest,
+        } satisfies DeleteMessagesInput,
       },
     );
   });
@@ -78,6 +80,7 @@ test.describe("Doc Chat - bot reply", () => {
   });
 });
 
+// TODO: replace repeating steps with a fixture
 test.describe("Doc Chat - copy to clipboard", () => {
   const username = TEST_USERS.chat_copy_clipboard;
   let sourcePublicId = "";
@@ -106,7 +109,7 @@ test.describe("Doc Chat - copy to clipboard", () => {
       {
         form: {
           sourcePublicId,
-        } satisfies TestActionRequest,
+        } satisfies DeleteMessagesInput,
       },
     );
   });
@@ -119,7 +122,7 @@ test.describe("Doc Chat - copy to clipboard", () => {
       {
         form: {
           sourcePublicId,
-        } satisfies TestActionRequest,
+        } satisfies DeleteMessagesInput,
       },
     );
   });

@@ -1,12 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { DASHBOARD_TITLE } from "@app/config/titles";
-import { appRoutes } from "../../../app/shared/appRoutes";
-import { TEST_KEYS } from "../../../app/shared/testKeys";
-import type { TestActionRequest } from "../../../app/types/testActions";
-import { TEST_USERS } from "../../../app/types/testUsers";
-import { getTestEmail } from "../../utils/getTestEmail";
-import { setAuthStoragePath } from "../../utils/setAuthStoragePath";
+
+import type { UpsertSourceInput } from "@app/routes/e2e.$command/utils/e2eSchemas";
+import { appRoutes } from "@app/shared/appRoutes";
+import { TEST_KEYS } from "@app/shared/testKeys";
+import { TEST_USERS } from "@e2e/types/testUsers";
+import { getTestEmail } from "@e2e/utils/getTestEmail";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 
 test.describe("Dashboard - Has Docs", () => {
   const user = TEST_USERS.has_docs;
@@ -26,7 +27,7 @@ test.describe("Dashboard - Has Docs", () => {
         form: {
           email: getTestEmail(user),
           sourcePublicId,
-        } satisfies TestActionRequest,
+        } satisfies UpsertSourceInput,
       },
     );
     // act

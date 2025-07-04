@@ -1,4 +1,4 @@
-import type { TestUserNames } from "~/types/testUsers";
+import type { TestUserNames } from "@e2e/types/testUsers";
 
 // TODO: move to common config
 const TEST_DOMAIN = "test.com";

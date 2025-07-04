@@ -1,5 +1,5 @@
-import { upsertUser } from "~/.server/models/users/upsertUser";
-import { TestUserNames } from "../../app/types/testUsers";
+import { upsertUser } from "@app/.server/models/users/upsertUser";
+import type { TestUserNames } from "@e2e/types/testUsers";
 import { getTestEmail } from "./getTestEmail";
 import { upsertStytchUser } from "./upsertStytchUser";
 

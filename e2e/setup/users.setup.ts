@@ -1,9 +1,9 @@
+import { appRoutes } from "@app/shared/appRoutes";
+import { TestUserNames } from "@e2e/types/testUsers";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
+import { upsertTestUser } from "@e2e/utils/upsertTestUsers";
 import { test as setup } from "@playwright/test";
 import { getTestEmail } from "e2e/utils/getTestEmail";
-import { appRoutes } from "../../app/shared/appRoutes";
-import { TestUserNames } from "../../app/types/testUsers";
-import { setAuthStoragePath } from "../utils/setAuthStoragePath";
-import { upsertTestUser } from "../utils/upsertTestUsers";
 const port = process.env.PORT;
 
 setup("test users setup", async ({ request }) => {

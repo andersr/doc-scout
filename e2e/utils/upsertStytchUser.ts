@@ -1,7 +1,7 @@
-import { requireEnvVar } from "~/.server/utils/requireEnvVar";
-import { getStytchUserByEmail } from "~/.server/vendors/stytch/getStytchUserByEmail";
-import { stytchClient } from "../../app/.server/vendors/stytch/client";
-import { type CreateTestUserInput } from "../../app/types/testUsers";
+import { requireEnvVar } from "@app/.server/utils/requireEnvVar";
+import { stytchClient } from "@app/.server/vendors/stytch/client";
+import { getStytchUserByEmail } from "@app/.server/vendors/stytch/getStytchUserByEmail";
+import type { CreateTestUserInput } from "@e2e/types/testUsers";
 
 export async function upsertStytchUser(
   user: CreateTestUserInput,
