@@ -1,8 +1,7 @@
+import { appRoutes } from "@app/shared/appRoutes";
+import { TEST_USERS } from "@e2e/types/testUsers";
+import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
-
-import { appRoutes } from "../../../app/shared/appRoutes";
-import { TEST_USERS } from "../../../app/types/testUsers";
-import { setAuthStoragePath } from "../../utils/setAuthStoragePath";
 
 test.describe("Dashboard - No Docs", () => {
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });

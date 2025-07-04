@@ -1,4 +1,4 @@
-import { TEST_USERS } from "@app/types/testUsers";
+import { TEST_USERS } from "@e2e/types/testUsers";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { test } from "@playwright/test";
 

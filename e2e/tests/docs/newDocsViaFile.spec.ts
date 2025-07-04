@@ -1,10 +1,10 @@
 import { FILE_CONFIG } from "@app/config/files";
 import { appRoutes } from "@app/shared/appRoutes";
-import { TEST_USERS } from "@app/types/testUsers";
 import {
   MOCK_FILEPATHS,
   PDF_MOCKFILE_NAME,
 } from "@e2e/fixtures/MockFileFactory";
+import { TEST_USERS } from "@e2e/types/testUsers";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "../../test.withFixtures";
 
