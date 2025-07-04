@@ -3,6 +3,7 @@ import { MOCK_SOURCE } from "e2e/mocks/sources/mockSource";
 import { appRoutes } from "~/shared/appRoutes";
 import { TEST_KEYS } from "~/shared/testKeys";
 
+// TODO: create base class and extend for Docs, etc
 export class ApiRequest {
   constructor(
     public readonly page: Page,

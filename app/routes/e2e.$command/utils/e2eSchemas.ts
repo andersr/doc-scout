@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { isValidFilename } from "~/utils/isValidFilename";
 
+// Turn into schema factory?
 export const upsertSourceSchema = z.object({
   email: z.string().email(),
   sourcePublicId: z.string().min(1),
@@ -24,3 +25,8 @@ export const createChatSchema = z.object({
   sourcePublicId: z.string().min(1),
 });
 export type CreateChatInput = z.infer<typeof createChatSchema>;
+
+export const deleteMessagesSchema = z.object({
+  sourcePublicId: z.string().min(1),
+});
+export type DeleteMessagesInput = z.infer<typeof deleteMessagesSchema>;

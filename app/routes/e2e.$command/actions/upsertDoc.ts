@@ -3,7 +3,6 @@ import { getStytchUserByEmail } from "~/.server/vendors/stytch/getStytchUserByEm
 import { prisma } from "~/lib/prisma";
 import type { ActionHandlerFn } from "~/types/action";
 import type { FileSourceInput } from "~/types/source";
-import type { TestActionResponse } from "~/types/testActions";
 import { USER_INTERNAL_INCLUDE } from "~/types/user";
 import { MOCK_SOURCE } from "../../../../e2e/mocks/sources/mockSource";
 import { upsertSourceSchema } from "../utils/e2eSchemas";
@@ -45,10 +44,5 @@ export const upsertDoc: ActionHandlerFn = async ({ formData }) => {
     });
   }
 
-  return new Response(
-    JSON.stringify({ ok: true } satisfies TestActionResponse),
-    {
-      status: 200,
-    },
-  );
+  return null;
 };
