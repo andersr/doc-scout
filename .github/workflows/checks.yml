@@ -127,6 +127,7 @@ jobs:
       PINECONE_INDEX_NAME: foo
       PORT: 8080
       STYTCH_PROJECT_ID: ${{ secrets.STYTCH_PROJECT_ID }}
+      STYTCH_PUBLIC_TOKEN: foo
       STYTCH_SECRET: ${{ secrets.STYTCH_SECRET }}
       TEST_USER_PWD: ${{ secrets.TEST_USER_PWD }}
 
