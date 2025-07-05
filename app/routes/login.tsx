@@ -8,6 +8,7 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
+import { ENV } from "~/.server/ENV";
 import { upsertUser } from "~/.server/models/users/upsertUser";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
@@ -20,6 +21,8 @@ import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
+import { GOOGLE_DRIVE_SCOPES } from "~/config/google";
+import { STYTCH_GOOGLE_START } from "~/config/stytch";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -34,11 +37,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     error,
+    stytchPublicToken: ENV.STYTCH_PUBLIC_TOKEN,
     title: "Sign In",
   };
 }
 export default function LoginRoute() {
-  const { error, title } = useLoaderData<typeof loader>();
+  const { error, stytchPublicToken, title } = useLoaderData<typeof loader>();
+
   const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
   const [nameValue, setNameValue] = useState("");
@@ -48,6 +53,13 @@ export default function LoginRoute() {
     : error
       ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
       : [];
+
+  const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
+  stytchGoogleAuthStart.searchParams.set(KEYS.public_token, stytchPublicToken);
+  stytchGoogleAuthStart.searchParams.set(
+    KEYS.custom_scopes,
+    GOOGLE_DRIVE_SCOPES,
+  );
 
   return (
     <AppContainer className="relative">
@@ -60,6 +72,9 @@ export default function LoginRoute() {
       <div className="flex h-2/3 flex-col items-center justify-center">
         <div className="mb-4">
           <PageTitle title={title} />
+        </div>
+        <div>
+          <a href={stytchGoogleAuthStart.href}>Google login</a>
         </div>
         {errors.map((e) => (
           <div key={e} className="text-danger py-2 text-center">

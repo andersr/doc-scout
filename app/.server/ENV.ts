@@ -11,11 +11,13 @@ const envSchema = z.object({
   AWS_S3_ACCESS_KEY: z.string().min(3),
   AWS_S3_SECRET: z.string().min(3),
   FIRECRAWL_API_KEY: z.string().min(3),
+  // GOOGLE_OAUTH_CLIENT_ID: z.string().min(3),
   OPENAI_API_KEY: z.string().min(3),
   PINECONE_API_KEY: z.string().min(3),
   PINECONE_HOST: z.string().min(3),
   PINECONE_INDEX_NAME: z.string().min(3),
   STYTCH_PROJECT_ID: z.string().min(3),
+  STYTCH_PUBLIC_TOKEN: z.string().min(3),
   STYTCH_SECRET: z.string().min(3),
 });
 

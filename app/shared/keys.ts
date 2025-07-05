@@ -16,6 +16,8 @@ export const AppKeys = [
   "urls",
   "password",
   "token",
+  "public_token", // used for stytch oauth
+  "custom_scopes", // used for googla oauth
 ] as const;
 
 const keyTuples = AppKeys.map((k) => [k, k]);
