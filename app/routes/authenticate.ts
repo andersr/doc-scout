@@ -20,25 +20,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
       throw new ServerError(`No token`, StatusCodes.BAD_REQUEST);
     }
 
-    if (tokenType !== "magic_links") {
-      console.error(`Unsupported token type: '${tokenType}'`);
-      throw new ServerError(
-        `Unsupported token type: '${tokenType}'`,
-        StatusCodes.BAD_REQUEST,
-      );
+    if (tokenType === "magic_links") {
+      const res = await stytchClient.magicLinks.authenticate({
+        session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
+        token,
+      });
+
+      return createSession({
+        key: STYTCH_SESSION_TOKEN,
+        redirectTo: appRoutes("/"),
+        request,
+        token: res.session_token,
+      });
     }
 
-    const res = await stytchClient.magicLinks.authenticate({
-      session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
-      token,
-    });
+    if (tokenType === "oauth") {
+      const res = await stytchClient.oauth.authenticate({
+        session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
+        token,
+      });
+      console.info("res: ", res);
 
-    return createSession({
-      key: STYTCH_SESSION_TOKEN,
-      redirectTo: appRoutes("/"),
-      request,
-      token: res.session_token,
-    });
+      // const redirectUrl = res.
+
+      return createSession({
+        key: STYTCH_SESSION_TOKEN,
+        redirectTo: appRoutes("/"),
+        request,
+        token: res.session_token,
+      });
+    }
+
+    throw new ServerError("Unknown request type", StatusCodes.BAD_REQUEST);
   } catch (error) {
     console.error(`Login error: ${error}`);
     throw redirect(

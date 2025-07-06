@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+import mdx from "@mdx-js/rollup";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -10,11 +11,13 @@ export default defineConfig(({ mode }) => {
   const isE2eTestEnv = env.E2E_ENV;
   const isUnitTestEnv = env.NODE_ENV === "test";
 
+  const testOnlyPlugins = [mdx(), tailwindcss()];
+
   return {
     plugins:
       isUnitTestEnv || mode === "test"
-        ? [tailwindcss()]
-        : [tailwindcss(), reactRouter(), safeRoutes()],
+        ? testOnlyPlugins
+        : [...testOnlyPlugins, reactRouter(), safeRoutes()],
     resolve: {
       alias: {
         "@services": path.resolve(
@@ -25,8 +28,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      ...(env.DEV_HOST ? { allowedHosts: [env.DEV_HOST] } : {}),
       port: process.env.PORT ? Number(process.env.PORT) : 3000,
-      ...(process.env.DEV_HOST && { allowedHosts: [process.env.DEV_HOST] }),
     },
     test: {
       environment: "jsdom",

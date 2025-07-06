@@ -9,6 +9,7 @@ export const AppKeys = [
   "error",
   "files",
   "fileNames",
+  "google_state", // used for stytch login redirect
   "sourcesInput",
   "message",
   "intent",
@@ -16,6 +17,8 @@ export const AppKeys = [
   "urls",
   "password",
   "token",
+  "public_token", // used for stytch oauth
+  "custom_scopes", // used for googla oauth
 ] as const;
 
 const keyTuples = AppKeys.map((k) => [k, k]);
