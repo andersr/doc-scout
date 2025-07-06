@@ -54,7 +54,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (previewHost) {
     const previewUrl = `https://${previewHost}`;
-    const redirectUrl = `${BASE_REDIRECT_URL}?redirect_url=${previewUrl}`;
+    const redirectUrl = `${previewUrl}/authenticate`;
 
     stytchGoogleAuthStart.searchParams.set(
       KEYS.login_redirect_url,
