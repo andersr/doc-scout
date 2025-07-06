@@ -1,4 +1,3 @@
-import getGoogleAuthStartUrl from "@services/oauth/getGoogleAuthStartUrl";
 import { useState } from "react";
 import {
   type ActionFunctionArgs,
@@ -10,6 +9,7 @@ import {
   useNavigation,
 } from "react-router";
 import { upsertUser } from "~/.server/models/users/upsertUser";
+import getGoogleAuthStartUrl from "~/.server/services/oauth/getGoogleAuthStartUrl";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
 
