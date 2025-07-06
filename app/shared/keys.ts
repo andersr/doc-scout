@@ -9,6 +9,7 @@ export const AppKeys = [
   "error",
   "files",
   "fileNames",
+  "google_state", // used for stytch login redirect
   "sourcesInput",
   "message",
   "intent",

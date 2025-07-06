@@ -35,14 +35,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const params = new URL(request.url).searchParams;
   const error = params.get(KEYS.error);
 
+  const vercelEnv = process.env.VERCEL_ENV;
+  console.info("vercelEnv: ", vercelEnv);
+  const previewUrl =
+    vercelEnv === "preview" ? process.env.VERCEL_URL : undefined;
+
+  const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
+  stytchGoogleAuthStart.searchParams.set(
+    KEYS.public_token,
+    ENV.STYTCH_PUBLIC_TOKEN,
+  );
+  stytchGoogleAuthStart.searchParams.set(
+    KEYS.custom_scopes,
+    GOOGLE_DRIVE_SCOPES,
+  );
+
+  if (previewUrl) {
+    stytchGoogleAuthStart.searchParams.set(KEYS.google_state, previewUrl);
+  }
   return {
     error,
-    stytchPublicToken: ENV.STYTCH_PUBLIC_TOKEN,
+    googleAuthStartUrl: stytchGoogleAuthStart.href,
+    // previewUrl, // generated preview url, if found
+    // stytchPublicToken: ENV.STYTCH_PUBLIC_TOKEN,
     title: "Sign In",
   };
 }
 export default function LoginRoute() {
-  const { error, stytchPublicToken, title } = useLoaderData<typeof loader>();
+  const { error, googleAuthStartUrl, title } = useLoaderData<typeof loader>();
 
   const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
@@ -53,13 +73,6 @@ export default function LoginRoute() {
     : error
       ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
       : [];
-
-  const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
-  stytchGoogleAuthStart.searchParams.set(KEYS.public_token, stytchPublicToken);
-  stytchGoogleAuthStart.searchParams.set(
-    KEYS.custom_scopes,
-    GOOGLE_DRIVE_SCOPES,
-  );
 
   return (
     <AppContainer className="relative">
@@ -74,7 +87,7 @@ export default function LoginRoute() {
           <PageTitle title={title} />
         </div>
         <div>
-          <a href={stytchGoogleAuthStart.href}>Google login</a>
+          <a href={googleAuthStartUrl}>Google login</a>
         </div>
         {errors.map((e) => (
           <div key={e} className="text-danger py-2 text-center">
