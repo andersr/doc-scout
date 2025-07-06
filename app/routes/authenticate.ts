@@ -13,9 +13,7 @@ import { ServerError } from "~/types/server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const token = searchParams.get(KEYS.token);
-  console.info("token: ", token);
   const tokenType = searchParams.get("stytch_token_type");
-  console.info("tokenType: ", tokenType);
 
   try {
     if (!token) {
@@ -41,9 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
         token,
       });
-      console.info("OAUTH res: ", res);
-
-      // const redirectUrl = res.
 
       return createSession({
         key: STYTCH_SESSION_TOKEN,

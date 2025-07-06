@@ -29,8 +29,6 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
 
-const BASE_REDIRECT_URL = "https://www.docscout.app/authenticate";
-
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAnon({ request });
 
@@ -38,9 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const error = params.get(KEYS.error);
 
   const vercelEnv = process.env.VERCEL_ENV;
-  console.info("vercelEnv: ", vercelEnv);
   const previewHost = process.env.VERCEL_URL;
-  console.info("previewHost: ", previewHost);
 
   const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
   stytchGoogleAuthStart.searchParams.set(
@@ -52,7 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     GOOGLE_DRIVE_SCOPES,
   );
 
-  if (previewHost) {
+  if (vercelEnv === "preview" && previewHost) {
     const previewUrl = `https://${previewHost}`;
     const redirectUrl = `${previewUrl}/authenticate`;
 
@@ -68,8 +64,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return {
     error,
     googleAuthStartUrl: stytchGoogleAuthStart.href,
-    // previewUrl, // generated preview url, if found
-    // stytchPublicToken: ENV.STYTCH_PUBLIC_TOKEN,
     title: "Sign In",
   };
 }
