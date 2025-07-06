@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 export default function LoginRoute() {
-  const { error, googleAuthStartUrl, title } = useLoaderData<typeof loader>();
+  const { error, title } = useLoaderData<typeof loader>();
 
   const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
@@ -87,9 +87,9 @@ export default function LoginRoute() {
         <div className="mb-4">
           <PageTitle title={title} />
         </div>
-        <div>
+        {/* <div>
           <a href={googleAuthStartUrl}>Google login</a>
-        </div>
+        </div> */}
         {errors.map((e) => (
           <div key={e} className="text-danger py-2 text-center">
             {e}
