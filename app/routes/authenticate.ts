@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
         token,
       });
-      console.info("res: ", res);
+      console.info("OAUTH res: ", res);
 
       // const redirectUrl = res.
 

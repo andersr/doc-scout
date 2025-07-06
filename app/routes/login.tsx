@@ -29,6 +29,8 @@ import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
 
+const BASE_REDIRECT_URL = "https://www.docscout.app/authenticate";
+
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAnon({ request });
 
@@ -37,9 +39,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const vercelEnv = process.env.VERCEL_ENV;
   console.info("vercelEnv: ", vercelEnv);
-  const previewUrl =
+  const previewHost =
     vercelEnv === "preview" ? process.env.VERCEL_URL : undefined;
-  console.info("previewUrl: ", previewUrl);
+  console.info("previewHost: ", previewHost);
 
   const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
   stytchGoogleAuthStart.searchParams.set(
@@ -51,8 +53,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     GOOGLE_DRIVE_SCOPES,
   );
 
-  if (previewUrl) {
-    stytchGoogleAuthStart.searchParams.set(KEYS.google_state, previewUrl);
+  if (previewHost) {
+    const previewUrl = `https://${previewHost}`;
+    const redirectUrl = `${BASE_REDIRECT_URL}?redirect_url=${previewUrl}`;
+
+    stytchGoogleAuthStart.searchParams.set(
+      KEYS.login_redirect_url,
+      redirectUrl,
+    );
+    stytchGoogleAuthStart.searchParams.set(
+      KEYS.signup_redirect_url,
+      redirectUrl,
+    );
   }
   return {
     error,
@@ -63,7 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 export default function LoginRoute() {
-  const { error, title } = useLoaderData<typeof loader>();
+  const { error, googleAuthStartUrl, title } = useLoaderData<typeof loader>();
 
   const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
@@ -87,9 +99,9 @@ export default function LoginRoute() {
         <div className="mb-4">
           <PageTitle title={title} />
         </div>
-        {/* <div>
+        <div>
           <a href={googleAuthStartUrl}>Google login</a>
-        </div> */}
+        </div>
         {errors.map((e) => (
           <div key={e} className="text-danger py-2 text-center">
             {e}
