@@ -1,3 +1,4 @@
+import getGoogleAuthStartUrl from "@services/oauth/getGoogleAuthStartUrl";
 import { useState } from "react";
 import {
   type ActionFunctionArgs,
@@ -8,7 +9,6 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { ENV } from "~/.server/ENV";
 import { upsertUser } from "~/.server/models/users/upsertUser";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
@@ -21,8 +21,6 @@ import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
-import { GOOGLE_DRIVE_SCOPES } from "~/config/google";
-import { STYTCH_GOOGLE_START } from "~/config/stytch";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
@@ -35,35 +33,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const params = new URL(request.url).searchParams;
   const error = params.get(KEYS.error);
 
-  const vercelEnv = process.env.VERCEL_ENV;
-  const previewHost = process.env.VERCEL_URL;
-
-  const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);
-  stytchGoogleAuthStart.searchParams.set(
-    KEYS.public_token,
-    ENV.STYTCH_PUBLIC_TOKEN,
-  );
-  stytchGoogleAuthStart.searchParams.set(
-    KEYS.custom_scopes,
-    GOOGLE_DRIVE_SCOPES,
-  );
-
-  if (vercelEnv === "preview" && previewHost) {
-    const previewUrl = `https://${previewHost}`;
-    const redirectUrl = `${previewUrl}/authenticate`;
-
-    stytchGoogleAuthStart.searchParams.set(
-      KEYS.login_redirect_url,
-      redirectUrl,
-    );
-    stytchGoogleAuthStart.searchParams.set(
-      KEYS.signup_redirect_url,
-      redirectUrl,
-    );
-  }
   return {
     error,
-    googleAuthStartUrl: stytchGoogleAuthStart.href,
+    googleAuthStartUrl: getGoogleAuthStartUrl(),
     title: "Sign In",
   };
 }
