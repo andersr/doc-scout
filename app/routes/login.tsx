@@ -39,8 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const vercelEnv = process.env.VERCEL_ENV;
   console.info("vercelEnv: ", vercelEnv);
-  const previewHost =
-    vercelEnv === "preview" ? process.env.VERCEL_URL : undefined;
+  const previewHost = process.env.VERCEL_URL;
   console.info("previewHost: ", previewHost);
 
   const stytchGoogleAuthStart = new URL(STYTCH_GOOGLE_START);

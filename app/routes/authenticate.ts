@@ -13,7 +13,9 @@ import { ServerError } from "~/types/server";
 export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const token = searchParams.get(KEYS.token);
+  console.info("token: ", token);
   const tokenType = searchParams.get("stytch_token_type");
+  console.info("tokenType: ", tokenType);
 
   try {
     if (!token) {
