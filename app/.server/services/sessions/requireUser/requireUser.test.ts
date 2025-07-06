@@ -53,7 +53,6 @@ vi.mock("~/.server/services/sessions/logout", () => ({
 }));
 
 import { redirect } from "react-router";
-import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { USER_INTERNAL_INCLUDE } from "~/types/user";
@@ -61,6 +60,7 @@ import { USER_INTERNAL_INCLUDE } from "~/types/user";
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { logout } from "~/.server/services/sessions/logout";
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { KEYS } from "~/shared/keys";
 import { requireUser } from "./requireUser";
 
 const mockRedirect = vi.mocked(redirect);
@@ -149,7 +149,7 @@ describe("requireUser", () => {
     });
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: STYTCH_SESSION_TOKEN,
+      key: KEYS.stytch_session_token,
       request: mockRequest,
     });
     expect(mockStytchAuthenticate).toHaveBeenCalledWith({
@@ -171,7 +171,7 @@ describe("requireUser", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: STYTCH_SESSION_TOKEN,
+      key: KEYS.stytch_session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/login");
@@ -315,7 +315,7 @@ describe("requireUser", () => {
 
     // Assert
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: STYTCH_SESSION_TOKEN,
+      key: KEYS.stytch_session_token,
       request: customRequest,
     });
   });

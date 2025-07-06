@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
-import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
+import { KEYS } from "~/shared/keys";
 
 export async function requireAnon({
   request,
@@ -9,7 +9,7 @@ export async function requireAnon({
   request: Request;
 }): Promise<void> {
   const sessionToken = await getCookieValue({
-    key: STYTCH_SESSION_TOKEN,
+    key: KEYS.stytch_session_token,
     request,
   });
   if (sessionToken) {

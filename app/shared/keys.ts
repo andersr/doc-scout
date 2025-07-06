@@ -2,6 +2,7 @@
  * Used for setting input ids, query params, and other values that need to match across separate methods and services, ie between client and server.
  */
 export const AppKeys = [
+  "custom_scopes", // used for oauth
   "description",
   "id",
   "ids",
@@ -9,18 +10,17 @@ export const AppKeys = [
   "error",
   "files",
   "fileNames",
-  "google_state", // used for stytch login redirect
+  "login_redirect_url", // used for stytch oauth
   "sourcesInput",
   "message",
   "intent",
   "username",
   "urls",
   "password",
-  "token",
   "public_token", // used for stytch oauth
-  "custom_scopes", // used for googla oauth
-  "login_redirect_url", // used for stytch oauth
   "signup_redirect_url", // used for stytch oauth
+  "stytch_session_token",
+  "token",
 ] as const;
 
 const keyTuples = AppKeys.map((k) => [k, k]);
