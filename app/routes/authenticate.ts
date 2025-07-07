@@ -1,7 +1,8 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type LoaderFunctionArgs, redirect } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
-import requireAllowedUser from "~/.server/utils/requireAllowedUser";
+import { isAllowedUser } from "~/.server/utils/isAllowedUser";
+import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_DURATION_MINUTES } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
@@ -45,7 +46,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
         );
       }
 
-      requireAllowedUser({ email, request });
+      if (!isAllowedUser(email)) {
+        return redirectWithDomainHost({
+          request,
+          route: appRoutes("/request-access", {
+            email: email,
+          }),
+        });
+      }
 
       sessionToken = res.session_token;
     }

@@ -13,8 +13,9 @@ import { upsertUser } from "~/.server/models/users/upsertUser";
 import getGoogleAuthStartUrl from "~/.server/services/oauth/getGoogleAuthStartUrl";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+import { isAllowedUser } from "~/.server/utils/isAllowedUser";
+import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
-import requireAllowedUser from "~/.server/utils/requireAllowedUser";
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/layout/AppContainer";
@@ -22,6 +23,7 @@ import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
+import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
@@ -129,12 +131,6 @@ export default function LoginRoute() {
             .
           </div>
         </div>
-
-        {/* <div className="flex h-6 items-center">
-          <div className="bg-grey-2 flex h-px w-full items-center justify-center">
-            <span className="text-grey-3 h-6 bg-white px-6">Or</span>
-          </div>
-        </div> */}
       </div>
     </AppContainer>
   );
@@ -146,7 +142,14 @@ export async function action({ request }: ActionFunctionArgs) {
     const formData = Object.fromEntries(await request.formData());
     const data = loginSchema.parse(formData);
 
-    requireAllowedUser({ email: data.email, request });
+    if (!isAllowedUser(data.email)) {
+      return redirectWithDomainHost({
+        request,
+        route: appRoutes("/request-access", {
+          email: data.email,
+        }),
+      });
+    }
 
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
     const redirectUrlIfPreview = isPreviewEnv
