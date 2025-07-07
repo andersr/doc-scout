@@ -3,17 +3,18 @@ import {
   type ActionFunctionArgs,
   Form,
   type LoaderFunctionArgs,
-  redirect,
   useActionData,
   useLoaderData,
   useNavigation,
 } from "react-router";
+import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 import { upsertUser } from "~/.server/models/users/upsertUser";
 import getGoogleAuthStartUrl from "~/.server/services/oauth/getGoogleAuthStartUrl";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
 
-import { isAllowedUser } from "~/.server/utils/isAllowedUser";
+import requireAllowedUser from "~/.server/utils/requireAllowedUser";
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { AppContainer } from "~/components/layout/AppContainer";
@@ -21,11 +22,17 @@ import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
-import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .email()
+    .refine((e) => e.toLowerCase()),
+});
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireAnon({ request });
@@ -61,46 +68,73 @@ export default function LoginRoute() {
         </div>
       )}
       <div className="flex h-2/3 flex-col items-center justify-center">
-        <div className="mb-4">
-          <PageTitle title={title} />
-        </div>
-        <div>
-          <a href={googleAuthStartUrl}>Google login</a>
-        </div>
-        {errors.map((e) => (
-          <div key={e} className="text-danger py-2 text-center">
-            {e}
+        <div className="flex w-full max-w-[325px] flex-col gap-6">
+          <div className="text-center">
+            <PageTitle title={title} />
           </div>
-        ))}
-        <Form
-          method="POST"
-          className="flex flex-col gap-6"
-          onSubmit={() => setNameValue("")}
-        >
-          <div className="flex flex-col gap-2">
-            <Label htmlFor={KEYS.email}>Email</Label>
-            <input
-              id={KEYS.email}
-              name={KEYS.email}
-              type="email"
-              value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
-              className="block w-full min-w-72 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="email@example.com"
-              required
-            />
+          <div>
+            <a
+              className={twMerge(
+                "flex h-12 w-full items-center justify-center gap-3 rounded border border-black p-2",
+                "text-base leading-normal font-medium",
+              )}
+              href={googleAuthStartUrl}
+            >
+              <img
+                src="/images/google-logo.png"
+                alt="Google logo"
+                className="size-[18px]"
+              />
+              Continue with Google
+            </a>
           </div>
-          <ActionButton type="submit" disabled={nameValue.trim() === ""}>
-            {navigation.state === "submitting" ? "Loading..." : "Continue"}
-          </ActionButton>
-        </Form>
-        <div className="pt-4 text-sm">
-          Don&apos;t have an account?{" "}
-          <a className={LINK_STYLES} href="https://forms.gle/zCJqHCCSBgyrN8EB6">
-            Request access
-          </a>
-          .
+          <div className="pt-1">
+            <hr className="border-top-1 border-slate-300" />
+          </div>
+          {errors.map((e) => (
+            <div key={e} className="text-danger py-2 text-center">
+              {e}
+            </div>
+          ))}
+          <Form
+            method="POST"
+            className="flex flex-col gap-4"
+            onSubmit={() => setNameValue("")}
+          >
+            <div className="flex flex-col gap-2">
+              <Label htmlFor={KEYS.email}>Email</Label>
+              <input
+                id={KEYS.email}
+                name={KEYS.email}
+                type="email"
+                value={nameValue}
+                onChange={(e) => setNameValue(e.target.value)}
+                className="block w-full min-w-72 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="email@example.com"
+                required
+              />
+            </div>
+            <ActionButton type="submit" disabled={nameValue.trim() === ""}>
+              {navigation.state === "submitting" ? "Loading..." : "Continue"}
+            </ActionButton>
+          </Form>
+          <div className="text-sm">
+            Don&apos;t have an account?{" "}
+            <a
+              className={LINK_STYLES}
+              href="https://forms.gle/zCJqHCCSBgyrN8EB6"
+            >
+              Request access
+            </a>
+            .
+          </div>
         </div>
+
+        {/* <div className="flex h-6 items-center">
+          <div className="bg-grey-2 flex h-px w-full items-center justify-center">
+            <span className="text-grey-3 h-6 bg-white px-6">Or</span>
+          </div>
+        </div> */}
       </div>
     </AppContainer>
   );
@@ -108,30 +142,11 @@ export default function LoginRoute() {
 
 export async function action({ request }: ActionFunctionArgs) {
   try {
-    const formData = await request.formData();
-    const email = formData.get(KEYS.email)?.toString();
+    // TODO: turn into util
+    const formData = Object.fromEntries(await request.formData());
+    const data = loginSchema.parse(formData);
 
-    if (!email || email.trim() === "") {
-      return {
-        errorMessage: "Email is required",
-        ok: false,
-      };
-    }
-
-    const normalizedEmail = email.toLowerCase();
-
-    const isAllowed = isAllowedUser(normalizedEmail);
-
-    if (!isAllowed) {
-      return redirect(
-        `${getDomainHost({ request, withProtocol: true })}${appRoutes(
-          "/request-access",
-          {
-            email: normalizedEmail,
-          },
-        )}`,
-      );
-    }
+    requireAllowedUser({ email: data.email, request });
 
     const isPreviewEnv = process.env.VERCEL_ENV === "preview";
     const redirectUrlIfPreview = isPreviewEnv
@@ -139,7 +154,7 @@ export async function action({ request }: ActionFunctionArgs) {
       : undefined;
 
     const res = await stytchClient.magicLinks.email.loginOrCreate({
-      email: normalizedEmail,
+      email: data.email,
       login_magic_link_url: redirectUrlIfPreview,
       signup_magic_link_url: redirectUrlIfPreview,
     });
@@ -150,7 +165,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     await upsertUser({ stytchId: res.user_id });
 
-    return { email, errors: null, ok: true };
+    return { email: data.email, errors: null, ok: true };
   } catch (error) {
     return serverError(error);
   }

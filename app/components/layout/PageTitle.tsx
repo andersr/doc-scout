@@ -13,7 +13,7 @@ export function PageTitle({
       <title>{setWindowTitle(title)}</title>
       <h1
         className={twMerge(
-          "text-3xl leading-tight text-stone-600 font-stretch-75% md:text-5xl md:font-semibold md:font-stretch-50%",
+          "text-4xl leading-tight font-semibold text-stone-600 font-stretch-75% md:text-5xl md:font-stretch-50%",
           danger ? "text-danger" : "text-stone-600",
         )}
       >
