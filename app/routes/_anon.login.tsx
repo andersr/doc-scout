@@ -19,8 +19,6 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { AppContainer } from "~/components/layout/AppContainer";
-import AppHeader from "~/components/layout/AppHeader";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
@@ -63,14 +61,13 @@ export default function LoginRoute() {
       : [];
 
   return (
-    <AppContainer className="relative">
-      <AppHeader />
-      {actionData?.email && (
-        <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
-          Please check the inbox for {actionData.email}
-        </div>
-      )}
-      <div className="flex h-2/3 flex-col items-center justify-center">
+    <>
+      <div className="flex h-2/3 flex-1 flex-col items-center justify-center">
+        {actionData?.email && (
+          <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
+            Please check the inbox for {actionData.email}
+          </div>
+        )}
         <div className="flex w-full max-w-[325px] flex-col gap-6">
           <div className="text-center">
             <PageTitle title={title} />
@@ -133,7 +130,7 @@ export default function LoginRoute() {
           </div>
         </div>
       </div>
-    </AppContainer>
+    </>
   );
 }
 

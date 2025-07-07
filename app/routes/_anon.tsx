@@ -5,7 +5,7 @@ import AppHeader from "~/components/layout/AppHeader";
 import { MainContentContainer } from "~/components/layout/MainContentContainer";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
-import type { Route } from "./+types/_static";
+import type { Route } from "./+types/_anon";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,10 +16,10 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function StaticRoutes() {
+export default function AnonRoutes() {
   return (
     <Layout>
-      <div className="mx-auto w-lg">
+      <div className="mx-auto w-lg flex-1">
         <Outlet />
       </div>
     </Layout>
