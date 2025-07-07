@@ -34,7 +34,7 @@ export async function handleActionIntent({
       );
     }
 
-    return await handlers[intent]({ formData, params, request: clone });
+    return await handlers[intent]({ formData, params, request });
   } catch (error) {
     return serverError(error);
   }

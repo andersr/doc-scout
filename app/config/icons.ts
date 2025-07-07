@@ -9,6 +9,7 @@ export const APP_ICONS = {
   ARROW_UP: "arrow_upward",
   CHATS: "chat_bubble",
   COPY: "content_copy",
+  DELETE: "delete",
   DOCUMENTS: "library_books",
   DONE: "done",
   LOGOUT: "logout",

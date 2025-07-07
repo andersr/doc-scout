@@ -91,6 +91,8 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
             <div className="flex items-center">
               <button
                 type="submit"
+                name={KEYS.intent}
+                value={KEYS.chat}
                 className={twMerge(
                   "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100 disabled:opacity-40",
                   HOVER_TRANSITION,

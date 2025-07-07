@@ -1,7 +1,7 @@
 import type { Source } from "@prisma/client";
 import { addDocsToVectorStore } from "./addDocsToVectorStore";
 
-import { getNameSpace } from "~/config/namespaces";
+import { setNameSpace } from "~/config/namespaces";
 import type { LCDocument } from "~/types/document";
 import type { VectorDocMetadata } from "~/types/vectorDoc";
 
@@ -33,7 +33,7 @@ export async function addSourcesToVectorStore({
   if (vectorDocs.length > 0) {
     await addDocsToVectorStore({
       docs: vectorDocs,
-      namespace: getNameSpace("user", userPublicId),
+      namespace: setNameSpace({ prefix: "user", userPublicId }),
     });
   }
 }

@@ -73,7 +73,7 @@ export function FileUploadForm() {
               <span className="font-semibold">{f.name}</span>
               <IconButton
                 name="REMOVE"
-                title="Remove item"
+                label="Remove item"
                 onClick={() => {
                   const updated = [...selectedFiles];
                   const index = selectedFiles.findIndex(

@@ -2,6 +2,7 @@ import type { Document } from "@langchain/core/documents";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { Annotation, StateGraph } from "@langchain/langgraph";
 import { RAG_TEMPLATE } from "~/config/prompts";
+import type { VectorMetadataFilter } from "~/types/vectorDoc";
 import { llm } from "../../llm/llm";
 import { getVectorStore } from "../../vectorStore/vectorStore";
 
@@ -38,7 +39,7 @@ export async function generateGraph({
     const retrievedDocs = await vectorStore.similaritySearch(
       state.question,
       4, // default value
-      { sourceId: { $in: sourceIds } },
+      { sourceId: { $in: sourceIds } } satisfies VectorMetadataFilter,
     );
     return { context: retrievedDocs };
   };

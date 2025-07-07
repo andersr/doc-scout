@@ -2,5 +2,10 @@ export const NAMESPACES = {
   user: "user",
 } as const;
 
-export const getNameSpace = (type: keyof typeof NAMESPACES, id: string) =>
-  `${NAMESPACES[type]}_${id}`;
+export const setNameSpace = ({
+  prefix,
+  userPublicId,
+}: {
+  prefix: keyof typeof NAMESPACES;
+  userPublicId: string;
+}) => `${NAMESPACES[prefix]}_${userPublicId}`;

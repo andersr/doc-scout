@@ -17,6 +17,7 @@ import type { Route } from "./+types/_auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { internalUser } = await requireUser({ request });
+
   const stytchUser = await getStytchUserById(internalUser.stytchId);
 
   const email = stytchUser?.emails[0].email ?? "";

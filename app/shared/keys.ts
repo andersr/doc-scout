@@ -2,14 +2,16 @@
  * Used for setting input ids, query params, and other values that need to match across separate methods and services, ie between client and server.
  */
 export const AppKeys = [
+  "chat",
   "custom_scopes", // used for oauth
+  "delete",
   "description",
-  "id",
-  "ids",
   "email",
   "error",
   "files",
   "fileNames",
+  "id",
+  "ids",
   "login_redirect_url", // used for stytch oauth
   "sourcesInput",
   "message",
