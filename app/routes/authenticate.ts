@@ -1,6 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type LoaderFunctionArgs, redirect } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
+import requireAllowedUser from "~/.server/utils/requireAllowedUser";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { STYTCH_SESSION_DURATION_MINUTES } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
@@ -32,6 +33,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
         session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
         token,
       });
+
+      const email =
+        res.user.emails.length > 0 ? res.user.emails[0].email : undefined;
+
+      if (!email) {
+        console.error("no user email");
+        throw new ServerError(
+          ReasonPhrases.BAD_REQUEST,
+          StatusCodes.BAD_REQUEST,
+        );
+      }
+
+      requireAllowedUser({ email, request });
 
       sessionToken = res.session_token;
     }
