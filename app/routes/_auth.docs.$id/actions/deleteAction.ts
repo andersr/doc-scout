@@ -1,3 +1,4 @@
+import { deleteFromBucket } from "@services/cloudStore/deleteFromBucket";
 import { getVectorStore } from "@services/vectorStore/getVectorStore";
 import { redirect } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
@@ -18,6 +19,8 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     params,
   });
 
+  // TODO: delete doc from S3
+
   const source = await prisma.source.delete({
     include: SOURCE_INCLUDE,
     where: {
@@ -25,6 +28,15 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
       publicId: sourcePublicId,
     },
   });
+
+  if (!source.storagePath) {
+    console.warn(
+      `no storage path found, cannot delete from s3 for source: ${source.fileName}, ${source.publicId} `,
+    );
+  }
+  if (source.storagePath) {
+    await deleteFromBucket(source.storagePath);
+  }
 
   const namespace = setNameSpace({
     prefix: "user",

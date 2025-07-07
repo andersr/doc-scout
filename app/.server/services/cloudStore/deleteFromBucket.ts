@@ -1,9 +1,9 @@
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from "../../ENV";
 import { s3Client } from "../../vendors/aws/s3Client";
 
-export async function getFromBucket(key: string) {
-  const command = new GetObjectCommand({
+export async function deleteFromBucket(key: string) {
+  const command = new DeleteObjectCommand({
     Bucket: ENV.AWS_DATA_BUCKET_NAME,
     Key: key,
   });
