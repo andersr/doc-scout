@@ -19,8 +19,6 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     params,
   });
 
-  // TODO: delete doc from S3
-
   const source = await prisma.source.delete({
     include: SOURCE_INCLUDE,
     where: {
@@ -64,6 +62,5 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     });
   }
 
-  // set flash message and display on dashboard
   return redirect(appRoutes("/"));
 };
