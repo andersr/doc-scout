@@ -1,5 +1,4 @@
 import { ENV } from "~/.server/ENV";
-import { GOOGLE_DRIVE_SCOPES } from "~/config/google";
 import { STYTCH_GOOGLE_START } from "~/config/stytch";
 import { KEYS } from "../../../shared/keys";
 
@@ -11,10 +10,6 @@ export default function (): string {
   stytchGoogleAuthStart.searchParams.set(
     KEYS.public_token,
     ENV.STYTCH_PUBLIC_TOKEN,
-  );
-  stytchGoogleAuthStart.searchParams.set(
-    KEYS.custom_scopes,
-    GOOGLE_DRIVE_SCOPES,
   );
 
   if (vercelEnv === "preview" && previewHost) {
