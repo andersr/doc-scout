@@ -1,5 +1,6 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type LoaderFunctionArgs, redirect } from "react-router";
+import { upsertUser } from "~/.server/models/users/upsertUser";
 import { createSession } from "~/.server/services/sessions/createSession";
 import { isAllowedUser } from "~/.server/utils/isAllowedUser";
 import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
@@ -56,6 +57,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
 
       sessionToken = res.session_token;
+
+      await upsertUser({ stytchId: res.user_id });
     }
 
     if (!sessionToken) {
