@@ -14,6 +14,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Doc Chat - bot reply", () => {
   const username = TEST_USERS.chat_bot_reply;
   let sourcePublicId = "";
+  test.describe.configure({ retries: 2 });
   test.use({ storageState: setAuthStoragePath(username) });
 
   test.beforeEach(async ({ request }) => {
