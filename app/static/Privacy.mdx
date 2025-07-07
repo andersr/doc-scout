@@ -26,11 +26,13 @@ For the purposes of this Privacy Policy:
 
 - When You add a file to the Application, either via file upload or via a URL, the file data is stored in an [AWS S3](https://aws.amazon.com/pm/serv-s3/) object storage "bucket".
 - The data in each file is extracted and stored in a vector database, to allow for use by an LLM.
+- When you chat with a Document, Your chat messages are stored in the Application database. The chat messages are only visible to you and the Application administrator.
 
 ## Data protection mechanisms
 
-- Files and the associated data are only accessible by You and by the application administrator.
+- Files and the associated data are only accessible by You and the Application administrator.
 - We protect your data by using [Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security).
+- You can permanently delete any document You add. This will remove the document from the object storage bucket, delete all associated records in the vector store, and delete all associated records in the application database, include the associated chat and chat messages.
 
 ## What data do we NOT collect or store?
 
