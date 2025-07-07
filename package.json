@@ -113,7 +113,7 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
-    "e2e:codegen": "PORT=8080 dotenv -e .env.test -- npx playwright codegen --load-storage=playwright/.auth/has_docs.json http://localhost:8080",
+    "e2e:codegen": "PORT=8080 dotenv -e .env.test -- npx playwright codegen --load-storage=playwright/.auth/doc_delete.json http://localhost:8080",
     "e2e:db:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "e2e:db:studio": "dotenv -e .env.test -- prisma studio",
     "e2e:test": "PORT=9000 dotenv -e .env.test -- run-s e2e:db:reset build pw:test",

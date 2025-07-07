@@ -12,7 +12,5 @@ export const deleteSourceAction: ActionHandlerFn = async ({ formData }) => {
     },
   });
 
-  // TODO: also delete associated Chat (currently is left orphaned)
-
   return null;
 };

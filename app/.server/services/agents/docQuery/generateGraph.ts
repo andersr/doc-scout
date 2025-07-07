@@ -4,7 +4,7 @@ import { Annotation, StateGraph } from "@langchain/langgraph";
 import { RAG_TEMPLATE } from "~/config/prompts";
 import type { VectorMetadataFilter } from "~/types/vectorDoc";
 import { llm } from "../../llm/llm";
-import { getVectorStore } from "../../vectorStore/vectorStore";
+import { getVectorStore } from "../../vectorStore/getVectorStore";
 
 export interface GenerateGraphInput {
   namespace: string;

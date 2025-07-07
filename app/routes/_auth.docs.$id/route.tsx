@@ -11,6 +11,7 @@ import BotChat from "~/components/chat/BotChat";
 import { PageHeading } from "~/components/layout/PageHeading";
 import { IconButton } from "~/components/ui/buttons/IconButton";
 import { Icon } from "~/components/ui/Icon";
+import { DELETE_DOC_CONFIRM } from "~/config/confirmations";
 import { KEYS } from "~/shared/keys";
 import type { ClientMessage } from "~/types/message";
 import { setSourceTitle } from "~/utils/setSourceTitle";
@@ -74,7 +75,7 @@ export default function DocDetailsLayout() {
                 onClick={() => {
                   if (
                     confirm(
-                      `Delete this doc? ${messages.length > 0 ? "***This will also delete all associated chat messages.***" : ""}`,
+                      `${DELETE_DOC_CONFIRM}${messages.length > 0 ? " ***This will also delete all associated chat messages.***" : ""}`,
                     )
                   ) {
                     deleteFetcher.submit(

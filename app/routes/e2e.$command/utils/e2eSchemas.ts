@@ -8,6 +8,13 @@ export const upsertSourceSchema = z.object({
 });
 export type UpsertSourceInput = z.infer<typeof upsertSourceSchema>;
 
+export const deleteAllUserSourcesSchema = z.object({
+  email: z.string().email(),
+});
+export type DeleteAllUserSourcesInput = z.infer<
+  typeof deleteAllUserSourcesSchema
+>;
+
 export const deleteSourceSchema = z.object({
   sourcePublicId: z.string().min(1),
 });

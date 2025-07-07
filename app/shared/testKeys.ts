@@ -4,6 +4,7 @@ export const TestKeys = [
   "username",
   "deleteMessages",
   "deleteSource",
+  "deleteAllUserSources",
   "deleteSourcesByName",
   "chatPublicId",
   "sourcePublicId",

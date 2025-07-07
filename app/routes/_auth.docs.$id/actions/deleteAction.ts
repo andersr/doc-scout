@@ -1,4 +1,4 @@
-import { getVectorStore } from "@services/vectorStore/vectorStore";
+import { getVectorStore } from "@services/vectorStore/getVectorStore";
 import { redirect } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
