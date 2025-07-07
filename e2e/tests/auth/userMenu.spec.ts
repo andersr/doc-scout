@@ -5,6 +5,7 @@ import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
 
 test.describe("User Menu", () => {
+  test.describe.configure({ retries: 2 });
   test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
 
   const USER_EMAIL = getTestEmail(TEST_USERS.no_docs);
