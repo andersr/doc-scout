@@ -10,12 +10,7 @@ interface Props {
 
 export function AppContainer({ children, className }: Props) {
   return (
-    <div
-      className={twMerge(
-        "flex h-full flex-col pt-4 pr-4 pb-6 pl-4 md:pr-6",
-        className,
-      )}
-    >
+    <div className={twMerge("flex h-full flex-col p-4", className)}>
       {children}
       <footer className="flex items-center justify-center gap-4">
         <Link className={MUTED_LINK_STYLES} to={appRoutes("/privacy")}>

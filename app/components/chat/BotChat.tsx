@@ -64,7 +64,7 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
           )}
           {fetcher.state !== "idle" && <ChatListItem isBot loading />}
         </ListContainer>
-      </ScrollContainer>{" "}
+      </ScrollContainer>
       <div
         className={twMerge(
           "fixed right-4 bottom-0 left-4 z-10 pb-4 md:mx-auto md:max-w-5xl",
