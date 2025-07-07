@@ -11,6 +11,7 @@ import {
   TabsList,
   useTabs,
 } from "~/components/ui/tabs";
+import { ADD_DOCS_TITLE } from "~/config/titles";
 import { KEYS } from "~/shared/keys";
 import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";
@@ -21,7 +22,7 @@ export default function NewDocsRoute() {
 
   return (
     <div>
-      <PageTitle title="Add Docs" />
+      <PageTitle title={ADD_DOCS_TITLE} />
       <div className="pt-4">
         <Tabs value={value} onValueChange={onValueChange}>
           <TabsList>

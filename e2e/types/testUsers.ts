@@ -9,6 +9,7 @@ export const TestUserNames = [
   "chat_bot_reply",
   "chat_copy_clipboard",
   "no_docs",
+  "doc_delete",
 ] as const;
 
 export type CreateTestUserInput = { email: string };

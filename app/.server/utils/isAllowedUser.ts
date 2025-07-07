@@ -8,5 +8,5 @@ export function isAllowedUser(email: string) {
 
   const allowedUsers = envVar.split(",");
 
-  return allowedUsers.includes(email);
+  return allowedUsers.includes(email.toLowerCase());
 }

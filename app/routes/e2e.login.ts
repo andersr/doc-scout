@@ -4,7 +4,6 @@ import { createSession } from "~/.server/services/sessions/createSession";
 import { requireEnvVar } from "~/.server/utils/requireEnvVar";
 import { requireSearchParam } from "~/.server/utils/requireSearchParam";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 
@@ -19,7 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     return createSession({
-      key: STYTCH_SESSION_TOKEN,
+      key: KEYS.stytch_session_token,
       redirectTo: appRoutes("/"),
       request,
       token: authRes.session_token,

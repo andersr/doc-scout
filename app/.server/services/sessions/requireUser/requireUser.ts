@@ -1,6 +1,5 @@
 import { redirect } from "react-router";
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
-import { STYTCH_SESSION_TOKEN } from "~/config/auth";
 import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import {
@@ -10,6 +9,7 @@ import {
 } from "~/types/user";
 
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { KEYS } from "~/shared/keys";
 import { logout } from "../logout";
 
 export async function requireUser({
@@ -18,7 +18,7 @@ export async function requireUser({
   request: Request;
 }): Promise<{ clientUser: UserClient; internalUser: UserInternal }> {
   const sessionToken = await getCookieValue({
-    key: STYTCH_SESSION_TOKEN,
+    key: KEYS.stytch_session_token,
     request,
   });
   if (!sessionToken) {

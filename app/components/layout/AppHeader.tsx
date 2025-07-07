@@ -13,7 +13,7 @@ export default function AppHeader({
   const isHome = pathname === appRoutes("/");
 
   return (
-    <header className="flex place-items-baseline gap-2 md:gap-4">
+    <header className="flex items-center gap-2 md:gap-4">
       <div className="flex-1">
         {isHome ? (
           <LogoWithText />

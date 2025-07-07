@@ -1,11 +1,10 @@
-import { StatusCodes } from "http-status-codes";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { type LoaderFunctionArgs, redirect } from "react-router";
 import { createSession } from "~/.server/services/sessions/createSession";
+import { isAllowedUser } from "~/.server/utils/isAllowedUser";
+import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import {
-  STYTCH_SESSION_DURATION_MINUTES,
-  STYTCH_SESSION_TOKEN,
-} from "~/config/auth";
+import { STYTCH_SESSION_DURATION_MINUTES } from "~/config/auth";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
@@ -20,18 +19,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
       throw new ServerError(`No token`, StatusCodes.BAD_REQUEST);
     }
 
+    let sessionToken = "";
+
     if (tokenType === "magic_links") {
       const res = await stytchClient.magicLinks.authenticate({
         session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
         token,
       });
-
-      return createSession({
-        key: STYTCH_SESSION_TOKEN,
-        redirectTo: appRoutes("/"),
-        request,
-        token: res.session_token,
-      });
+      sessionToken = res.session_token;
     }
 
     if (tokenType === "oauth") {
@@ -39,19 +34,41 @@ export async function loader({ request }: LoaderFunctionArgs) {
         session_duration_minutes: STYTCH_SESSION_DURATION_MINUTES,
         token,
       });
-      console.info("res: ", res);
 
-      // const redirectUrl = res.
+      const email =
+        res.user.emails.length > 0 ? res.user.emails[0].email : undefined;
 
-      return createSession({
-        key: STYTCH_SESSION_TOKEN,
-        redirectTo: appRoutes("/"),
-        request,
-        token: res.session_token,
-      });
+      if (!email) {
+        console.error("no user email");
+        throw new ServerError(
+          ReasonPhrases.BAD_REQUEST,
+          StatusCodes.BAD_REQUEST,
+        );
+      }
+
+      if (!isAllowedUser(email)) {
+        return redirectWithDomainHost({
+          request,
+          route: appRoutes("/request-access", {
+            email: email,
+          }),
+        });
+      }
+
+      sessionToken = res.session_token;
     }
 
-    throw new ServerError("Unknown request type", StatusCodes.BAD_REQUEST);
+    if (!sessionToken) {
+      console.error("no request token");
+      throw new ServerError(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
+    }
+
+    return createSession({
+      key: KEYS.stytch_session_token,
+      redirectTo: appRoutes("/"),
+      request,
+      token: sessionToken,
+    });
   } catch (error) {
     console.error(`Login error: ${error}`);
     throw redirect(
