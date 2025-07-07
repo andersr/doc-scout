@@ -7,6 +7,7 @@ import { ENV } from "~/.server/ENV";
 import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSourceAndSourceChat";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
+import getFormData from "~/.server/utils/getFormData";
 import { serverError } from "~/.server/utils/serverError";
 import BotChat from "~/components/chat/BotChat";
 import { PageHeading } from "~/components/layout/PageHeading";
@@ -75,7 +76,7 @@ export async function action({ params, request }: Route.ActionArgs) {
   try {
     const { source, sourceChat } = await requireSourceAndSourceChat({ params });
 
-    const formData = Object.fromEntries(await request.formData());
+    const formData = await getFormData({ request });
     const input = userMessageSchema.parse(formData);
 
     await prisma.message.create({

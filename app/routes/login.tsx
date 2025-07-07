@@ -13,6 +13,7 @@ import { upsertUser } from "~/.server/models/users/upsertUser";
 import getGoogleAuthStartUrl from "~/.server/services/oauth/getGoogleAuthStartUrl";
 import { requireAnon } from "~/.server/services/sessions/requireAnon";
 import { getDomainHost } from "~/.server/utils/getDomainHost";
+import getFormData from "~/.server/utils/getFormData";
 import { isAllowedUser } from "~/.server/utils/isAllowedUser";
 import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
@@ -138,8 +139,7 @@ export default function LoginRoute() {
 
 export async function action({ request }: ActionFunctionArgs) {
   try {
-    // TODO: turn into util
-    const formData = Object.fromEntries(await request.formData());
+    const formData = await getFormData({ request });
     const data = loginSchema.parse(formData);
 
     if (!isAllowedUser(data.email)) {
