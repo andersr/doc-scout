@@ -1,5 +1,17 @@
 import "material-symbols/outlined.css";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  data,
+  Links,
+  type LoaderFunctionArgs,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from "react-router";
+import { getToast } from "remix-toast";
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
 import { APP_NAME } from "./config/app";
@@ -20,7 +32,20 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { headers, toast } = await getToast(request);
+  return data({ alert: toast }, { headers });
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { alert } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    if (alert) {
+      toast(alert.message);
+    }
+  }, [alert]);
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -47,6 +72,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className={twMerge("h-full", "bg-background")}>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

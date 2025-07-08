@@ -2,7 +2,6 @@ import { data, Link, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
-// import AppHeader from "~/components/AppHeader";
 import { AppContainer } from "~/components/layout/AppContainer";
 import AppHeader from "~/components/layout/AppHeader";
 import { MainContentContainer } from "~/components/layout/MainContentContainer";

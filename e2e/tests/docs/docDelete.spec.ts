@@ -1,5 +1,4 @@
 import { generateId } from "@app/.server/utils/generateId";
-import { DELETE_DOC_CONFIRM } from "@app/config/confirmations";
 import { ADD_DOCS_TITLE } from "@app/config/titles";
 import type {
   DeleteAllUserSourcesInput,
@@ -7,6 +6,7 @@ import type {
 } from "@app/routes/e2e.$command/utils/e2eSchemas";
 import { appRoutes } from "@app/shared/appRoutes";
 import { TEST_KEYS } from "@app/shared/testKeys";
+import { MOCK_SOURCE } from "@e2e/mocks/sources/mockSource";
 import { TEST_USERS } from "@e2e/types/testUsers";
 import { getTestEmail } from "@e2e/utils/getTestEmail";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
@@ -46,7 +46,7 @@ test.describe("Doc delete", () => {
   test("deletes doc with confirmation dialog", async ({ page }) => {
     // arrange
     page.on("dialog", async (dialog) => {
-      expect(dialog.message()).toBe(DELETE_DOC_CONFIRM);
+      expect(dialog.message()).toBe(`Delete "${MOCK_SOURCE.title}"?`);
       await dialog.accept();
     });
 

@@ -1,6 +1,6 @@
 import { deleteFromBucket } from "@services/cloudStore/deleteFromBucket";
 import { getVectorStore } from "@services/vectorStore/getVectorStore";
-import { redirect } from "react-router";
+import { redirectWithSuccess } from "remix-toast";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
 import { setNameSpace } from "~/config/namespaces";
@@ -10,6 +10,7 @@ import { KEYS } from "~/shared/keys";
 import type { ActionHandlerFn } from "~/types/action";
 import { SOURCE_INCLUDE } from "~/types/source";
 import type { VectorMetadataFilter } from "~/types/vectorDoc";
+// import { getVectorStore } from "../../../.server/services/vectorStore/getVectorStore";
 
 export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
   const { internalUser } = await requireUser({ request });
@@ -62,5 +63,5 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     });
   }
 
-  return redirect(appRoutes("/"));
+  return redirectWithSuccess(appRoutes("/"), `"${source.title}" was deleted.`);
 };
