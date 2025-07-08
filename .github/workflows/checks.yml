@@ -116,6 +116,7 @@ jobs:
       AWS_S3_ACCESS_KEY: foo
       AWS_S3_SECRET: foo
       AWS_CDN_HOST: ${{ secrets.AWS_CDN_HOST }}
+      AWS_CDN_SECRET: foo
       AWS_CDN_PUBLIC_KEY_ID: foo
       CI: true
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
