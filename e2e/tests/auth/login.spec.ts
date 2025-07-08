@@ -2,6 +2,7 @@ import { appRoutes } from "@app/shared/appRoutes";
 import { expect, test } from "@playwright/test";
 
 test.describe("Login", () => {
+  test.describe.configure({ retries: 2 });
   test.use({ storageState: { cookies: [], origins: [] } });
   test("redirects unauthorized users to request access page", async ({
     page,

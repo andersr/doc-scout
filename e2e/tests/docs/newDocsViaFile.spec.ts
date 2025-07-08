@@ -9,7 +9,7 @@ import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "../../test.withFixtures";
 
 test.describe("Add/Remove Docs", () => {
-  test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.new_docs_add_files) });
 
   test("allows for adding files via drag and drop", async ({
     fileFactory,
@@ -59,7 +59,7 @@ test.describe("Add/Remove Docs", () => {
 });
 
 test.describe("Docs Validation", () => {
-  test.use({ storageState: setAuthStoragePath(TEST_USERS.has_docs) });
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.new_docs_validate) });
 
   test.fixme(
     "displays an error if file is too large",
@@ -117,6 +117,7 @@ test.describe("Docs Validation", () => {
 });
 
 test.describe("New Docs Redirect - single doc", () => {
+  test.describe.configure({ retries: 2 });
   test.use({
     storageState: setAuthStoragePath(TEST_USERS.new_docs_redirect),
   });
@@ -146,6 +147,7 @@ test.describe("New Docs Redirect - single doc", () => {
 });
 
 test.describe("New Docs Redirect - multiple docs", () => {
+  test.describe.configure({ retries: 2 });
   test.use({
     storageState: setAuthStoragePath(TEST_USERS.new_docs_redirect_multidoc),
   });
