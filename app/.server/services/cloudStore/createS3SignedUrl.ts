@@ -4,7 +4,7 @@ import { SIGNED_URL_DFLT_EXPIRATION } from "~/config/signedUrls";
 import { ENV } from "../../ENV";
 import { s3Client } from "../../vendors/aws/s3Client";
 
-export const createPresignedUrl = ({
+export const createS3SignedUrl = ({
   expiresSeconds,
   key,
 }: {

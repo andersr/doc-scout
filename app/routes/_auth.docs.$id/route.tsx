@@ -3,8 +3,8 @@ import type { ServerResponse } from "http";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { useFetcher, useLoaderData } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { ENV } from "~/.server/ENV";
 import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSourceAndSourceChat";
+import { createCloudfrontSignedUrl } from "~/.server/services/cloudStore/createCloudfrontSignedUrl";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import BotChat from "~/components/chat/BotChat";
@@ -26,9 +26,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
     ...m,
     isBot: m.type === MessageType.BOT,
   }));
-
+  const docUrl = source.storagePath
+    ? await createCloudfrontSignedUrl({ storagePath: source.storagePath })
+    : "";
   return {
-    cdn: ENV.AWS_CDN,
+    docUrl,
     messages,
     source,
     title: setSourceTitle(source),
@@ -36,7 +38,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function DocDetailsLayout() {
-  const { cdn, messages, source, title } = useLoaderData<typeof loader>();
+  const { docUrl, messages, title } = useLoaderData<typeof loader>();
 
   const deleteFetcher = useFetcher<ServerResponse>();
 
@@ -46,10 +48,10 @@ export default function DocDetailsLayout() {
         pageTitle={title}
         headingContent={
           <ul className="flex items-center gap-4">
-            {source.storagePath && (
+            {docUrl && (
               <li>
                 <a
-                  href={`${cdn}/${source.storagePath}`}
+                  href={docUrl}
                   target="_blank"
                   rel="noreferrer"
                   className={twMerge(

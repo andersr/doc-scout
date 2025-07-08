@@ -34,7 +34,7 @@ A live version of the app can be found at <https://www.docscout.app/>
    - `AWS_S3_ACCESS_KEY`: Your AWS access key (create IAM user with AmazonS3FullAccess and AWSCloudFormationFullAccess)
    - `AWS_S3_SECRET`: Your AWS secret key
    - `AWS_REGION`: AWS region (e.g., us-east-1)
-   - `AWS_CDN`: CDN URL for document web links
+   - `AWS_CDN_HOST`: CDN URL for document web links
 
    #### Database
 
