@@ -60,6 +60,9 @@ test.describe("Doc delete", () => {
 
     // assert
     await expect(
+      page.getByText(`"${MOCK_SOURCE.title}" was deleted.`),
+    ).toBeVisible();
+    await expect(
       page.getByRole("heading", { level: 1, name: ADD_DOCS_TITLE }),
     ).toBeVisible();
   });

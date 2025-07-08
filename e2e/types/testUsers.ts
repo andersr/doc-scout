@@ -4,6 +4,8 @@
  */
 export const TestUserNames = [
   "has_docs",
+  "new_docs_add_files",
+  "new_docs_validate",
   "new_docs_redirect",
   "new_docs_redirect_multidoc",
   "chat_bot_reply",
