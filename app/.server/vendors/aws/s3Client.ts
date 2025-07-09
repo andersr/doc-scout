@@ -3,8 +3,8 @@ import { ENV } from "~/.server/ENV";
 
 export const s3Client = new S3Client({
   credentials: {
-    accessKeyId: ENV.AWS_S3_ACCESS_KEY,
-    secretAccessKey: ENV.AWS_S3_SECRET,
+    accessKeyId: ENV.AWS_ACCESS_KEY_ID,
+    secretAccessKey: ENV.AWS_SECRET_ACCESS_KEY,
   },
   region: ENV.AWS_REGION,
 });

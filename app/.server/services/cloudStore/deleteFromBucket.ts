@@ -4,7 +4,7 @@ import { s3Client } from "~/.server/vendors/aws/s3Client";
 
 export async function deleteFromBucket(key: string) {
   const command = new DeleteObjectCommand({
-    Bucket: ENV.AWS_DATA_BUCKET_NAME,
+    Bucket: ENV.AWS_S3_BUCKET_NAME,
     Key: key,
   });
 
