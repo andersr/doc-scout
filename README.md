@@ -17,19 +17,16 @@ A live version of the app can be found at <https://www.docscout.app/>
 2. Fill in the required environment variables:
 
    #### Authentication
-
    - `AUTH_SESSION_SECRET`: Generate a secret key (e.g., using `openssl rand -hex 32`)
    - `ALLOWED_USERS`: For production, add comma-separated emails for authorized users. For development, set to "any" to allow access with any email address
 
    #### Adobe PDF Services
-
    - `ADOBE_PDF_SERVICES_CLIENT_ID`: Your Adobe PDF Services client ID
    - `ADOBE_PDF_SERVICES_CLIENT_SECRET`: Your Adobe PDF Services client secret
 
    Set up a PDF services project at: <https://developer.adobe.com/document-services/apis/pdf-services/>
 
    #### AWS
-
    - `AWS_S3_BUCKET_NAME`: Name of your AWS S3 bucket
    - `AWS_ACCESS_KEY_ID`: Your AWS access key (create IAM user with AmazonS3FullAccess and AWSCloudFormationFullAccess)
    - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
@@ -37,24 +34,20 @@ A live version of the app can be found at <https://www.docscout.app/>
    - `AWS_CDN_HOST`: CDN URL for document web links
 
    #### Database
-
    - `DATABASE_URL`: Your PostgreSQL connection string (append `?pgbouncer=true` parameter)
    - `DIRECT_URL`: Direct URL to your PostgreSQL database
 
    #### Firecrawl
-
    - `FIRECRAWL_API_KEY`: Your Firecrawl API key
 
    Get an API key at: <https://www.firecrawl.dev/>
 
    #### OpenAI
-
    - `OPENAI_API_KEY`: Your OpenAI API key
 
    Get an API key at: <https://platform.openai.com/>
 
    #### Pinecone
-
    - `PINECONE_API_KEY`: Your Pinecone API key
    - `PINECONE_HOST`: Your Pinecone host URL
    - `PINECONE_INDEX_NAME`: Your Pinecone index name
@@ -62,7 +55,6 @@ A live version of the app can be found at <https://www.docscout.app/>
    Get API key and create a vector store at: <https://www.pinecone.io/>
 
    #### Stytch
-
    - `STYTCH_PROJECT_ID`: Your Stytch project ID
    - `STYTCH_SECRET`: Your Stytch secret key
 
