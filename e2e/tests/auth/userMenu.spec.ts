@@ -4,11 +4,14 @@ import { getTestEmail } from "@e2e/utils/getTestEmail";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
 
-test.describe("User Menu", () => {
+test.describe("User Menu - display email", () => {
+  const username = TEST_USERS.user_menu_display_email;
   test.describe.configure({ retries: 2 });
-  test.use({ storageState: setAuthStoragePath(TEST_USERS.no_docs) });
+  test.use({
+    storageState: setAuthStoragePath(username),
+  });
 
-  const USER_EMAIL = getTestEmail(TEST_USERS.no_docs);
+  const USER_EMAIL = getTestEmail(username);
 
   test("displays current user's email address", async ({ page }) => {
     // act
@@ -18,6 +21,15 @@ test.describe("User Menu", () => {
     // assert
     await expect(page.getByText(USER_EMAIL)).toBeVisible();
   });
+});
+
+test.describe("User Menu - sign out", () => {
+  const username = TEST_USERS.user_menu_sign_out;
+
+  test.describe.configure({ retries: 2 });
+  test.use({ storageState: setAuthStoragePath(username) });
+
+  const USER_EMAIL = getTestEmail(username);
 
   test("signs out a user if clicking sign out", async ({ page }) => {
     // act

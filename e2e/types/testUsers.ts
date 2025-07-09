@@ -10,6 +10,8 @@ export const TestUserNames = [
   "new_docs_redirect_multidoc",
   "chat_bot_reply",
   "chat_copy_clipboard",
+  "user_menu_display_email",
+  "user_menu_sign_out",
   "no_docs",
   "doc_delete",
 ] as const;
