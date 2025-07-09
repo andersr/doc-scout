@@ -79,7 +79,6 @@ A live version of the app can be found at <https://www.docscout.app/>
    ```
 
 2. Configure test-specific environment variables:
-
    - Use **separate test databases** and services from your development environment
    - Create a dedicated test database: `research_tool_test`
    - Use Stytch **test credentials** (not production keys)
