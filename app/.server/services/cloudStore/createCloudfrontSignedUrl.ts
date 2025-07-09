@@ -13,7 +13,7 @@ export async function createCloudfrontSignedUrl({
 
   const dateLessThan = date.setDate(date.getDate() + 1);
 
-  const privateKey = await getSecret(ENV.AWS_CDN_SECRET);
+  const privateKey = await getSecret(ENV.AWS_CDN_PRIVATE_KEY_NAME);
 
   const signedUrl = getSignedUrl({
     dateLessThan,
