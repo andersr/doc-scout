@@ -1,7 +1,7 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { ENV } from "~/.server/ENV";
 
-export const s3Client = new S3Client({
+export const secretsMgrClient = new SecretsManagerClient({
   credentials: {
     accessKeyId: ENV.AWS_ACCESS_KEY_ID,
     secretAccessKey: ENV.AWS_SECRET_ACCESS_KEY,
