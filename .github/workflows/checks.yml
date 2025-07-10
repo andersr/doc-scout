@@ -81,7 +81,7 @@ jobs:
         run: npm install
 
       - name: 💄 Formatting Check
-        run: npm run format:check
+        run: npx prettier . --check
 
   test:
     name: 🔬 E2E Testing

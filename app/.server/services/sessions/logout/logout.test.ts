@@ -58,11 +58,11 @@ describe("logout", () => {
     mockAuthSessionStore.destroySession.mockResolvedValue(
       "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
     );
-    mockAppRoutes.mockReturnValue("/login");
+    mockAppRoutes.mockReturnValue("/");
     mockRedirect.mockReturnValue(new Response(null, { status: 302 }));
   });
 
-  it("destroys session and redirects to login", async () => {
+  it("destroys session and redirects to homepage", async () => {
     // Act
     const result = await logout({ request: mockRequest });
 
@@ -72,7 +72,7 @@ describe("logout", () => {
       mockSession,
     );
     // expect(mockAppRoutes).toHaveBeenCalledWith("/login");
-    expect(mockRedirect).toHaveBeenCalledWith("/login", {
+    expect(mockRedirect).toHaveBeenCalledWith("/", {
       headers: {
         "Set-Cookie": "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
       },
@@ -93,7 +93,7 @@ describe("logout", () => {
     expect(mockAuthSessionStore.destroySession).toHaveBeenCalledWith(
       mockSession,
     );
-    expect(mockRedirect).toHaveBeenCalledWith("/login", {
+    expect(mockRedirect).toHaveBeenCalledWith("/", {
       headers: {
         "Set-Cookie": destroySessionResult,
       },
@@ -106,7 +106,7 @@ describe("logout", () => {
 
     // Assert
     expect(mockAppRoutes).toHaveBeenCalledTimes(1);
-    expect(mockAppRoutes).toHaveBeenCalledWith("/login", { error: "true" });
+    expect(mockAppRoutes).toHaveBeenCalledWith("/", { error: "true" });
   });
 
   it("sets correct Set-Cookie header for session destruction", async () => {
@@ -118,7 +118,7 @@ describe("logout", () => {
     await logout({ request: mockRequest });
 
     // Assert
-    expect(mockRedirect).toHaveBeenCalledWith("/login", {
+    expect(mockRedirect).toHaveBeenCalledWith("/", {
       headers: {
         "Set-Cookie": expectedCookie,
       },
@@ -190,7 +190,7 @@ describe("logout", () => {
     expect(mockAuthSessionStore.destroySession).toHaveBeenCalledWith(
       emptySession,
     );
-    expect(mockRedirect).toHaveBeenCalledWith("/login", {
+    expect(mockRedirect).toHaveBeenCalledWith("/", {
       headers: {
         "Set-Cookie": "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
       },
@@ -246,7 +246,7 @@ describe("logout", () => {
 
     mockAppRoutes.mockImplementation(() => {
       callOrder.push("appRoutes");
-      return "/login";
+      return "/";
     });
 
     mockRedirect.mockImplementation(() => {

@@ -31,7 +31,7 @@ test.describe("Dashboard - Has Docs", () => {
       },
     );
     // act
-    await page.goto(appRoutes("/"));
+    await page.goto(appRoutes("/dashboard"));
 
     // assert
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
