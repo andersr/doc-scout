@@ -52,7 +52,7 @@ export default function HomePage() {
         </div>
       </AppHeader>
       <MainContentContainer>
-        <div className="mx-auto max-w-4xl space-y-16 py-16">
+        <div className="mx-auto max-w-4xl space-y-16 pt-24 md:pt-40">
           <div className="text-center">
             <h1 className="text-pompadour/80 text-6xl font-semibold tracking-tight font-stretch-50% md:text-7xl">
               Doc Scout
