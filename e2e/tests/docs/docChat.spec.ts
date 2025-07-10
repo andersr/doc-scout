@@ -13,12 +13,12 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Doc Chat - bot reply", () => {
   const username = TEST_USERS.chat_bot_reply;
-  let sourcePublicId = "";
+  let botReplySourceId = "";
   test.describe.configure({ retries: 2 });
   test.use({ storageState: setAuthStoragePath(username) });
 
   test.beforeEach(async ({ request }) => {
-    sourcePublicId = generateId();
+    botReplySourceId = generateId();
     await request.post(
       appRoutes("/e2e/:command", {
         command: TEST_KEYS.upsertDoc,
@@ -26,7 +26,7 @@ test.describe("Doc Chat - bot reply", () => {
       {
         form: {
           email: getTestEmail(username),
-          sourcePublicId,
+          sourcePublicId: botReplySourceId,
         } satisfies UpsertSourceInput,
       },
     );
@@ -36,7 +36,7 @@ test.describe("Doc Chat - bot reply", () => {
       }),
       {
         form: {
-          sourcePublicId,
+          sourcePublicId: botReplySourceId,
         } satisfies DeleteMessagesInput,
       },
     );
@@ -49,7 +49,7 @@ test.describe("Doc Chat - bot reply", () => {
       }),
       {
         form: {
-          sourcePublicId,
+          sourcePublicId: botReplySourceId,
         } satisfies DeleteMessagesInput,
       },
     );
@@ -65,7 +65,7 @@ test.describe("Doc Chat - bot reply", () => {
     // act
     await page.goto(
       appRoutes("/docs/:id", {
-        id: sourcePublicId,
+        id: botReplySourceId,
       }),
     );
     await page.getByRole("textbox", { name: "Message" }).fill(expectedInput);
@@ -76,6 +76,9 @@ test.describe("Doc Chat - bot reply", () => {
     ).toBeVisible();
 
     // assert
+    await page
+      .getByRole("alert", { name: "loading" })
+      .waitFor({ state: "hidden" });
     await expect(page.getByText(expectedInput)).toBeVisible();
     await expect(page.getByText(expectedReply)).toBeVisible();
   });
