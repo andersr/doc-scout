@@ -49,11 +49,13 @@ export default function NewDocsRoute() {
           </TabContent>
         </Tabs>
       </div>
-      {/* {actionData?.errors && (
+      {actionData?.errors && (
         <ul className="text-danger mt-4 text-center font-semibold">
-          {actionData?.errors.map((e) => <li key={e}>{e}</li>)}
+          {actionData?.errors.map((err) => (
+            <li key={err}>{err}</li>
+          ))}
         </ul>
-      )} */}
+      )}
     </div>
   );
 }
