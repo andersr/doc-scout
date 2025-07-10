@@ -1,23 +1,27 @@
 import { redirect } from "react-router";
 import { authSessionStore } from "~/.server/services/sessions/authSessionStore";
 import { AUTH_DEFAULT_REDIRECT, AUTH_SESSION_DURATION } from "~/config/auth";
+import { KEYS } from "~/shared/keys";
 import { getSession } from "../getSession";
 
 export async function createSession({
-  key,
+  accessToken,
   maxAge,
   redirectTo = AUTH_DEFAULT_REDIRECT,
   request,
-  token,
+  sessionToken,
 }: {
-  key: string;
+  accessToken?: string;
   maxAge?: number;
   redirectTo?: string;
   request: Request;
-  token: string;
+  sessionToken: string;
 }) {
   const session = await getSession({ request });
-  session.set(key, token);
+  session.set(KEYS.session_token, sessionToken);
+  if (accessToken) {
+    session.set(KEYS.access_token, accessToken);
+  }
 
   return redirect(redirectTo, {
     headers: {

@@ -18,10 +18,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     return createSession({
-      key: KEYS.stytch_session_token,
       redirectTo: appRoutes("/"),
       request,
-      token: authRes.session_token,
+      sessionToken: authRes.session_token,
     });
   } catch (error) {
     console.error("E2E login error: ", error);

@@ -10,6 +10,7 @@ export const AppKeys = [
   "error",
   "files",
   "fileNames",
+  "googleDrive",
   "id",
   "ids",
   "login_redirect_url", // used for stytch oauth
@@ -21,7 +22,8 @@ export const AppKeys = [
   "password",
   "public_token", // used for stytch oauth
   "signup_redirect_url", // used for stytch oauth
-  "stytch_session_token",
+  "session_token",
+  "access_token",
   "token",
 ] as const;
 

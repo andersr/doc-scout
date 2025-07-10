@@ -57,7 +57,7 @@ describe("requireAnon", () => {
     ).resolves.toBeUndefined();
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).not.toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe("requireAnon", () => {
     ).resolves.toBeUndefined();
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).not.toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe("requireAnon", () => {
     ).resolves.toBeUndefined();
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).not.toHaveBeenCalled();
@@ -109,7 +109,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/");
@@ -127,7 +127,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/");
@@ -145,7 +145,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/");
@@ -163,7 +163,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
   });
@@ -177,7 +177,7 @@ describe("requireAnon", () => {
 
     // Assert
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: "stytch_session_token", // STYTCH_SESSION_TOKEN mock value
+      key: "session_token", // STYTCH_SESSION_TOKEN mock value
       request: mockRequest,
     });
   });
@@ -197,7 +197,7 @@ describe("requireAnon", () => {
 
     // Assert
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: customRequest,
     });
   });
@@ -241,7 +241,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).not.toHaveBeenCalled();
@@ -262,7 +262,7 @@ describe("requireAnon", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/");

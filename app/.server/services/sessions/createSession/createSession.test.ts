@@ -62,19 +62,17 @@ describe("createSession", () => {
 
   it("creates session with default parameters", async () => {
     // Arrange
-    const key = "userId";
-    const token = "user-token-123";
+    const sessionToken = "user-token-123";
 
     // Act
     const result = await createSession({
-      key,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
     expect(mockGetSession).toHaveBeenCalledWith({ request: mockRequest });
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
     expect(mockAuthSessionStore.commitSession).toHaveBeenCalledWith(
       mockSession,
       {
@@ -91,20 +89,18 @@ describe("createSession", () => {
 
   it("creates session with custom maxAge", async () => {
     // Arrange
-    const key = "sessionToken";
-    const token = "custom-token-456";
+    const sessionToken = "custom-token-456";
     const maxAge = 3600; // 1 hour
 
     // Act
     await createSession({
-      key,
       maxAge,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
     expect(mockAuthSessionStore.commitSession).toHaveBeenCalledWith(
       mockSession,
       {
@@ -120,20 +116,18 @@ describe("createSession", () => {
 
   it("creates session with custom redirectTo", async () => {
     // Arrange
-    const key = "authToken";
-    const token = "auth-token-789";
+    const sessionToken = "auth-token-789";
     const redirectTo = "/profile";
 
     // Act
     await createSession({
-      key,
       redirectTo,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
     expect(mockAuthSessionStore.commitSession).toHaveBeenCalledWith(
       mockSession,
       {
@@ -149,23 +143,21 @@ describe("createSession", () => {
 
   it("creates session with all custom parameters", async () => {
     // Arrange
-    const key = "customKey";
-    const token = "custom-token-000";
+    const sessionToken = "custom-token-000";
     const maxAge = 7200; // 2 hours
     const redirectTo = "/custom-page";
 
     // Act
     await createSession({
-      key,
       maxAge,
       redirectTo,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
     expect(mockGetSession).toHaveBeenCalledWith({ request: mockRequest });
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
     expect(mockAuthSessionStore.commitSession).toHaveBeenCalledWith(
       mockSession,
       {
@@ -181,33 +173,29 @@ describe("createSession", () => {
 
   it("handles session setting correctly", async () => {
     // Arrange
-    const key = "accessToken";
-    const token = "access-token-111";
+    const sessionToken = "access-token-111";
 
     // Act
     await createSession({
-      key,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
     expect(mockSession.set).toHaveBeenCalledTimes(1);
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
   });
 
   it("handles commit session correctly", async () => {
     // Arrange
-    const key = "refreshToken";
-    const token = "refresh-token-222";
+    const sessionToken = "refresh-token-222";
     const maxAge = 1800; // 30 minutes
 
     // Act
     await createSession({
-      key,
       maxAge,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
@@ -220,8 +208,7 @@ describe("createSession", () => {
 
   it("handles redirect response correctly", async () => {
     // Arrange
-    const key = "sessionId";
-    const token = "session-id-333";
+    const sessionToken = "session-id-333";
     const redirectTo = "/welcome";
     const cookieHeader = "Set-Cookie: session=xyz789; Path=/; Secure";
 
@@ -229,10 +216,9 @@ describe("createSession", () => {
 
     // Act
     await createSession({
-      key,
       redirectTo,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
@@ -245,8 +231,7 @@ describe("createSession", () => {
 
   it("propagates errors from getSession", async () => {
     // Arrange
-    const key = "errorKey";
-    const token = "error-token";
+    const sessionToken = "error-token";
     const error = new Error("Failed to get session");
 
     mockGetSession.mockRejectedValue(error);
@@ -254,9 +239,8 @@ describe("createSession", () => {
     // Act & Assert
     await expect(
       createSession({
-        key,
         request: mockRequest,
-        token,
+        sessionToken,
       }),
     ).rejects.toThrow("Failed to get session");
 
@@ -268,8 +252,7 @@ describe("createSession", () => {
 
   it("propagates errors from commitSession", async () => {
     // Arrange
-    const key = "commitErrorKey";
-    const token = "commit-error-token";
+    const sessionToken = "commit-error-token";
     const error = new Error("Failed to commit session");
 
     mockAuthSessionStore.commitSession.mockRejectedValue(error);
@@ -277,14 +260,13 @@ describe("createSession", () => {
     // Act & Assert
     await expect(
       createSession({
-        key,
         request: mockRequest,
-        token,
+        sessionToken,
       }),
     ).rejects.toThrow("Failed to commit session");
 
     expect(mockGetSession).toHaveBeenCalledWith({ request: mockRequest });
-    expect(mockSession.set).toHaveBeenCalledWith(key, token);
+    expect(mockSession.set).toHaveBeenCalledWith("session_token", sessionToken);
     expect(mockAuthSessionStore.commitSession).toHaveBeenCalledWith(
       mockSession,
       { maxAge: 86400 },
@@ -294,16 +276,14 @@ describe("createSession", () => {
 
   it("handles maxAge of 0 correctly", async () => {
     // Arrange
-    const key = "zeroMaxAge";
-    const token = "zero-token";
+    const sessionToken = "zero-token";
     const maxAge = 0;
 
     // Act
     await createSession({
-      key,
       maxAge,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert
@@ -317,16 +297,14 @@ describe("createSession", () => {
 
   it("handles empty string redirectTo", async () => {
     // Arrange
-    const key = "emptyRedirect";
-    const token = "empty-redirect-token";
+    const sessionToken = "empty-redirect-token";
     const redirectTo = "";
 
     // Act
     await createSession({
-      key,
       redirectTo,
       request: mockRequest,
-      token,
+      sessionToken,
     });
 
     // Assert

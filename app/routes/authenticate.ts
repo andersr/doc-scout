@@ -21,6 +21,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 
     let sessionToken = "";
+    let accessToken = "";
 
     if (tokenType === "magic_links") {
       const res = await stytchClient.magicLinks.authenticate({
@@ -57,6 +58,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
 
       sessionToken = res.session_token;
+      accessToken = res.provider_values.access_token;
 
       await upsertUser({ stytchId: res.user_id });
     }
@@ -67,10 +69,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 
     return createSession({
-      key: KEYS.stytch_session_token,
+      accessToken,
       redirectTo: appRoutes("/"),
       request,
-      token: sessionToken,
+      sessionToken,
     });
   } catch (error) {
     console.error(`Login error: ${error}`);

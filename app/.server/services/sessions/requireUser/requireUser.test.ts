@@ -149,7 +149,7 @@ describe("requireUser", () => {
     });
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockStytchAuthenticate).toHaveBeenCalledWith({
@@ -171,7 +171,7 @@ describe("requireUser", () => {
     );
 
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: mockRequest,
     });
     expect(mockAppRoutes).toHaveBeenCalledWith("/login");
@@ -315,7 +315,7 @@ describe("requireUser", () => {
 
     // Assert
     expect(mockGetCookieValue).toHaveBeenCalledWith({
-      key: KEYS.stytch_session_token,
+      key: KEYS.session_token,
       request: customRequest,
     });
   });

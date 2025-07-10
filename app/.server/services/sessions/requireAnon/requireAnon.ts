@@ -9,7 +9,7 @@ export async function requireAnon({
   request: Request;
 }): Promise<void> {
   const sessionToken = await getCookieValue({
-    key: KEYS.stytch_session_token,
+    key: KEYS.session_token,
     request,
   });
   if (sessionToken) {
