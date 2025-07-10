@@ -70,7 +70,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     return createSession({
       accessToken,
-      redirectTo: appRoutes("/"),
+      redirectTo: appRoutes("/dashboard"),
       request,
       sessionToken,
     });

@@ -38,6 +38,8 @@ test.describe("User Menu - sign out", () => {
     await page.getByRole("button", { name: "Sign Out" }).click();
 
     // assert
-    await expect(page.getByRole("heading", { name: "Sign In" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Doc Scout" }),
+    ).toBeVisible();
   });
 });

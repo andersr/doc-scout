@@ -23,5 +23,5 @@ node_modules/
 /playwright/.auth/
 /e2e/screenshots
 
-# claude
+# claude 
 /instructions

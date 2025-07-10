@@ -10,7 +10,6 @@ import { KEYS } from "~/shared/keys";
 import type { ActionHandlerFn } from "~/types/action";
 import { SOURCE_INCLUDE } from "~/types/source";
 import type { VectorMetadataFilter } from "~/types/vectorDoc";
-// import { getVectorStore } from "../../../.server/services/vectorStore/getVectorStore";
 
 export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
   const { internalUser } = await requireUser({ request });
@@ -63,5 +62,8 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     });
   }
 
-  return redirectWithSuccess(appRoutes("/"), `"${source.title}" was deleted.`);
+  return redirectWithSuccess(
+    appRoutes("/dashboard"),
+    `"${source.title}" was deleted.`,
+  );
 };
