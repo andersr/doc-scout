@@ -125,7 +125,7 @@
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
     "lint": "eslint",
-    "lint:fix": "eslint --cache --fix",
+    "lint:fix": "eslint --fix",
     "lint:staged": "npx lint-staged",
     "postinstall": "prisma generate",
     "prepare": "husky",
