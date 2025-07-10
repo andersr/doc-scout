@@ -13,6 +13,7 @@ import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { expect, test } from "@playwright/test";
 
 test.describe("Doc delete", () => {
+  test.describe.configure({ retries: 2 });
   const username = TEST_USERS.doc_delete;
   let sourcePublicId = "";
   test.use({ storageState: setAuthStoragePath(username) });

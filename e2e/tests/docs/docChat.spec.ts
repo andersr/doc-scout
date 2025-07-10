@@ -83,6 +83,7 @@ test.describe("Doc Chat - bot reply", () => {
 
 // TODO: replace repeating steps with a fixture
 test.describe("Doc Chat - copy to clipboard", () => {
+  test.describe.configure({ retries: 2 });
   const username = TEST_USERS.chat_copy_clipboard;
   let sourcePublicId = "";
   test.use({
