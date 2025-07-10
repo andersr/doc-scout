@@ -4,7 +4,13 @@ function AnimatedDot() {
 
 export function DotsLoading() {
   return (
-    <ul className="flex h-6 items-center gap-1">
+    <ul
+      role="alert"
+      aria-busy="true"
+      aria-live="polite"
+      className="flex h-6 items-center gap-1"
+      title="loading"
+    >
       <AnimatedDot />
       <AnimatedDot />
       <AnimatedDot />
