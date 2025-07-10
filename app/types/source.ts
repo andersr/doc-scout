@@ -13,7 +13,8 @@ type BaseSourceInput = Required<
 export type UrlSourceInput = BaseSourceInput & Required<Pick<Source, "url">>;
 
 export type FileSourceInput = BaseSourceInput &
-  Required<Pick<Source, "storagePath" | "publicId" | "fileName">>;
+  Required<Pick<Source, "publicId" | "fileName">> &
+  Partial<Pick<Source, "storagePath">>;
 
 const sourceInputSchema = z.object({
   fileName: z.string().min(1),

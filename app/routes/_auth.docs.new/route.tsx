@@ -2,6 +2,7 @@ import { type ActionFunctionArgs, useActionData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import { FileUploadForm } from "~/components/files/FileUploadForm";
+import { GoogleDriveForm } from "~/components/files/GoogleDriveForm";
 import { UrlForm } from "~/components/files/UrlForm";
 import { PageTitle } from "~/components/layout/PageTitle";
 import {
@@ -14,6 +15,7 @@ import {
 import { ADD_DOCS_TITLE } from "~/config/titles";
 import { KEYS } from "~/shared/keys";
 import { filesAction } from "./actions/filesAction";
+import { googleDriveAction } from "./actions/googleDriveAction";
 import { urlsAction } from "./actions/urlsAction";
 
 export default function NewDocsRoute() {
@@ -40,12 +42,22 @@ export default function NewDocsRoute() {
             >
               Via URL
             </TabButton>
+            <TabButton
+              value={KEYS.googleDrive}
+              currentValue={value}
+              onValueChange={onValueChange}
+            >
+              Google Drive
+            </TabButton>
           </TabsList>
           <TabContent value={KEYS.files} currentValue={value}>
             <FileUploadForm />
           </TabContent>
           <TabContent value={KEYS.urls} currentValue={value}>
             <UrlForm />
+          </TabContent>
+          <TabContent value={KEYS.googleDrive} currentValue={value}>
+            <GoogleDriveForm />
           </TabContent>
         </Tabs>
       </div>
@@ -63,6 +75,7 @@ export async function action(args: ActionFunctionArgs) {
   return await handleActionIntent({
     handlers: {
       files: filesAction,
+      googleDrive: googleDriveAction,
       urls: urlsAction,
     },
     ...args,
