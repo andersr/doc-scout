@@ -13,7 +13,7 @@ export async function logout({
   const session = await getSession({
     request,
   });
-  return redirect(appRoutes("/login", error ? { error: "true" } : undefined), {
+  return redirect(appRoutes("/", error ? { error: "true" } : undefined), {
     headers: {
       "Set-Cookie": await authSessionStore.destroySession(session),
     },
