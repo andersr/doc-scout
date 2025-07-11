@@ -2,7 +2,6 @@ import { type ActionFunctionArgs, useActionData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import { FileUploadForm } from "~/components/files/FileUploadForm";
-import { GoogleDriveForm } from "~/components/files/GoogleDriveForm";
 import { UrlForm } from "~/components/files/UrlForm";
 import { PageTitle } from "~/components/layout/PageTitle";
 import {
@@ -42,22 +41,12 @@ export default function NewDocsRoute() {
             >
               Via URL
             </TabButton>
-            <TabButton
-              value={KEYS.googleDrive}
-              currentValue={value}
-              onValueChange={onValueChange}
-            >
-              Google Drive
-            </TabButton>
           </TabsList>
           <TabContent value={KEYS.files} currentValue={value}>
             <FileUploadForm />
           </TabContent>
           <TabContent value={KEYS.urls} currentValue={value}>
             <UrlForm />
-          </TabContent>
-          <TabContent value={KEYS.googleDrive} currentValue={value}>
-            <GoogleDriveForm />
           </TabContent>
         </Tabs>
       </div>
