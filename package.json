@@ -112,7 +112,7 @@
   "private": true,
   "scripts": {
     "build": "react-router build",
-    "checks": "run-s format:fix lint:fix typecheck",
+    "checks": "run-s format:fix lint:fix typecheck test:run",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
