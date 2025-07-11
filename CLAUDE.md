@@ -5,11 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ```bash
-# Start development server with tests
+# Start development server
 npm run dev
-
-# Run development server only
-npm run dev:rr
 
 # Build production
 npm run build
@@ -17,13 +14,14 @@ npm run build
 # Run build locally
 npm run start:dev
 
-# Lint and format (run before commits)
+# Lint, format, and run unit tests (run before commits)
 npm run checks
 
 # Individual checks
 npm run lint
 npm run typecheck
 npm run format:check
+npm run test:run
 
 # Fix issues
 npm run lint:fix
@@ -35,7 +33,7 @@ npm run db:reset       # Reset database with migrations
 
 # Testing
 npm test:run               # Run vitest tests
-npm run e2e:run       # Run Playwright e2e tests
+npm run e2e:test       # Run Playwright e2e tests
 ```
 
 ## Architecture Overview
@@ -49,6 +47,7 @@ npm run e2e:run       # Run Playwright e2e tests
 - **AI**: LangChain + OpenAI (embeddings and chat)
 - **Storage**: AWS S3 for file uploads
 - **Styling**: Tailwind CSS with shadcn/ui components
+- **E2E Testing**: Playwright end to end tests, run both locally and in the CI via Github actions
 
 ### Core Architecture Patterns
 
@@ -104,3 +103,8 @@ Copy `.env.example` to `.env` and fill required variables:
 ### Coding Best Practices
 
 - Avoid use of any type and instead try to use more specific types
+
+### Testing Best Practices
+
+- Write unit tests for any added functions and components
+- Write E2E tests for new features and updates existing E2E tests when features change.
