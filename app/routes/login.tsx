@@ -19,6 +19,9 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { LogoWithText } from "~/components/brand/LogoWithText";
+import { AppContainer } from "~/components/layout/AppContainer";
+import { Footer } from "~/components/layout/Footer";
 import { MainLayout } from "~/components/layout/MainLayout";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
@@ -65,14 +68,19 @@ export default function LoginRoute() {
       : [];
 
   return (
-    <MainLayout>
-      <div className="flex h-2/3 flex-1 flex-col items-center justify-center">
+    <AppContainer>
+      <header className="flex h-12 items-center gap-2 md:gap-4">
+        <div className="flex flex-1 items-center gap-4 md:gap-6">
+          <LogoWithText />
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col items-center md:h-1/3">
         {actionData?.email && (
           <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
             Please check the inbox for {actionData.email}
           </div>
         )}
-        <div className="flex w-full max-w-[325px] flex-col gap-6">
+        <div className="flex w-full max-w-[325px] flex-col gap-6 pt-52">
           <div className="text-center">
             <PageTitle title={title} />
           </div>
@@ -134,7 +142,8 @@ export default function LoginRoute() {
           </div>
         </div>
       </div>
-    </MainLayout>
+      <Footer />
+    </AppContainer>
   );
 }
 
