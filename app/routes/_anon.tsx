@@ -2,7 +2,8 @@ import { Outlet } from "react-router";
 
 import { AppContainer } from "~/components/layout/AppContainer";
 import AppHeader from "~/components/layout/AppHeader";
-import { MainContentContainer } from "~/components/layout/MainContentContainer";
+import { Footer } from "~/components/layout/Footer";
+import { MainContent } from "~/components/layout/MainContent";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import type { Route } from "./+types/_anon";
@@ -11,7 +12,8 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AppContainer>
       <AppHeader />
-      <MainContentContainer>{children}</MainContentContainer>
+      <MainContent>{children}</MainContent>
+      <Footer />
     </AppContainer>
   );
 }

@@ -4,7 +4,8 @@ import { requireUser } from "~/.server/services/sessions/requireUser";
 import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
 import { AppContainer } from "~/components/layout/AppContainer";
 import AppHeader from "~/components/layout/AppHeader";
-import { MainContentContainer } from "~/components/layout/MainContentContainer";
+import { Footer } from "~/components/layout/Footer";
+import { MainContent } from "~/components/layout/MainContent";
 import { DropdownMenu } from "~/components/ui/DropdownMenu";
 import { Avatar } from "~/components/user/Avatar";
 import { LogoutBtn } from "~/components/user/LogoutBtn";
@@ -66,7 +67,8 @@ function Layout({
           )}
         </div>
       </AppHeader>
-      <MainContentContainer>{children}</MainContentContainer>
+      <MainContent>{children}</MainContent>
+      <Footer />
     </AppContainer>
   );
 }

@@ -2,7 +2,8 @@ import { Link, useLoaderData } from "react-router";
 import { maybeUser } from "~/.server/services/sessions/maybeUser";
 import { AppContainer } from "~/components/layout/AppContainer";
 import AppHeader from "~/components/layout/AppHeader";
-import { MainContentContainer } from "~/components/layout/MainContentContainer";
+import { Footer } from "~/components/layout/Footer";
+import { MainContent } from "~/components/layout/MainContent";
 import { DropdownMenu } from "~/components/ui/DropdownMenu";
 import { Avatar } from "~/components/user/Avatar";
 import { LogoutBtn } from "~/components/user/LogoutBtn";
@@ -51,7 +52,7 @@ export default function HomePage() {
           )}
         </div>
       </AppHeader>
-      <MainContentContainer>
+      <MainContent>
         <div className="mx-auto max-w-4xl space-y-16 pt-24 md:pt-40">
           <div className="text-center">
             <h1 className="text-pompadour/80 text-6xl font-semibold tracking-tight font-stretch-50% md:text-7xl">
@@ -145,7 +146,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </MainContentContainer>
+      </MainContent>
+      <Footer />
     </AppContainer>
   );
 }
