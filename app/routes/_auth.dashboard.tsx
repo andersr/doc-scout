@@ -35,7 +35,7 @@ export default function Dashboard() {
   const { docs, title } = useLoaderData<typeof loader>();
 
   return (
-    <div className="space-y-8">
+    <div className="flex w-full flex-col gap-8 md:mx-auto md:w-3xl">
       <PageHeading
         pageTitle={title}
         headingContent={

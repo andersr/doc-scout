@@ -4,9 +4,11 @@ import PrivacyContent from "../static/Privacy.mdx";
 
 export default function PrivacyPage() {
   return (
-    <div className={PROSE_STYLES}>
+    <div>
       <PageTitle title="Privacy Policy" />
-      <PrivacyContent />
+      <div className={PROSE_STYLES}>
+        <PrivacyContent />
+      </div>
     </div>
   );
 }

@@ -1,29 +1,30 @@
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 
 import { appRoutes } from "~/shared/appRoutes";
-import { LogoWithText } from "../brand/LogoWithText";
+import { Logo } from "../brand/Logo";
+import ConditionalLink from "../ui/ConditionalLink";
 
-export default function AppHeader({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+export interface AppHeaderProps {
+  leftNav?: React.ReactNode;
+  rightNav?: React.ReactNode;
+}
+
+export default function AppHeader({ leftNav, rightNav }: AppHeaderProps) {
   const { pathname } = useLocation();
 
   const isHome = pathname === appRoutes("/");
 
   return (
-    <header className="flex items-center gap-2 md:gap-4">
-      <div className="flex-1">
-        {isHome ? (
-          <LogoWithText />
-        ) : (
-          <Link to={appRoutes("/")} className="inline-block">
-            <LogoWithText />
-          </Link>
-        )}
+    <header className="flex h-12 items-center gap-2 md:gap-4">
+      <div className="flex flex-1 items-center gap-4 md:gap-6">
+        <ConditionalLink
+          to={appRoutes("/")}
+          shouldLink={isHome}
+          label={<Logo />}
+        />
+        {leftNav}
       </div>
-      {children}
+      {rightNav}
     </header>
   );
 }

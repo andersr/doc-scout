@@ -8,7 +8,7 @@ import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSour
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import BotChat from "~/components/chat/BotChat";
-import { PageHeading } from "~/components/layout/PageHeading";
+import { PageTitle } from "~/components/layout/PageTitle";
 import { IconButton } from "~/components/ui/buttons/IconButton";
 import { Icon } from "~/components/ui/Icon";
 import { KEYS } from "~/shared/keys";
@@ -43,53 +43,51 @@ export default function DocDetailsLayout() {
   const deleteFetcher = useFetcher<ServerResponse>();
 
   return (
-    <div className="relative flex w-full flex-1 flex-col gap-6">
-      <PageHeading
-        pageTitle={title}
-        headingContent={
-          <ul className="flex items-center gap-4">
-            {docUrl && (
-              <li>
-                <a
-                  href={docUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={twMerge(
-                    "inline-flex items-center gap-1",
-                    "text-blue-600",
-                  )}
-                >
-                  <span className="underline">View Doc</span>{" "}
-                  <Icon
-                    name="NEW_WINDOW"
-                    fontSize="20px"
-                    customStyles="no-underline"
-                  />
-                </a>
-              </li>
-            )}
+    <div className="relative flex w-full flex-1 flex-col gap-8 md:mx-auto md:w-3xl">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <PageTitle title={title} />
+        <ul className="flex items-center gap-4">
+          {docUrl && (
             <li>
-              <IconButton
-                name="DELETE"
-                label="Delete Doc"
-                customStyles="text-danger/40 hover:text-danger"
-                onClick={() => {
-                  if (
-                    confirm(
-                      `Delete "${title}"?${messages.length > 0 ? " ***This will also delete all associated chat messages.***" : ""}`,
-                    )
-                  ) {
-                    deleteFetcher.submit(
-                      { intent: KEYS.delete },
-                      { method: "POST" },
-                    );
-                  }
-                }}
-              />
+              <a
+                href={docUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={twMerge(
+                  "inline-flex items-center gap-1",
+                  "text-blue-600",
+                )}
+              >
+                <span className="underline">View Doc</span>{" "}
+                <Icon
+                  name="NEW_WINDOW"
+                  fontSize="20px"
+                  customStyles="no-underline"
+                />
+              </a>
             </li>
-          </ul>
-        }
-      />
+          )}
+          <li>
+            <IconButton
+              name="DELETE"
+              label="Delete Doc"
+              customStyles="text-danger/40 hover:text-danger"
+              onClick={() => {
+                if (
+                  confirm(
+                    `Delete "${title}"?${messages.length > 0 ? " ***This will also delete all associated chat messages.***" : ""}`,
+                  )
+                ) {
+                  deleteFetcher.submit(
+                    { intent: KEYS.delete },
+                    { method: "POST" },
+                  );
+                }
+              }}
+            />
+          </li>
+        </ul>
+      </div>
       <BotChat messages={messages} />
     </div>
   );

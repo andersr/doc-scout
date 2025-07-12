@@ -1,30 +1,38 @@
-import { data, Outlet, useLoaderData } from "react-router";
+import { Outlet, useLoaderData } from "react-router";
 
-import { requireUser } from "~/.server/services/sessions/requireUser";
-import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
+import { maybeUser } from "~/.server/services/sessions/maybeUser";
 import { AppNav } from "~/components/layout/AppNav";
 import { MainLayout } from "~/components/layout/MainLayout";
 import { UserMenu } from "~/components/user/UserMenu";
 import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import type { UserClient } from "~/types/user";
-import type { Route } from "./+types/_auth";
+import type { Route } from "./+types/_static";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { internalUser } = await requireUser({ request });
+  const userResult = await maybeUser({ request });
 
-  const stytchUser = await getStytchUserById(internalUser.stytchId);
+  if (userResult.success) {
+    const { internalUser, stytchUser } = userResult.data;
+    const email = stytchUser?.emails[0].email ?? "";
+    return {
+      user: { email, publicId: internalUser.publicId } satisfies UserClient,
+    };
+  }
 
-  const email = stytchUser?.emails[0].email ?? "";
-  return data<{ user: UserClient }>({
-    user: { email, publicId: internalUser.publicId },
-  });
+  return {
+    user: null,
+  };
 }
 
-export default function AuthRoutes() {
+export default function StaticRoutes() {
   const { user } = useLoaderData<typeof loader>();
+
   return (
-    <MainLayout leftNav={<AppNav />} rightNav={<UserMenu user={user} />}>
+    <MainLayout
+      leftNav={user && <AppNav />}
+      rightNav={<UserMenu user={user} />}
+    >
       <Outlet />
     </MainLayout>
   );

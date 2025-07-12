@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
+  Link,
   type LoaderFunctionArgs,
   useActionData,
   useLoaderData,
@@ -19,14 +20,21 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
+import { Logo } from "~/components/brand/Logo";
+import { AppContainer } from "~/components/layout/AppContainer";
+import { Footer } from "~/components/layout/Footer";
+import { MainLayout } from "~/components/layout/MainLayout";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
+import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
+import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
+import type { Route } from "./+types/login";
 
 const loginSchema = z.object({
   email: z
@@ -61,14 +69,21 @@ export default function LoginRoute() {
       : [];
 
   return (
-    <>
-      <div className="flex h-2/3 flex-1 flex-col items-center justify-center">
+    <AppContainer>
+      <header className="flex h-12 items-center gap-2 md:gap-4">
+        <div className="flex flex-1 items-center gap-4 md:gap-6">
+          <Link to={appRoutes("/")}>
+            <Logo />
+          </Link>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col items-center">
         {actionData?.email && (
           <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
             Please check the inbox for {actionData.email}
           </div>
         )}
-        <div className="flex w-full max-w-[325px] flex-col gap-6">
+        <div className="flex w-full max-w-[325px] flex-col gap-6 pt-24">
           <div className="text-center">
             <PageTitle title={title} />
           </div>
@@ -130,7 +145,8 @@ export default function LoginRoute() {
           </div>
         </div>
       </div>
-    </>
+      <Footer />
+    </AppContainer>
   );
 }
 
@@ -169,4 +185,14 @@ export async function action({ request }: ActionFunctionArgs) {
   } catch (error) {
     return serverError(error);
   }
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const output = useErrorBoundary(error);
+
+  return (
+    <MainLayout>
+      <ErrorBoundaryInfo {...output} />
+    </MainLayout>
+  );
 }
