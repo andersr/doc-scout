@@ -19,7 +19,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 export default function AnonRoutes() {
   return (
     <Layout>
-      <div className="mx-auto w-lg flex-1">
+      <div className="mx-auto flex-1 md:w-lg">
         <Outlet />
       </div>
     </Layout>
