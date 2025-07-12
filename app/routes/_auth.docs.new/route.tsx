@@ -21,7 +21,7 @@ export default function NewDocsRoute() {
   const actionData = useActionData<typeof action>();
 
   return (
-    <div>
+    <div className="flex w-full flex-col gap-8 md:mx-auto md:w-3xl">
       <PageTitle title={ADD_DOCS_TITLE} />
       <div className="pt-4">
         <Tabs value={value} onValueChange={onValueChange}>
