@@ -3,7 +3,8 @@
  * Each env should have its own instance of test users
  */
 export const TestUserNames = [
-  "has_docs",
+  "dashboard_has_docs",
+  "dashboard_no_docs",
   "new_docs_add_files",
   "new_docs_validate",
   "new_docs_redirect",
@@ -12,7 +13,6 @@ export const TestUserNames = [
   "chat_copy_clipboard",
   "user_menu_display_email",
   "user_menu_sign_out",
-  "no_docs",
   "doc_delete",
 ] as const;
 
