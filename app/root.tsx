@@ -64,7 +64,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <meta name="apple-mobile-web-app-title" content="DocScout" />
+        <meta name="apple-mobile-web-app-title" content="Doc Scout" />
         <link rel="manifest" href="/site.webmanifest" />
         <Meta />
         <Links />

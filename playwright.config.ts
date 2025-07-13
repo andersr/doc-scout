@@ -1,5 +1,4 @@
 import { defineConfig, devices } from "@playwright/test";
-
 const port = process.env.PORT;
 
 if (!port) {
@@ -86,8 +85,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `PORT=${port} dotenv -e .env.test -- react-router dev`,
-    reuseExistingServer: !process.env.CI,
+    command: "npm run e2e:devserver",
+    reuseExistingServer: false,
     url: `http://localhost:${port}`,
   },
   /* Opt out of parallel tests on CI. */

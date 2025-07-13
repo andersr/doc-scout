@@ -10,14 +10,11 @@ import { getTestEmail } from "@e2e/utils/getTestEmail";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 
 test.describe("Dashboard - Has Docs", () => {
-  const user = TEST_USERS.has_docs;
+  const user = TEST_USERS.dashboard_has_docs;
   const sourcePublicId = "docsDashboardHasDocs";
   test.use({ storageState: setAuthStoragePath(user) });
 
-  test("redirects to the dashboard if user has docs", async ({
-    page,
-    request,
-  }) => {
+  test("displays the dashboard if user has docs", async ({ page, request }) => {
     // arrange
     await request.post(
       appRoutes("/e2e/:command", {
@@ -36,6 +33,16 @@ test.describe("Dashboard - Has Docs", () => {
     // assert
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       DASHBOARD_TITLE,
+    );
+  });
+});
+
+test.describe("Dashboard - No Docs", () => {
+  test.use({ storageState: setAuthStoragePath(TEST_USERS.dashboard_no_docs) });
+  test("redirects to New Docs if user has no docs", async ({ page }) => {
+    await page.goto(appRoutes("/docs/new"));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      /Add Docs/,
     );
   });
 });

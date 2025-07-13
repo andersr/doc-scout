@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
-  Link,
   type LoaderFunctionArgs,
   useActionData,
   useLoaderData,
@@ -20,8 +19,8 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { Logo } from "~/components/brand/Logo";
 import { AppContainer } from "~/components/layout/AppContainer";
+import AppHeader from "~/components/layout/AppHeader";
 import { Footer } from "~/components/layout/Footer";
 import { MainLayout } from "~/components/layout/MainLayout";
 import { PageTitle } from "~/components/layout/PageTitle";
@@ -70,13 +69,7 @@ export default function LoginRoute() {
 
   return (
     <AppContainer>
-      <header className="flex h-12 items-center gap-2 md:gap-4">
-        <div className="flex flex-1 items-center gap-4 md:gap-6">
-          <Link to={appRoutes("/")}>
-            <Logo />
-          </Link>
-        </div>
-      </header>
+      <AppHeader />
       <div className="flex flex-1 flex-col items-center">
         {actionData?.email && (
           <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">

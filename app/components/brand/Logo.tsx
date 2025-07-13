@@ -1,13 +1,13 @@
-import { DocIcon } from "./DocIcon";
+import { DocCompass } from "./DocCompass";
 
 export function Logo() {
   return (
     <div className="text-pompadour/70 flex items-baseline">
       <div className="hidden md:block">
-        <DocIcon size={34} />
+        <DocCompass size={40} />
       </div>
       <div className="md:hidden">
-        <DocIcon size={30} />
+        <DocCompass size={30} />
       </div>
     </div>
   );

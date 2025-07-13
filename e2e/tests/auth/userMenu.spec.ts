@@ -1,3 +1,4 @@
+import { TAG_LINE } from "@app/config/app";
 import { appRoutes } from "@app/shared/appRoutes";
 import { TEST_USERS } from "@e2e/types/testUsers";
 import { getTestEmail } from "@e2e/utils/getTestEmail";
@@ -39,7 +40,7 @@ test.describe("User Menu - sign out", () => {
 
     // assert
     await expect(
-      page.getByRole("heading", { level: 1, name: "Doc Scout" }),
+      page.getByRole("heading", { level: 1, name: TAG_LINE }),
     ).toBeVisible();
   });
 });
