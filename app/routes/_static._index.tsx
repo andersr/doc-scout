@@ -26,9 +26,7 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-16 pt-4">
-      <title>
-        `${APP_NAME} - ${TAG_LINE}`
-      </title>
+      <title>{`${APP_NAME} - ${TAG_LINE}`}</title>
       <div className="text-center">
         <h1 className="text-pompadour/80 text-5xl tracking-tight font-stretch-50% md:text-7xl">
           {TAG_LINE}
