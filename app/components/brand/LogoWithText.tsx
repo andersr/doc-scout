@@ -9,7 +9,7 @@ export function LogoWithText() {
       <div className="md:hidden">
         <DocCompass size={23} />
       </div>
-      <div className="pl-1 text-2xl font-stretch-50% md:pl-2 md:text-4xl">
+      <div className="pl-2 text-2xl font-stretch-50% md:text-4xl">
         Doc Scout
       </div>
     </div>

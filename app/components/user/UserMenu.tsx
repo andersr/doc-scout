@@ -20,7 +20,7 @@ export function UserMenu({ user }: { user: UserClient | null }) {
           <Avatar email={user.email} />
         </DropdownMenu>
       ) : (
-        <div>
+        <div className="pr-1">
           <Link to={appRoutes("/login")}>Sign In</Link>
         </div>
       )}
