@@ -1,5 +1,6 @@
 import { Link, useLoaderData } from "react-router";
 import { maybeUser } from "~/.server/services/sessions/maybeUser";
+import { APP_NAME, TAG_LINE } from "~/config/app";
 import { appRoutes } from "~/shared/appRoutes";
 import type { UserClient } from "~/types/user";
 import type { Route } from "./+types/_static._index";
@@ -24,15 +25,17 @@ export default function HomePage() {
   const { user } = useLoaderData<typeof loader>();
 
   return (
-    <div className="mx-auto max-w-4xl space-y-16">
+    <div className="mx-auto max-w-4xl space-y-16 pt-4">
+      <title>
+        `${APP_NAME} - ${TAG_LINE}`
+      </title>
       <div className="text-center">
-        <h1 className="text-pompadour/80 text-6xl font-semibold tracking-tight font-stretch-50% md:text-7xl">
-          Doc Scout
+        <h1 className="text-pompadour/80 text-5xl tracking-tight font-stretch-50% md:text-7xl">
+          {TAG_LINE}
         </h1>
         <p className="mt-6 text-lg leading-8 text-gray-600">
-          Upload, analyze, and chat with large text documents. From research
-          papers to regulatory docs, Doc Scout makes it easy to extract insights
-          and get answers.
+          From research papers to regulatory docs, Doc Scout makes it easy to
+          extract insights and get answers.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link

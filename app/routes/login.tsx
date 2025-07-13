@@ -20,7 +20,7 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { Logo } from "~/components/brand/Logo";
+import { LogoWithText } from "~/components/brand/LogoWithText";
 import { AppContainer } from "~/components/layout/AppContainer";
 import { Footer } from "~/components/layout/Footer";
 import { MainLayout } from "~/components/layout/MainLayout";
@@ -70,12 +70,10 @@ export default function LoginRoute() {
 
   return (
     <AppContainer>
-      <header className="flex h-12 items-center gap-2 md:gap-4">
-        <div className="flex flex-1 items-center gap-4 md:gap-6">
-          <Link to={appRoutes("/")}>
-            <Logo />
-          </Link>
-        </div>
+      <header className="h-12">
+        <Link to={appRoutes("/")}>
+          <LogoWithText />
+        </Link>
       </header>
       <div className="flex flex-1 flex-col items-center">
         {actionData?.email && (
