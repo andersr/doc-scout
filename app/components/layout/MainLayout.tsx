@@ -1,18 +1,135 @@
+import { Link } from "react-router";
+import { twMerge } from "tailwind-merge";
 import { AppContainer } from "~/components/layout/AppContainer";
-import AppHeader, { type AppHeaderProps } from "~/components/layout/AppHeader";
-import { Footer } from "~/components/layout/Footer";
-import { MainContent } from "~/components/layout/MainContent";
+import { useIsRoute } from "~/hooks/useIsRoute";
+import { useIsScrolling } from "~/hooks/useIsScrolling";
+import { useResponsive } from "~/hooks/useResponsive";
+import { appRoutes } from "~/shared/appRoutes";
+import type { MenuAction } from "~/types/menu";
+import type { LayoutRouteData } from "~/types/routes";
+import type { UserClient } from "~/types/user";
+import { setWindowTitle } from "~/utils/setWindowTitle";
+import { Logo } from "../brand/Logo";
+import { MoreMenu } from "../MoreMenu";
+import ConditionalLink from "../ui/ConditionalLink";
+import { Icon } from "../ui/Icon";
+import { UserMenu } from "../user/UserMenu";
+import { Footer } from "./Footer";
+import { PageTitle } from "./PageTitle";
 
 export function MainLayout({
+  centeredPageTitle,
   children,
-  leftNav,
-  rightNav,
-}: { children: React.ReactNode } & AppHeaderProps) {
+  moreActions,
+  noFooter,
+  pageTitle,
+  user,
+}: { children: React.ReactNode } & Pick<LayoutRouteData, "pageTitle"> & {
+    centeredPageTitle?: boolean;
+    moreActions?: MenuAction[];
+    noFooter?: boolean;
+    user: UserClient | null;
+  }) {
+  const { isMobile } = useResponsive();
+
+  const { isHome } = useIsRoute();
+
+  function setLeftNav() {
+    if (isMobile) {
+      return isHome ? (
+        <Logo />
+      ) : (
+        <Link className="pt-1" to={appRoutes("/")}>
+          <Icon name="BACK" fontSize="26px" />
+        </Link>
+      );
+    }
+    return (
+      <ConditionalLink
+        shouldLink={!isHome}
+        to={appRoutes("/")}
+        linkStyles="hover:text-pompadour"
+      >
+        <Logo withText />
+      </ConditionalLink>
+    );
+  }
+
+  function setRightNav() {
+    if (isMobile) {
+      return moreActions && moreActions.length > 0 ? (
+        <MoreMenu actions={moreActions} />
+      ) : (
+        <span className="pt-1 pr-1">
+          <UserMenu user={user} />
+        </span>
+      );
+    }
+
+    return <UserMenu user={user} />;
+  }
+
+  const { componentRef, isScrolling } = useIsScrolling();
+
   return (
-    <AppContainer>
-      <AppHeader leftNav={leftNav} rightNav={rightNav} />
-      <MainContent>{children}</MainContent>
-      <Footer />
-    </AppContainer>
+    <>
+      <title>{setWindowTitle(pageTitle)}</title>
+      <AppContainer>
+        <header
+          className={twMerge(
+            "md:bg-background fixed top-0 right-0 left-0 z-20 bg-white p-2 md:static md:px-0",
+            isScrolling ? "drop-shadow md:drop-shadow-none" : "",
+          )}
+        >
+          <div className="flex size-full h-12 flex-row items-center justify-between md:h-16">
+            {setLeftNav()}
+            {isMobile && pageTitle ? (
+              <div className="flex flex-1 items-center justify-center">
+                <PageTitle centered>{pageTitle}</PageTitle>
+              </div>
+            ) : (
+              <div className="flex-1">&nbsp;</div>
+            )}
+            {setRightNav()}
+          </div>
+        </header>
+        <main
+          ref={componentRef}
+          className="mt-14 flex flex-1 flex-col gap-2 overflow-auto bg-white md:relative md:mt-0"
+        >
+          <div
+            className={twMerge("z-10 hidden md:fixed md:inset-x-0 md:block")}
+          >
+            <div
+              className={twMerge(
+                "flex items-center justify-between p-4 md:mx-auto md:w-3xl md:bg-white",
+                isScrolling ? "drop-shadow" : "",
+              )}
+            >
+              <PageTitle centered={centeredPageTitle}>{pageTitle}</PageTitle>
+              {moreActions && moreActions.length > 0 && (
+                <MoreMenu actions={moreActions} />
+              )}
+            </div>
+          </div>
+          <div className="my-6 flex flex-1 flex-col px-4 md:mt-22">
+            {children}
+          </div>
+        </main>
+        {isMobile ? (
+          <>
+            {!noFooter && (
+              <div className="py-3">
+                <Footer />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="py-4">
+            <Footer />
+          </div>
+        )}
+      </AppContainer>
+    </>
   );
 }

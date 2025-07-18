@@ -1,24 +1,23 @@
 import { twMerge } from "tailwind-merge";
-import { setWindowTitle } from "~/utils/setWindowTitle";
 
 export function PageTitle({
+  centered,
+  children,
   danger,
-  title,
 }: {
+  centered?: boolean;
+  children: React.ReactNode;
   danger?: boolean;
-  title: string;
 }) {
   return (
-    <>
-      <title>{setWindowTitle(title)}</title>
-      <h1
-        className={twMerge(
-          "text-4xl leading-tight font-semibold text-stone-600 font-stretch-50% md:inline-block md:text-5xl md:font-stretch-50%",
-          danger ? "text-danger" : "text-stone-600",
-        )}
-      >
-        {title}
-      </h1>
-    </>
+    <h1
+      className={twMerge(
+        "inline text-4xl text-stone-600 font-stretch-50% md:inline-block md:font-semibold md:font-stretch-50%",
+        danger ? "text-danger" : "text-stone-600",
+        centered && "text-center",
+      )}
+    >
+      {children}
+    </h1>
   );
 }
