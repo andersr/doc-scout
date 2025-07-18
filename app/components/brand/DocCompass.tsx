@@ -1,11 +1,17 @@
-export function DocCompass({ size }: { size: number }) {
+export function DocCompass({
+  opacity,
+  size,
+}: {
+  opacity?: number;
+  size: number;
+}) {
   const sizePx = `${size}px`;
   return (
     <svg
       height={sizePx}
       viewBox="0 0 605 894"
       fill="none"
-      fillOpacity={0.7}
+      fillOpacity={opacity ?? 0.5}
       xmlns="http://www.w3.org/2000/svg"
     >
       <desc>
