@@ -19,21 +19,17 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { AppContainer } from "~/components/layout/AppContainer";
-import AppHeader from "~/components/layout/AppHeader";
-import { Footer } from "~/components/layout/Footer";
-import { MainLayout } from "~/components/layout/MainLayout";
+import { Logo } from "~/components/brand/Logo";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
-import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
-import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
+import { APP_NAME } from "~/config/app";
+import { LOGIN_TITLE } from "~/config/titles";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import { INTENTIONALLY_GENERIC_ERROR_MESSAGE } from "~/shared/messages";
 import { LINK_STYLES } from "~/styles/links";
 import type { ServerResponse } from "~/types/server";
-import type { Route } from "./+types/login";
 
 const loginSchema = z.object({
   email: z
@@ -51,11 +47,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return {
     error,
     googleAuthStartUrl: getGoogleAuthStartUrl(),
-    title: "Sign In",
   };
 }
 export default function LoginRoute() {
-  const { error, googleAuthStartUrl, title } = useLoaderData<typeof loader>();
+  const { error, googleAuthStartUrl } = useLoaderData<typeof loader>();
 
   const actionData = useActionData<ServerResponse & { email: string }>();
   const navigation = useNavigation();
@@ -66,20 +61,25 @@ export default function LoginRoute() {
     : error
       ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
       : [];
-
+  // TODO: ensure page title is below success banner
   return (
-    <AppContainer>
-      <AppHeader />
-      <div className="flex flex-1 flex-col items-center">
-        {actionData?.email && (
-          <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
-            Please check the inbox for {actionData.email}
-          </div>
-        )}
-        <div className="flex w-full max-w-[325px] flex-col gap-6 pt-24">
-          <div className="text-center">
-            <PageTitle title={title} />
-          </div>
+    <div className="mx-auto flex h-full flex-col px-4">
+      <title>{`${APP_NAME} - ${LOGIN_TITLE}`}</title>
+      <header>
+        <div className="flex flex-row items-center justify-between py-4 pr-3 pl-2 md:py-6">
+          <Logo withText customStyles="text-pompadour/80" opacity={0.8} />
+        </div>
+      </header>
+      {actionData?.email && (
+        <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
+          Please check the inbox for {actionData.email}
+        </div>
+      )}
+      <div className="flex-1">
+        <div className="mt-12 text-center">
+          <PageTitle centered>{LOGIN_TITLE}</PageTitle>
+        </div>
+        <div className="mx-auto flex max-w-[325px] flex-col gap-6 pt-12">
           <div>
             <a
               className={twMerge(
@@ -138,9 +138,83 @@ export default function LoginRoute() {
           </div>
         </div>
       </div>
-      <Footer />
-    </AppContainer>
+    </div>
   );
+
+  // return (
+  //   <AppContainer>
+  //     <AppHeader />
+  //     <div className="flex flex-1 flex-col items-center">
+  //       {actionData?.email && (
+  //         <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
+  //           Please check the inbox for {actionData.email}
+  //         </div>
+  //       )}
+  //       <div className="flex w-full max-w-[325px] flex-col gap-6 pt-24">
+  //         <div className="text-center">
+  //           <PageTitle title={title} />
+  //         </div>
+  //         <div>
+  //           <a
+  //             className={twMerge(
+  //               "flex h-12 w-full items-center justify-center gap-3 rounded border border-black p-2",
+  //               "text-base leading-normal font-medium",
+  //             )}
+  //             href={googleAuthStartUrl}
+  //           >
+  //             <img
+  //               src="/images/google-logo.png"
+  //               alt="Google logo"
+  //               className="size-[18px]"
+  //             />
+  //             Continue with Google
+  //           </a>
+  //         </div>
+  //         <div className="pt-1">
+  //           <hr className="border-top-1 border-slate-300" />
+  //         </div>
+  //         {errors.map((e) => (
+  //           <div key={e} className="text-danger py-2 text-center">
+  //             {e}
+  //           </div>
+  //         ))}
+  //         <Form
+  //           method="POST"
+  //           className="flex flex-col gap-4"
+  //           onSubmit={() => setNameValue("")}
+  //         >
+  //           <div className="flex flex-col gap-2">
+  //             <Label htmlFor={KEYS.email}>Email</Label>
+  //             <input
+  //               id={KEYS.email}
+  //               name={KEYS.email}
+  //               type="email"
+  //               value={nameValue}
+  //               onChange={(e) => setNameValue(e.target.value)}
+  //               className="block w-full min-w-72 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+  //               placeholder="email@example.com"
+  //               required
+  //             />
+  //           </div>
+  //           <ActionButton type="submit" disabled={nameValue.trim() === ""}>
+  //             {navigation.state === "submitting" ? "Loading..." : "Continue"}
+  //           </ActionButton>
+  //         </Form>
+  //         <div className="text-sm">
+  //           Don&apos;t have an account?{" "}
+  //           <a
+  //             className={LINK_STYLES}
+  //             href="https://forms.gle/zCJqHCCSBgyrN8EB6"
+  //           >
+  //             Request access
+  //           </a>
+  //           .
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <Footer />
+  //   </AppContainer>
+  // );
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -180,12 +254,12 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  const output = useErrorBoundary(error);
+// export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+//   const output = useErrorBoundary(error);
 
-  return (
-    <MainLayout>
-      <ErrorBoundaryInfo {...output} />
-    </MainLayout>
-  );
-}
+//   return (
+//     <MainLayout>
+//       <ErrorBoundaryInfo {...output} />
+//     </MainLayout>
+//   );
+// }

@@ -68,7 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     return createSession({
       key: KEYS.stytch_session_token,
-      redirectTo: appRoutes("/dashboard"),
+      redirectTo: appRoutes("/"),
       request,
       token: sessionToken,
     });

@@ -2,11 +2,10 @@ import { data, Outlet, useLoaderData } from "react-router";
 
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
-import { AppNav } from "~/components/layout/AppNav";
 import { MainLayout } from "~/components/layout/MainLayout";
-import { UserMenu } from "~/components/user/UserMenu";
-import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
-import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
+import { useMoreMenu } from "~/hooks/useMoreMenu";
+import { useRouteData } from "~/hooks/useRouteData";
+import { prisma } from "~/lib/prisma";
 import type { UserClient } from "~/types/user";
 import type { Route } from "./+types/_auth";
 
@@ -15,27 +14,35 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const stytchUser = await getStytchUserById(internalUser.stytchId);
 
+  const sources = await prisma.source.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    where: {
+      ownerId: internalUser.id,
+    },
+  });
+
   const email = stytchUser?.emails[0].email ?? "";
   return data<{ user: UserClient }>({
-    user: { email, publicId: internalUser.publicId },
+    user: { email, publicId: internalUser.publicId, sources },
   });
 }
 
-export default function AuthRoutes() {
+export default function MainLayoutRoutes() {
   const { user } = useLoaderData<typeof loader>();
+  const { actionsInput, noFooter, pageTitle } = useRouteData();
+
+  const moreActions = useMoreMenu(actionsInput);
+
   return (
-    <MainLayout leftNav={<AppNav />} rightNav={<UserMenu user={user} />}>
+    <MainLayout
+      noFooter={noFooter}
+      moreActions={moreActions}
+      pageTitle={pageTitle}
+      user={user}
+    >
       <Outlet />
-    </MainLayout>
-  );
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  const output = useErrorBoundary(error);
-
-  return (
-    <MainLayout>
-      <ErrorBoundaryInfo {...output} />
     </MainLayout>
   );
 }

@@ -1,22 +1,24 @@
-import { Icon, type IconProps } from "../Icon";
+import { twMerge } from "tailwind-merge";
 
-interface Props extends IconProps {
+interface Props {
   children?: React.ReactNode;
-  // title?: string;
+  customStyles?: string;
+  onClick: () => void;
 }
+
 export function IconButton({
   children,
   customStyles,
-  label,
-  name,
   onClick,
 }: Props & { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className={"flex cursor-pointer items-center gap-1"}
+      className={twMerge(
+        "flex cursor-pointer items-center gap-1",
+        customStyles,
+      )}
     >
-      <Icon name={name} label={label} customStyles={customStyles} />
       {children}
     </button>
   );

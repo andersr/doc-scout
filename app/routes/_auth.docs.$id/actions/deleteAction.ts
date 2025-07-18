@@ -62,8 +62,5 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     });
   }
 
-  return redirectWithSuccess(
-    appRoutes("/dashboard"),
-    `"${source.title}" was deleted.`,
-  );
+  return redirectWithSuccess(appRoutes("/"), `"${source.title}" was deleted.`);
 };

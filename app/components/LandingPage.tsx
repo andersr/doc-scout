@@ -7,7 +7,7 @@ import { UserMenu } from "./user/UserMenu";
 
 export default function LandingPage() {
   return (
-    <div className="mx-auto flex h-full max-w-4xl flex-col">
+    <div className="flex h-full flex-col px-4">
       <title>{`${APP_NAME} - ${TAG_LINE}`}</title>
       <header>
         <div className="flex flex-row items-center justify-between py-4 pr-3 pl-2 md:py-6">
@@ -15,7 +15,7 @@ export default function LandingPage() {
           <UserMenu user={null} />
         </div>
       </header>
-      <div className="mt-2 flex flex-1 flex-col gap-8 px-6 py-4 md:mt-12 md:gap-14">
+      <div className="mx-auto mt-2 flex max-w-4xl flex-1 flex-col gap-8 px-6 py-4 md:mt-12 md:gap-14">
         <div className="text-center">
           <h1 className="text-pompadour/80 text-5xl tracking-tight font-stretch-50% md:text-7xl">
             {TAG_LINE}

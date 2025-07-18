@@ -4,30 +4,30 @@ import { TabButton, TabContent, Tabs, TabsList, useTabs } from "./Tabs";
 
 // Test component that uses the useTabs hook
 function TestTabs({ defaultValue }: { defaultValue: string }) {
-  const { onValueChange, value } = useTabs({ defaultValue });
+  const { currentTab, onTabChange } = useTabs({ defaultValue });
 
   return (
-    <Tabs value={value} onValueChange={onValueChange}>
+    <Tabs currentTab={currentTab} onTabChange={onTabChange}>
       <TabsList>
         <TabButton
-          value="tab1"
-          currentValue={value}
-          onValueChange={onValueChange}
+          tabName="tab1"
+          currentTab={currentTab}
+          onTabChange={onTabChange}
         >
           Tab 1
         </TabButton>
         <TabButton
-          value="tab2"
-          currentValue={value}
-          onValueChange={onValueChange}
+          tabName="tab2"
+          currentTab={currentTab}
+          onTabChange={onTabChange}
         >
           Tab 2
         </TabButton>
       </TabsList>
-      <TabContent value="tab1" currentValue={value}>
+      <TabContent tabName="tab1" currentTab={currentTab}>
         Content 1
       </TabContent>
-      <TabContent value="tab2" currentValue={value}>
+      <TabContent tabName="tab2" currentTab={currentTab}>
         Content 2
       </TabContent>
     </Tabs>
@@ -35,7 +35,7 @@ function TestTabs({ defaultValue }: { defaultValue: string }) {
 }
 
 describe("Tabs", () => {
-  it("renders tabs with correct default value", () => {
+  it("renders tabs with correct default currentTab", () => {
     render(<TestTabs defaultValue="tab1" />);
 
     expect(screen.getByText("Content 1")).toBeInTheDocument();

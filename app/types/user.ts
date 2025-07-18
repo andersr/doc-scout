@@ -1,4 +1,4 @@
-import type { Prisma, User } from "@prisma/client";
+import type { Prisma, Source, User } from "@prisma/client";
 
 export const USER_INTERNAL_INCLUDE = {
   messages: true,
@@ -11,4 +11,5 @@ export type UserInternal = Prisma.UserGetPayload<{
 
 export type UserClient = Pick<User, "publicId"> & {
   email: string;
+  sources?: Source[];
 };
