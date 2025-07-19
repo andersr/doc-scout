@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   type ActionFunctionArgs,
   Form,
+  Link,
   type LoaderFunctionArgs,
   useActionData,
   useLoaderData,
@@ -61,13 +62,14 @@ export default function LoginRoute() {
     : error
       ? [INTENTIONALLY_GENERIC_ERROR_MESSAGE]
       : [];
-  // TODO: ensure page title is below success banner
   return (
     <div className="mx-auto flex h-full flex-col px-4">
       <title>{`${APP_NAME} - ${LOGIN_TITLE}`}</title>
       <header>
         <div className="flex flex-row items-center justify-between py-4 pr-3 pl-2 md:py-6">
-          <Logo withText customStyles="text-pompadour/80" opacity={0.8} />
+          <Link to={appRoutes("/")}>
+            <Logo withText customStyles="text-pompadour/80" opacity={0.8} />
+          </Link>
         </div>
       </header>
       {actionData?.email && (
@@ -77,7 +79,9 @@ export default function LoginRoute() {
       )}
       <div className="flex-1">
         <div className="mt-12 text-center">
-          <PageTitle centered>{LOGIN_TITLE}</PageTitle>
+          <PageTitle centered customStyles="md:text-5xl">
+            {LOGIN_TITLE}
+          </PageTitle>
         </div>
         <div className="mx-auto flex max-w-[325px] flex-col gap-6 pt-12">
           <div>
