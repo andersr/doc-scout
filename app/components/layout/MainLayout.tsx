@@ -11,7 +11,6 @@ import type { UserClient } from "~/types/user";
 import { setWindowTitle } from "~/utils/setWindowTitle";
 import { Logo } from "../brand/Logo";
 import { MoreMenu } from "../MoreMenu";
-import ConditionalLink from "../ui/ConditionalLink";
 import { Icon } from "../ui/Icon";
 import { UserMenu } from "../user/UserMenu";
 import { Footer } from "./Footer";
@@ -48,15 +47,17 @@ export function MainLayout({
         </Link>
       );
     }
-    return (
-      <ConditionalLink
-        shouldLink={!isHome}
-        to={appRoutes("/")}
-        linkStyles="hover:text-pompadour"
-      >
-        <Logo withText />
-      </ConditionalLink>
-    );
+    // return (
+    //   <ConditionalLink
+    // shouldLink={!isHome}
+    // to={appRoutes("/")}
+    //     linkStyles="hover:text-pompadour"
+    //   >
+    //     <Logo withText />
+    //   </ConditionalLink>
+    // );
+
+    return <Logo withText shouldLink={!isHome} to={appRoutes("/")} />;
   }
 
   function setRightNav() {

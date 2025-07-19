@@ -90,7 +90,11 @@ export function FileUploadForm() {
           ))}
         </ul>
       </div>
-      <ActionButton onClick={handleSubmit} disabled={filesSubmitDisabled}>
+      <ActionButton
+        customStyles="md:mt-2"
+        onClick={handleSubmit}
+        disabled={filesSubmitDisabled}
+      >
         {isUpdating ? "Processing..." : "Add Docs"}
       </ActionButton>
       {isUpdating && (

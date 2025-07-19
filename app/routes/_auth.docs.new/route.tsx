@@ -42,7 +42,7 @@ export default function NewDocsRoute() {
               currentTab={currentTab}
               onTabChange={onTabChange}
             >
-              Via URL
+              URLs
             </TabButton>
           </TabsList>
           <TabContent tabName={KEYS.files} currentTab={currentTab}>

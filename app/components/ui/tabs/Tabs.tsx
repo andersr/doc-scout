@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 import { cn } from "~/lib/utils";
 
 interface UseTabsOptions {
@@ -104,29 +105,18 @@ function TabButton({
 
 interface TabContentProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string; // unused?
   currentTab: string;
   tabName: string;
 }
 
-function TabContent({
-  children,
-  className,
-  currentTab,
-  tabName,
-}: TabContentProps) {
+function TabContent({ children, currentTab, tabName }: TabContentProps) {
   if (currentTab !== tabName) {
     return null;
   }
 
   return (
-    <div
-      role="tabpanel"
-      className={cn(
-        "focus-visible:ring-pompadour rounded-tr-lg rounded-b-lg border border-t-0 border-stone-300 bg-white p-6 shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-        className,
-      )}
-    >
+    <div role="tabpanel" className={twMerge("pt-6")}>
       {children}
     </div>
   );
