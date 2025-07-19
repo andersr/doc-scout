@@ -11,7 +11,7 @@ export default function LandingPage() {
       <title>{`${APP_NAME} - ${TAG_LINE}`}</title>
       <header>
         <div className="flex flex-row items-center justify-between py-4 pr-3 pl-2 md:py-6">
-          <Logo withText customStyles="text-pompadour/80" opacity={0.8} />
+          <Logo withText customStyles="text-pompadour/80" customOpacity={1} />
           <UserMenu user={null} />
         </div>
       </header>
@@ -33,7 +33,7 @@ export default function LandingPage() {
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12">
           <div className="text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
               <svg

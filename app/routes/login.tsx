@@ -68,7 +68,11 @@ export default function LoginRoute() {
       <header>
         <div className="flex flex-row items-center justify-between py-4 pr-3 pl-2 md:py-6">
           <Link to={appRoutes("/")}>
-            <Logo withText customStyles="text-pompadour/80" opacity={0.8} />
+            <Logo
+              withText
+              customStyles="text-pompadour/80"
+              customOpacity={0.8}
+            />
           </Link>
         </div>
       </header>
@@ -78,7 +82,7 @@ export default function LoginRoute() {
         </div>
       )}
       <div className="flex-1">
-        <div className="mt-12 text-center">
+        <div className="mt-16 text-center">
           <PageTitle centered customStyles="md:text-5xl">
             {LOGIN_TITLE}
           </PageTitle>
