@@ -15,7 +15,7 @@ export default function LandingPage() {
           <UserMenu user={null} />
         </div>
       </header>
-      <div className="mx-auto mt-2 flex max-w-4xl flex-1 flex-col gap-8 px-6 py-4 md:mt-12 md:gap-14">
+      <div className="mx-auto mt-2 flex max-w-4xl flex-1 flex-col gap-8 px-6 py-4 md:mt-20 md:gap-16">
         <div className="text-center">
           <h1 className="text-pompadour/80 text-5xl tracking-tight font-stretch-50% md:text-7xl">
             {TAG_LINE}
@@ -27,7 +27,7 @@ export default function LandingPage() {
           <div className="mt-6 flex items-center justify-center gap-x-6 md:mt-10">
             <Link
               to={appRoutes("/login")}
-              className="bg-navy-blue rounded-md px-6 py-3 text-xl text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600 md:px-8"
+              className="bg-navy-blue/75 hover:bg-navy-blue rounded-md px-6 py-3 text-xl text-white shadow-sm focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600 md:px-8"
             >
               Get Started
             </Link>
