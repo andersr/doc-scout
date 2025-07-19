@@ -41,7 +41,9 @@ export function MoreMenu({ actions }: Props) {
         {actions.map((action, index) => (
           <React.Fragment key={index}>
             {action.button && <MenuButton {...action.button} />}
-            {action.link && <MenuLink {...action.link} />}
+            {action.link && (
+              <MenuLink {...action.link} onClick={() => setIsMenuOpen(false)} />
+            )}
           </React.Fragment>
         ))}
       </div>

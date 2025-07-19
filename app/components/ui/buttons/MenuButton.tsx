@@ -17,9 +17,9 @@ export function MenuButton({ danger, label, onClick, type }: MenuActionButton) {
   );
 }
 
-export function MenuLink({ label, to }: MenuActionLink) {
+export function MenuLink({ label, onClick, to }: MenuActionLink) {
   return (
-    <Link className={twMerge(BTN_STYLES)} to={to}>
+    <Link className={twMerge(BTN_STYLES)} to={to} onClick={onClick}>
       {label}
     </Link>
   );

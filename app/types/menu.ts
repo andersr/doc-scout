@@ -17,6 +17,7 @@ export interface MenuActionInput {
 
 export interface MenuActionLink {
   label: React.JSX.Element | string;
+  onClick?: () => void; // needed to close the menu panel on mobile after the user clicks the link
   to: string;
 }
 
