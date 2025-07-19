@@ -56,10 +56,8 @@ export async function maybeUser({ request }: { request: Request }): Promise<{
       clientUser: {
         email: resp.user.emails[0].email,
         publicId: user.publicId,
-        // sources: user.sources,
       },
       internalUser: user,
-      // stytchUser,
     };
   } catch (error) {
     throw serverError(error);

@@ -2,10 +2,12 @@ import type { AppKeys } from "~/shared/keys";
 
 export interface MenuActionInput {
   button?: {
+    action: string;
     confirmMessage?: string;
     danger?: boolean;
     intent: AppKeys;
     label: React.JSX.Element | string;
+    method?: "DELETE";
   };
   link?: {
     label: React.JSX.Element | string;
@@ -22,7 +24,8 @@ export interface MenuActionButton {
   confirmMessage?: string;
   danger?: boolean;
   label: React.JSX.Element | string;
-  onClick: () => void;
+  onClick?: () => void; // TODO: this should really be required for for more menu actions
+  type?: "submit";
 }
 
 export interface MenuAction {

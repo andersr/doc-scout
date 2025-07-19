@@ -106,7 +106,12 @@ export function MainLayout({
                 isScrolling ? "drop-shadow" : "",
               )}
             >
-              <PageTitle centered={centeredPageTitle}>{pageTitle}</PageTitle>
+              <PageTitle
+                customStyles="md:text-5xl"
+                centered={centeredPageTitle}
+              >
+                {pageTitle}
+              </PageTitle>
               {moreActions && moreActions.length > 0 && (
                 <MoreMenu actions={moreActions} />
               )}
