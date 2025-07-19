@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchParams = new URL(request.url).searchParams;
   const token = searchParams.get(KEYS.token);
   const tokenType = searchParams.get("stytch_token_type");
-
+  let hasSources = false;
   try {
     if (!token) {
       throw new ServerError(`No token`, StatusCodes.BAD_REQUEST);
@@ -58,7 +58,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
       sessionToken = res.session_token;
 
-      await upsertUser({ stytchId: res.user_id });
+      const user = await upsertUser({ stytchId: res.user_id });
+      if (user.sources.length > 0) {
+        hasSources = true;
+      }
     }
 
     if (!sessionToken) {
@@ -68,7 +71,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     return createSession({
       key: KEYS.stytch_session_token,
-      redirectTo: appRoutes("/"),
+      redirectTo: hasSources ? appRoutes("/") : appRoutes("/docs/new"),
       request,
       token: sessionToken,
     });

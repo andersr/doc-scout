@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, redirect, useActionData } from "react-router";
+import { type ActionFunctionArgs, useActionData } from "react-router";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import { FileUploadForm } from "~/components/files/FileUploadForm";
@@ -11,11 +11,8 @@ import {
   useTabs,
 } from "~/components/ui/tabs";
 import { ADD_DOCS_TITLE } from "~/config/titles";
-import { prisma } from "~/lib/prisma";
-import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { RouteData } from "~/types/routes";
-import type { Route } from "../+types/_static.privacy";
 import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";
 
@@ -24,28 +21,6 @@ export const handle: RouteData = {
   pageTitle: ADD_DOCS_TITLE,
 };
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const user = await requireUser({ request });
-
-  const sources = await prisma.source.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    where: {
-      ownerId: user.internalUser.id,
-    },
-  });
-
-  if (sources.length === 0) {
-    return redirect(appRoutes("/docs/new"));
-  }
-  return {
-    user: {
-      ...user.clientUser,
-      sources,
-    },
-  };
-}
 export default function NewDocsRoute() {
   const { currentTab, onTabChange } = useTabs({ defaultValue: KEYS.files });
   const actionData = useActionData<typeof action>();

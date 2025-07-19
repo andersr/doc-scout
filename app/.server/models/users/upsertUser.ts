@@ -3,10 +3,13 @@ import { generateId } from "~/.server/utils/generateId";
 import { prisma } from "~/lib/prisma";
 
 export async function upsertUser({ stytchId }: Pick<User, "stytchId">) {
-  await prisma.user.upsert({
+  return await prisma.user.upsert({
     create: {
       publicId: generateId(),
       stytchId,
+    },
+    include: {
+      sources: true,
     },
     update: {},
     where: {
