@@ -89,7 +89,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const output = useErrorBoundary(error);
 
   return (
-    <MainLayout pageTitle={output.title} user={null}>
+    <MainLayout pageTitle={output.title} user={null} systemError>
       <ErrorBoundaryInfo {...output} />
     </MainLayout>
   );

@@ -22,19 +22,24 @@ export function MainLayout({
   moreActions,
   noFooter,
   pageTitle,
+  systemError,
   user,
   whiteBackground,
 }: { children: React.ReactNode } & LayoutRouteData & {
     centeredPageTitle?: boolean;
     moreActions?: MenuAction[];
     noFooter?: boolean;
-    user: UserClient | null;
+    systemError?: boolean;
+    user: UserClient | null; // used for error boundary display handling
   }) {
   const { isMobile } = useResponsive();
 
   const { isHome } = useIsRoute();
 
   function setLeftNav() {
+    if (systemError) {
+      return <Logo withText={!isMobile} />;
+    }
     if (isMobile) {
       if (user?.sources?.length === 0) {
         return <span className="w-12">&nbsp;</span>;
@@ -52,6 +57,9 @@ export function MainLayout({
   }
 
   function setRightNav() {
+    if (systemError) {
+      return null;
+    }
     if (isMobile) {
       return moreActions && moreActions.length > 0 ? (
         <MoreMenu actions={moreActions} />
@@ -78,7 +86,7 @@ export function MainLayout({
           <div className="flex size-full h-16 flex-row items-center justify-between md:h-18">
             {setLeftNav()}
             {isMobile && pageTitle ? (
-              <div className="flex flex-1 items-center justify-center">
+              <div className="flex flex-1 items-center justify-center px-1">
                 <PageTitle centered>{pageTitle}</PageTitle>
               </div>
             ) : (
