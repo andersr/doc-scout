@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { useClickOutside } from "~/hooks/useClickOutside";
 import { useResponsive } from "~/hooks/useResponsive";
-import type {
-  MenuAction,
-  MenuActionButton,
-  MenuActionLink,
-} from "~/types/menu";
+import type { MenuAction } from "~/types/menu";
 import { Icon } from "./ui/Icon";
+import { MenuButton, MenuLink } from "./ui/buttons/MenuButton";
 
 interface Props {
   actions: MenuAction[];
@@ -38,7 +34,7 @@ export function MoreMenu({ actions }: Props) {
       </button>
       <div
         className={twMerge(
-          "absolute top-10 right-0 z-20 w-24 rounded bg-white px-2 py-1 shadow",
+          "absolute top-10 right-0 z-20 w-24 rounded bg-white shadow",
           isMenuOpen ? "flex flex-col items-start gap-1" : "hidden",
         )}
       >
@@ -51,16 +47,4 @@ export function MoreMenu({ actions }: Props) {
       </div>
     </div>
   );
-}
-
-function MenuButton({ danger, label, onClick }: MenuActionButton) {
-  return (
-    <button className={twMerge(danger ? "text-danger" : "")} onClick={onClick}>
-      {label}
-    </button>
-  );
-}
-
-function MenuLink({ label, to }: MenuActionLink) {
-  return <Link to={to}>{label}</Link>;
 }
