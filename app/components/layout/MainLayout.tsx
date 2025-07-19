@@ -42,20 +42,11 @@ export function MainLayout({
       return isHome ? (
         <Logo />
       ) : (
-        <Link className="pt-1" to={appRoutes("/")}>
-          <Icon name="BACK" fontSize="26px" />
+        <Link className="pt-1 pl-3" to={appRoutes("/")}>
+          <Icon name="BACK" fontSize="28px" />
         </Link>
       );
     }
-    // return (
-    //   <ConditionalLink
-    // shouldLink={!isHome}
-    // to={appRoutes("/")}
-    //     linkStyles="hover:text-pompadour"
-    //   >
-    //     <Logo withText />
-    //   </ConditionalLink>
-    // );
 
     return <Logo withText shouldLink={!isHome} to={appRoutes("/")} />;
   }
@@ -65,9 +56,7 @@ export function MainLayout({
       return moreActions && moreActions.length > 0 ? (
         <MoreMenu actions={moreActions} />
       ) : (
-        <span className="pt-1 pr-1">
-          <UserMenu user={user} />
-        </span>
+        <UserMenu user={user} />
       );
     }
 
@@ -82,11 +71,11 @@ export function MainLayout({
       <AppContainer>
         <header
           className={twMerge(
-            "md:bg-background fixed top-0 right-0 left-0 z-20 bg-white p-2 md:static md:px-0",
+            "md:bg-background fixed top-0 right-0 left-0 z-20 bg-white md:static",
             isScrolling ? "drop-shadow md:drop-shadow-none" : "",
           )}
         >
-          <div className="flex size-full h-12 flex-row items-center justify-between md:h-16">
+          <div className="flex size-full h-16 flex-row items-center justify-between md:h-18">
             {setLeftNav()}
             {isMobile && pageTitle ? (
               <div className="flex flex-1 items-center justify-center">
@@ -95,7 +84,7 @@ export function MainLayout({
             ) : (
               <div className="flex-1">&nbsp;</div>
             )}
-            {setRightNav()}
+            <span className="pt-1 pr-2">{setRightNav()}</span>
           </div>
         </header>
         <main
@@ -106,7 +95,7 @@ export function MainLayout({
           )}
         >
           <div
-            className={twMerge("z-10 hidden md:fixed md:inset-x-0 md:block")}
+            className={twMerge("z-20 hidden md:fixed md:inset-x-0 md:block")}
           >
             <div
               className={twMerge(
@@ -129,20 +118,15 @@ export function MainLayout({
           <div className="my-6 flex flex-1 flex-col px-4 md:mt-22">
             {children}
           </div>
+          {noFooter ? null : (
+            <div className="pt-4 pb-6 md:hidden">
+              <Footer />
+            </div>
+          )}
         </main>
-        {isMobile ? (
-          <>
-            {!noFooter && (
-              <div className="py-3">
-                <Footer />
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="py-4">
-            <Footer />
-          </div>
-        )}
+        <div className="hidden py-4 md:block">
+          <Footer />
+        </div>
       </AppContainer>
     </>
   );

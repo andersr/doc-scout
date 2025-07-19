@@ -48,8 +48,11 @@ function LogoParts({ customOpacity, withText }: LogoProps) {
       <div className="hidden md:block">
         <DocCompass opacity={customOpacity ?? opacity} size={26} />
       </div>
-      <div className="px-2 md:hidden">
-        <DocCompass opacity={customOpacity ?? opacity} size={30} />
+      <div className={twMerge("md:hidden", withText ? "" : "ml-4")}>
+        <DocCompass
+          opacity={customOpacity ?? opacity}
+          size={withText ? 30 : 36}
+        />
       </div>
       {withText && (
         <div className="text-3xl font-stretch-50% md:pl-2 md:text-3xl">

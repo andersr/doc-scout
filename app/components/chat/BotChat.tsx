@@ -43,7 +43,7 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
     <>
       <ScrollContainer listBottomRef={listBottomRef}>
         {messages.length === 0 && !optimisticMessage && (
-          <div className="flex size-full items-center justify-center">
+          <div className="text-pompadour/80 flex size-full items-center justify-center text-xl font-semibold">
             Ask a question below to get started.
           </div>
         )}
@@ -68,10 +68,10 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
       <div
         className={twMerge(
           "w-full md:mx-auto md:max-w-3xl",
-          "fixed inset-x-0 bottom-0 z-10 bg-white px-3 md:bottom-16",
+          "fixed inset-x-0 bottom-0 z-10 bg-white px-3 md:bottom-14",
         )}
       >
-        <div className="py-4 md:pt-2 md:pb-3">
+        <div className="pt-2 pb-4">
           {fetcher.data?.errors &&
             fetcher.data?.errors.length > 0 &&
             fetcher.data.errors.map((e) => (
