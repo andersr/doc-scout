@@ -6,6 +6,7 @@ import { useUploadFiles } from "~/hooks/useUploadFiles";
 import { truncateString } from "~/utils/truncateString";
 import { ActionButton } from "../ui/buttons/ActionButton";
 import { IconButton } from "../ui/buttons/IconButton";
+import { Icon } from "../ui/Icon";
 import { Dropzone } from "./Dropzone";
 
 export function FileUploadForm() {
@@ -72,8 +73,6 @@ export function FileUploadForm() {
             <li key={f.name} className="flex gap-1">
               <span className="font-semibold">{f.name}</span>
               <IconButton
-                name="REMOVE"
-                label="Remove item"
                 onClick={() => {
                   const updated = [...selectedFiles];
                   const index = selectedFiles.findIndex(
@@ -84,12 +83,18 @@ export function FileUploadForm() {
                     setSelectedFiles(updated);
                   }
                 }}
-              />
+              >
+                <Icon name="REMOVE" label="Remove item" />
+              </IconButton>
             </li>
           ))}
         </ul>
       </div>
-      <ActionButton onClick={handleSubmit} disabled={filesSubmitDisabled}>
+      <ActionButton
+        customStyles="md:mt-2"
+        onClick={handleSubmit}
+        disabled={filesSubmitDisabled}
+      >
         {isUpdating ? "Processing..." : "Add Docs"}
       </ActionButton>
       {isUpdating && (

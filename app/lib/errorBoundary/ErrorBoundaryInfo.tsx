@@ -1,15 +1,9 @@
-import { PageTitle } from "~/components/layout/PageTitle";
 import { DEFAULT_MORE_HELP } from "~/config/errors";
 import type { UseErrorBoundaryOutput } from "./types";
 
-export function ErrorBoundaryInfo({
-  details,
-  stack,
-  title,
-}: UseErrorBoundaryOutput) {
+export function ErrorBoundaryInfo({ details, stack }: UseErrorBoundaryOutput) {
   return (
     <>
-      <PageTitle title={title} danger />
       <p>{details}</p>
       {stack ? (
         <pre className="w-full overflow-x-auto p-4">

@@ -11,7 +11,7 @@ import { HOVER_TRANSITION } from "~/styles/animations";
 import { INPUT_STYLES } from "~/styles/inputs";
 import { type ClientMessage } from "~/types/message";
 import type { ServerResponse } from "~/types/server";
-import { ListContainer } from "../layout/ListContainer";
+import { ListContainer } from "../ui/lists/ListContainer";
 import { ChatListItem } from "./ChatListItem";
 
 export default function BotChat({ messages }: { messages: ClientMessage[] }) {
@@ -40,10 +40,10 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
   }, [fetcher.state, messages.length, scrollIntoView]);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <>
       <ScrollContainer listBottomRef={listBottomRef}>
         {messages.length === 0 && !optimisticMessage && (
-          <div className="flex size-full items-center justify-center">
+          <div className="text-pompadour/80 flex size-full items-center justify-center text-xl font-semibold">
             Ask a question below to get started.
           </div>
         )}
@@ -67,48 +67,50 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
       </ScrollContainer>
       <div
         className={twMerge(
-          "fixed right-4 bottom-0 left-4 z-10 pb-4 md:mx-auto md:max-w-3xl",
-          "bg-background",
+          "w-full md:mx-auto md:max-w-3xl",
+          "fixed inset-x-0 bottom-0 z-10 bg-white px-3 md:bottom-14",
         )}
       >
-        {fetcher.data?.errors &&
-          fetcher.data?.errors.length > 0 &&
-          fetcher.data.errors.map((e) => (
-            <p className="text-danger py-2" key={e}>
-              {e}
-            </p>
-          ))}
-        <fetcher.Form method="POST">
-          <div className="flex w-full items-end gap-2">
-            <textarea
-              name={KEYS.message}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className={twMerge(INPUT_STYLES, "bg-white")}
-              placeholder={"Message"}
-              rows={1}
-            />
-            <div className="flex items-center">
-              <button
-                type="submit"
-                name={KEYS.intent}
-                value={KEYS.chat}
-                className={twMerge(
-                  "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100 disabled:opacity-40",
-                  HOVER_TRANSITION,
-                )}
-                disabled={submitDisabled}
-              >
-                {fetcher.state !== "idle" ? (
-                  <Spinner />
-                ) : (
-                  <Icon name={"ARROW_UP"} fontSize="24px" />
-                )}
-              </button>
+        <div className="pt-2 pb-4">
+          {fetcher.data?.errors &&
+            fetcher.data?.errors.length > 0 &&
+            fetcher.data.errors.map((e) => (
+              <p className="text-danger py-2" key={e}>
+                {e}
+              </p>
+            ))}
+          <fetcher.Form method="POST">
+            <div className="flex w-full items-end gap-2">
+              <textarea
+                name={KEYS.message}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className={twMerge(INPUT_STYLES, "bg-white")}
+                placeholder={"Message"}
+                rows={1}
+              />
+              <div className="flex items-center">
+                <button
+                  type="submit"
+                  name={KEYS.intent}
+                  value={KEYS.chat}
+                  className={twMerge(
+                    "disabled:bg-grey-2 hover:text-light-green bg-navy-blue flex cursor-pointer items-center justify-center rounded-lg p-3 text-white disabled:text-stone-100 disabled:opacity-40",
+                    HOVER_TRANSITION,
+                  )}
+                  disabled={submitDisabled}
+                >
+                  {fetcher.state !== "idle" ? (
+                    <Spinner />
+                  ) : (
+                    <Icon name={"ARROW_UP"} fontSize="24px" />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </fetcher.Form>
+          </fetcher.Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

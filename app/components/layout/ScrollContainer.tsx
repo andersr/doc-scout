@@ -11,7 +11,7 @@ export function ScrollContainer({
   return (
     <div
       className={twMerge(
-        "h-[calc(100vh-290px)] overflow-y-scroll rounded border border-stone-300 p-4 inset-shadow-sm inset-shadow-slate-300/40 md:h-[calc(100vh-340px)]",
+        "flex min-h-96 flex-1 flex-col justify-end overflow-y-auto",
       )}
     >
       {children}

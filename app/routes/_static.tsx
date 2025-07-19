@@ -1,49 +1,29 @@
 import { Outlet, useLoaderData } from "react-router";
 
 import { maybeUser } from "~/.server/services/sessions/maybeUser";
-import { AppNav } from "~/components/layout/AppNav";
 import { MainLayout } from "~/components/layout/MainLayout";
-import { UserMenu } from "~/components/user/UserMenu";
-import { ErrorBoundaryInfo } from "~/lib/errorBoundary/ErrorBoundaryInfo";
-import { useErrorBoundary } from "~/lib/errorBoundary/useErrorBoundary";
-import type { UserClient } from "~/types/user";
+import { useRouteData } from "~/hooks/useRouteData";
 import type { Route } from "./+types/_static";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const userResult = await maybeUser({ request });
-
-  if (userResult.success) {
-    const { internalUser, stytchUser } = userResult.data;
-    const email = stytchUser?.emails[0].email ?? "";
-    return {
-      user: { email, publicId: internalUser.publicId } satisfies UserClient,
-    };
-  }
+  const user = await maybeUser({ request });
 
   return {
-    user: null,
+    user: user?.clientUser ?? null,
   };
 }
 
-export default function StaticRoutes() {
+export default function MainLayoutRoutes() {
   const { user } = useLoaderData<typeof loader>();
+  const { pageTitle, whiteBackground } = useRouteData();
 
   return (
     <MainLayout
-      leftNav={user && <AppNav />}
-      rightNav={<UserMenu user={user} />}
+      whiteBackground={whiteBackground}
+      pageTitle={pageTitle}
+      user={user}
     >
       <Outlet />
-    </MainLayout>
-  );
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  const output = useErrorBoundary(error);
-
-  return (
-    <MainLayout>
-      <ErrorBoundaryInfo {...output} />
     </MainLayout>
   );
 }

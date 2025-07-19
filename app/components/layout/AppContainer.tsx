@@ -7,8 +7,10 @@ interface Props {
 
 export function AppContainer({ children, className }: Props) {
   return (
-    <div className={twMerge("flex h-full flex-col p-4", className)}>
-      {children}
+    <div className={twMerge("md:bg-background size-full", className)}>
+      <div className="relative flex h-full flex-col overflow-hidden md:mx-auto md:w-3xl">
+        {children}
+      </div>
     </div>
   );
 }

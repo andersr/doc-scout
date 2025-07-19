@@ -3,7 +3,6 @@ import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import { FileUploadForm } from "~/components/files/FileUploadForm";
 import { UrlForm } from "~/components/files/UrlForm";
-import { PageTitle } from "~/components/layout/PageTitle";
 import {
   TabButton,
   TabContent,
@@ -13,38 +12,43 @@ import {
 } from "~/components/ui/tabs";
 import { ADD_DOCS_TITLE } from "~/config/titles";
 import { KEYS } from "~/shared/keys";
+import type { RouteData } from "~/types/routes";
 import { filesAction } from "./actions/filesAction";
 import { urlsAction } from "./actions/urlsAction";
 
+export const handle: RouteData = {
+  addBackButton: true,
+  pageTitle: ADD_DOCS_TITLE,
+};
+
 export default function NewDocsRoute() {
-  const { onValueChange, value } = useTabs({ defaultValue: KEYS.files });
+  const { currentTab, onTabChange } = useTabs({ defaultValue: KEYS.files });
   const actionData = useActionData<typeof action>();
 
   return (
-    <div className="flex w-full flex-col gap-8 md:mx-auto md:w-3xl">
-      <PageTitle title={ADD_DOCS_TITLE} />
-      <div className="pt-4">
-        <Tabs value={value} onValueChange={onValueChange}>
+    <>
+      <div className="flex-1">
+        <Tabs currentTab={currentTab} onTabChange={onTabChange}>
           <TabsList>
             <TabButton
-              value={KEYS.files}
-              currentValue={value}
-              onValueChange={onValueChange}
+              tabName={KEYS.files}
+              currentTab={currentTab}
+              onTabChange={onTabChange}
             >
               Files
             </TabButton>
             <TabButton
-              value={KEYS.urls}
-              currentValue={value}
-              onValueChange={onValueChange}
+              tabName={KEYS.urls}
+              currentTab={currentTab}
+              onTabChange={onTabChange}
             >
-              Via URL
+              URLs
             </TabButton>
           </TabsList>
-          <TabContent value={KEYS.files} currentValue={value}>
+          <TabContent tabName={KEYS.files} currentTab={currentTab}>
             <FileUploadForm />
           </TabContent>
-          <TabContent value={KEYS.urls} currentValue={value}>
+          <TabContent tabName={KEYS.urls} currentTab={currentTab}>
             <UrlForm />
           </TabContent>
         </Tabs>
@@ -56,7 +60,7 @@ export default function NewDocsRoute() {
           ))}
         </ul>
       )}
-    </div>
+    </>
   );
 }
 

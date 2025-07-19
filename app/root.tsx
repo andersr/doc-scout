@@ -14,6 +14,7 @@ import {
 import { getToast } from "remix-toast";
 import { twMerge } from "tailwind-merge";
 import type { Route } from "./+types/root";
+import { MainLayout } from "./components/layout/MainLayout";
 import { APP_NAME } from "./config/app";
 import { ErrorBoundaryInfo } from "./lib/errorBoundary/ErrorBoundaryInfo";
 import { useErrorBoundary } from "./lib/errorBoundary/useErrorBoundary";
@@ -70,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
         <title>{APP_NAME}</title>
       </head>
-      <body className={twMerge("h-full", "bg-background")}>
+      <body className={twMerge("h-full", "md:bg-background")}>
         {children}
         <Toaster />
         <ScrollRestoration />
@@ -88,8 +89,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const output = useErrorBoundary(error);
 
   return (
-    <main className="container mx-auto p-4 pt-16">
+    <MainLayout pageTitle={output.title} user={null} systemError>
       <ErrorBoundaryInfo {...output} />
-    </main>
+    </MainLayout>
   );
 }

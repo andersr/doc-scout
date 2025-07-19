@@ -6,29 +6,23 @@ import {
   type UserInternal,
 } from "~/types/user";
 
+import { StatusCodes } from "http-status-codes";
+import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
-import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
 import { KEYS } from "~/shared/keys";
-import type { User as StytchUser } from "stytch";
+import { ServerError } from "~/types/server";
 
-export async function maybeUser({ request }: { request: Request }): Promise<
-  | {
-      data: {
-        clientUser: UserClient;
-        internalUser: UserInternal;
-        stytchUser: StytchUser | undefined;
-      };
-      success: true;
-    }
-  | { error: string; success: false }
-> {
+export async function maybeUser({ request }: { request: Request }): Promise<{
+  clientUser: UserClient;
+  internalUser: UserInternal;
+} | null> {
   const sessionToken = await getCookieValue({
     key: KEYS.stytch_session_token,
     request,
   });
 
   if (!sessionToken) {
-    return { error: "No session token", success: false };
+    return null;
   }
 
   try {
@@ -37,11 +31,14 @@ export async function maybeUser({ request }: { request: Request }): Promise<
     });
 
     if (resp.status_code !== 200) {
-      return { error: "Session invalid or expired", success: false };
+      throw new ServerError(
+        "Session invalid or expired",
+        StatusCodes.BAD_GATEWAY,
+      );
     }
 
     if (!resp.user || !resp.user.user_id) {
-      return { error: "No user found", success: false };
+      throw new ServerError("No user found", StatusCodes.BAD_GATEWAY);
     }
 
     const user = await prisma.user.findUnique({
@@ -52,23 +49,17 @@ export async function maybeUser({ request }: { request: Request }): Promise<
     });
 
     if (!user) {
-      return { error: "No user in db", success: false };
+      throw new ServerError("No user found", StatusCodes.BAD_REQUEST);
     }
 
-    const stytchUser = await getStytchUserById(user.stytchId);
-
     return {
-      data: {
-        clientUser: {
-          email: resp.user.emails[0].email,
-          publicId: user.publicId,
-        },
-        internalUser: user,
-        stytchUser,
+      clientUser: {
+        email: resp.user.emails[0].email,
+        publicId: user.publicId,
       },
-      success: true,
+      internalUser: user,
     };
   } catch (error) {
-    return { error: `Session error: ${error}`, success: false };
+    throw serverError(error);
   }
 }

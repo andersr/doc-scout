@@ -1,6 +1,6 @@
 import { Form } from "react-router";
-import { twMerge } from "tailwind-merge";
 import { appRoutes } from "~/shared/appRoutes";
+import { MenuButton } from "../ui/buttons/MenuButton";
 
 export function LogoutBtn() {
   return (
@@ -9,19 +9,7 @@ export function LogoutBtn() {
       action={appRoutes("/logout")}
       className="flex-block items-center"
     >
-      <button
-        type="submit"
-        className={twMerge(
-          "cursor-pointer",
-          "flex w-full items-center",
-          "hover:bg-stone-100",
-          "transition-all duration-200 ease-in-out",
-          "p-2",
-        )}
-        aria-label="Sign Out"
-      >
-        Sign Out
-      </button>
+      <MenuButton label={"Sign Out"} type="submit" />
     </Form>
   );
 }

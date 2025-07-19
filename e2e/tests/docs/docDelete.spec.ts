@@ -1,5 +1,5 @@
 import { generateId } from "@app/.server/utils/generateId";
-import { ADD_DOCS_TITLE } from "@app/config/titles";
+import { DASHBOARD_TITLE } from "@app/config/titles";
 import type {
   DeleteAllUserSourcesInput,
   UpsertSourceInput,
@@ -56,14 +56,15 @@ test.describe("Doc delete", () => {
         id: sourcePublicId,
       }),
     );
-    await page.getByRole("button", { name: "Delete Doc" }).click();
+    await page.getByRole("button", { name: "more_vert" }).click();
+    await page.getByRole("button", { exact: true, name: "Delete" }).click();
 
     // assert
     await expect(
       page.getByText(`"${MOCK_SOURCE.title}" was deleted.`),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { level: 1, name: ADD_DOCS_TITLE }),
+      page.getByRole("heading", { level: 1, name: DASHBOARD_TITLE }),
     ).toBeVisible();
   });
 });

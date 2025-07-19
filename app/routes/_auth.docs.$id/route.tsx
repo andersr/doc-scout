@@ -1,21 +1,25 @@
 import { MessageType } from "@prisma/client";
 import { createCloudfrontSignedUrl } from "@services/cloudStore/createCloudfrontSignedUrl";
-import type { ServerResponse } from "http";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { useFetcher, useLoaderData } from "react-router";
-import { twMerge } from "tailwind-merge";
+import { useLoaderData } from "react-router";
 import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSourceAndSourceChat";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import BotChat from "~/components/chat/BotChat";
-import { PageTitle } from "~/components/layout/PageTitle";
-import { IconButton } from "~/components/ui/buttons/IconButton";
-import { Icon } from "~/components/ui/Icon";
+import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
+import type { MenuActionInput } from "~/types/menu";
 import type { ClientMessage } from "~/types/message";
+import type { RouteData } from "~/types/routes";
 import { setSourceTitle } from "~/utils/setSourceTitle";
 import { chatAction } from "./actions/chatAction";
 import { deleteAction } from "./actions/deleteAction";
+
+export const handle: RouteData = {
+  addBackButton: true,
+  noFooter: true,
+  whiteBackground: true,
+};
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { source, sourceChat } = await requireSourceAndSourceChat({ params });
@@ -29,68 +33,40 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const docUrl = source.storagePath
     ? await createCloudfrontSignedUrl({ storagePath: source.storagePath })
     : "";
+
+  const pageTitle = setSourceTitle(source);
   return {
-    docUrl,
+    actionsInput: [
+      {
+        link: {
+          label: "View Doc",
+          to: docUrl,
+        },
+      },
+      {
+        button: {
+          action: appRoutes("/docs/:id", {
+            id: source.publicId,
+          }),
+          confirmMessage: `Delete "${pageTitle}"?${messages.length > 0 ? " ****This will also delete any associated chat messages.****" : ""}`,
+          danger: true,
+          intent: KEYS.delete,
+          label: "Delete",
+          method: "DELETE",
+        },
+      },
+    ] satisfies MenuActionInput[],
+    docUrl, // used in _main - maybe no longer needed
     messages,
+    pageTitle,
     source,
-    title: setSourceTitle(source),
   };
 }
 
 export default function DocDetailsLayout() {
-  const { docUrl, messages, title } = useLoaderData<typeof loader>();
+  const { messages } = useLoaderData<typeof loader>();
 
-  const deleteFetcher = useFetcher<ServerResponse>();
-
-  return (
-    <div className="relative flex w-full flex-1 flex-col gap-8 md:mx-auto md:w-3xl">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <PageTitle title={title} />
-        <ul className="flex items-center gap-4">
-          {docUrl && (
-            <li>
-              <a
-                href={docUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={twMerge(
-                  "inline-flex items-center gap-1",
-                  "text-blue-600",
-                )}
-              >
-                <span className="underline">View Doc</span>{" "}
-                <Icon
-                  name="NEW_WINDOW"
-                  fontSize="20px"
-                  customStyles="no-underline"
-                />
-              </a>
-            </li>
-          )}
-          <li>
-            <IconButton
-              name="DELETE"
-              label="Delete Doc"
-              customStyles="text-danger/40 hover:text-danger"
-              onClick={() => {
-                if (
-                  confirm(
-                    `Delete "${title}"?${messages.length > 0 ? " ***This will also delete all associated chat messages.***" : ""}`,
-                  )
-                ) {
-                  deleteFetcher.submit(
-                    { intent: KEYS.delete },
-                    { method: "POST" },
-                  );
-                }
-              }}
-            />
-          </li>
-        </ul>
-      </div>
-      <BotChat messages={messages} />
-    </div>
-  );
+  return <BotChat messages={messages} />;
 }
 
 export async function action(args: ActionFunctionArgs) {

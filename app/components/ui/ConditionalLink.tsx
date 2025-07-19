@@ -1,21 +1,23 @@
 import { Link } from "react-router";
 
 export interface ConditionalLinkProps {
-  label: React.ReactNode;
+  children: React.ReactNode;
+  linkStyles?: string;
   shouldLink: boolean;
   to: string;
 }
 
 export default function ConditionalLink({
-  label,
+  children,
+  linkStyles,
   shouldLink,
   to,
 }: ConditionalLinkProps) {
   return shouldLink ? (
-    <div className="inline-block">{label}</div>
-  ) : (
-    <Link to={to} className="inline-block">
-      {label}
+    <Link className={linkStyles} to={to}>
+      {children}
     </Link>
+  ) : (
+    <div className="inline-block">{children}</div>
   );
 }

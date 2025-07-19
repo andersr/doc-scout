@@ -7,6 +7,7 @@ interface Props {
   items: React.JSX.Element[];
 }
 
+// TODO: refactor and merge with MoreMenu
 export function DropdownMenu({ children, items }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -21,14 +22,14 @@ export function DropdownMenu({ children, items }: Props) {
       <button
         onClick={toggleMenu}
         className={twMerge(
-          "text-grey-4 hover:bg-grey-1 flex cursor-pointer items-center rounded p-1 text-base",
+          "flex cursor-pointer items-center rounded p-1 text-base",
         )}
       >
         {children}
       </button>
       <div
         className={twMerge(
-          "absolute top-12 right-0 z-20 flex w-44 flex-col justify-around rounded bg-white shadow-md",
+          "absolute top-12 right-0 z-0 flex w-44 flex-col justify-around rounded bg-white shadow-md",
           isMenuOpen ? "flex flex-col" : "hidden",
         )}
       >
