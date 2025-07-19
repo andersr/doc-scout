@@ -21,6 +21,7 @@ import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 import { serverError } from "~/.server/utils/serverError";
 import { stytchClient } from "~/.server/vendors/stytch/client";
 import { Logo } from "~/components/brand/Logo";
+import { Footer } from "~/components/layout/Footer";
 import { PageTitle } from "~/components/layout/PageTitle";
 import { ActionButton } from "~/components/ui/buttons/ActionButton";
 import { Label } from "~/components/ui/Label";
@@ -146,83 +147,11 @@ export default function LoginRoute() {
           </div>
         </div>
       </div>
+      <div className="pt-4 pb-6">
+        <Footer />
+      </div>
     </div>
   );
-
-  // return (
-  //   <AppContainer>
-  //     <AppHeader />
-  //     <div className="flex flex-1 flex-col items-center">
-  //       {actionData?.email && (
-  //         <div className="bg-success absolute inset-x-0 top-12 z-10 my-4 rounded p-2 text-center">
-  //           Please check the inbox for {actionData.email}
-  //         </div>
-  //       )}
-  //       <div className="flex w-full max-w-[325px] flex-col gap-6 pt-24">
-  //         <div className="text-center">
-  //           <PageTitle title={title} />
-  //         </div>
-  //         <div>
-  //           <a
-  //             className={twMerge(
-  //               "flex h-12 w-full items-center justify-center gap-3 rounded border border-black p-2",
-  //               "text-base leading-normal font-medium",
-  //             )}
-  //             href={googleAuthStartUrl}
-  //           >
-  //             <img
-  //               src="/images/google-logo.png"
-  //               alt="Google logo"
-  //               className="size-[18px]"
-  //             />
-  //             Continue with Google
-  //           </a>
-  //         </div>
-  //         <div className="pt-1">
-  //           <hr className="border-top-1 border-slate-300" />
-  //         </div>
-  //         {errors.map((e) => (
-  //           <div key={e} className="text-danger py-2 text-center">
-  //             {e}
-  //           </div>
-  //         ))}
-  //         <Form
-  //           method="POST"
-  //           className="flex flex-col gap-4"
-  //           onSubmit={() => setNameValue("")}
-  //         >
-  //           <div className="flex flex-col gap-2">
-  //             <Label htmlFor={KEYS.email}>Email</Label>
-  //             <input
-  //               id={KEYS.email}
-  //               name={KEYS.email}
-  //               type="email"
-  //               value={nameValue}
-  //               onChange={(e) => setNameValue(e.target.value)}
-  //               className="block w-full min-w-72 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-  //               placeholder="email@example.com"
-  //               required
-  //             />
-  //           </div>
-  //           <ActionButton type="submit" disabled={nameValue.trim() === ""}>
-  //             {navigation.state === "submitting" ? "Loading..." : "Continue"}
-  //           </ActionButton>
-  //         </Form>
-  //         <div className="text-sm">
-  //           Don&apos;t have an account?{" "}
-  //           <a
-  //             className={LINK_STYLES}
-  //             href="https://forms.gle/zCJqHCCSBgyrN8EB6"
-  //           >
-  //             Request access
-  //           </a>
-  //           .
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <Footer />
-  //   </AppContainer>
-  // );
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -261,13 +190,3 @@ export async function action({ request }: ActionFunctionArgs) {
     return serverError(error);
   }
 }
-
-// export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-//   const output = useErrorBoundary(error);
-
-//   return (
-//     <MainLayout>
-//       <ErrorBoundaryInfo {...output} />
-//     </MainLayout>
-//   );
-// }
