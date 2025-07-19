@@ -27,5 +27,6 @@ export function useRouteData(): LayoutRouteData {
     isDocDetails,
     noFooter: handle.noFooter ?? false,
     pageTitle: data?.pageTitle ?? handle.pageTitle ?? "",
+    whiteBackground: handle.whiteBackground ?? false,
   };
 }

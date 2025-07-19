@@ -5,6 +5,7 @@ import PrivacyContent from "../static/Privacy.mdx";
 export const handle: RouteData = {
   addBackButton: true,
   pageTitle: "Privacy",
+  whiteBackground: true,
 };
 
 export default function PrivacyPage() {

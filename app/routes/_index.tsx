@@ -29,9 +29,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       },
     });
 
-    // if (sources.length === 0) {
-    //   return redirect(appRoutes("/docs/new"));
-    // }
     return {
       user: {
         ...user.clientUser,
@@ -49,7 +46,7 @@ export default function HomePage() {
   const { user } = useLoaderData<typeof loader>();
 
   return user ? (
-    <MainLayout user={user} pageTitle={DASHBOARD_TITLE}>
+    <MainLayout whiteBackground user={user} pageTitle={DASHBOARD_TITLE}>
       {user.sources.length === 0 ? (
         <div>
           No docs added. <Link to={appRoutes("/docs/new")}>Add docs</Link>.

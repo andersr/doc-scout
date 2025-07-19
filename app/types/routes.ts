@@ -5,10 +5,12 @@ export interface RouteData {
   addBackButton?: boolean;
   docUrl?: string;
   noFooter?: boolean;
+  noSources?: boolean;
   pageTitle?: string;
+  whiteBackground?: boolean;
 }
 
 export type LayoutRouteData = Required<Pick<RouteData, "pageTitle">> &
-  Pick<RouteData, "docUrl" | "addBackButton" | "actionsInput" | "noFooter"> & {
+  Omit<RouteData, "pageTitle"> & {
     isDocDetails?: boolean;
   };

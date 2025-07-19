@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
         <title>{APP_NAME}</title>
       </head>
-      <body className={twMerge("h-full", "bg-background")}>
+      <body className={twMerge("h-full", "md:bg-background")}>
         {children}
         <Toaster />
         <ScrollRestoration />

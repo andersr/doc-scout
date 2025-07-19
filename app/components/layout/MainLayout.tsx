@@ -24,7 +24,8 @@ export function MainLayout({
   noFooter,
   pageTitle,
   user,
-}: { children: React.ReactNode } & Pick<LayoutRouteData, "pageTitle"> & {
+  whiteBackground,
+}: { children: React.ReactNode } & LayoutRouteData & {
     centeredPageTitle?: boolean;
     moreActions?: MenuAction[];
     noFooter?: boolean;
@@ -36,6 +37,9 @@ export function MainLayout({
 
   function setLeftNav() {
     if (isMobile) {
+      if (user?.sources?.length === 0) {
+        return <span className="w-12">&nbsp;</span>;
+      }
       return isHome ? (
         <Logo />
       ) : (
@@ -95,15 +99,19 @@ export function MainLayout({
         </header>
         <main
           ref={componentRef}
-          className="mt-14 flex flex-1 flex-col gap-2 overflow-auto bg-white md:relative md:mt-0"
+          className={twMerge(
+            "mt-14 flex flex-1 flex-col gap-2 overflow-auto md:relative md:mt-0",
+            whiteBackground && "rounded-xl bg-white",
+          )}
         >
           <div
             className={twMerge("z-10 hidden md:fixed md:inset-x-0 md:block")}
           >
             <div
               className={twMerge(
-                "flex items-center justify-between p-4 md:mx-auto md:w-3xl md:bg-white",
+                "flex items-center justify-between p-4 md:mx-auto md:w-3xl",
                 isScrolling ? "drop-shadow" : "",
+                whiteBackground && "bg-white",
               )}
             >
               <PageTitle

@@ -27,10 +27,10 @@ export function Dropzone({
         {...getRootProps()}
         className={cn(
           "relative flex min-h-[200px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-all duration-200 ease-in-out",
-          "bg-background/50 p-8 text-center",
+          "bg-white p-8 text-center",
           "hover:bg-accent/50 hover:border-accent-foreground/50",
           "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-          isDragActive ? "border-black bg-white" : "border-gray-400",
+          isDragActive ? "bg-background/50 border-black" : "border-gray-400",
         )}
         role="button"
         tabIndex={0}

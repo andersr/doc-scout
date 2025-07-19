@@ -15,10 +15,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function MainLayoutRoutes() {
   const { user } = useLoaderData<typeof loader>();
-  const { pageTitle } = useRouteData();
+  const { pageTitle, whiteBackground } = useRouteData();
 
   return (
-    <MainLayout pageTitle={pageTitle} user={user}>
+    <MainLayout
+      whiteBackground={whiteBackground}
+      pageTitle={pageTitle}
+      user={user}
+    >
       <Outlet />
     </MainLayout>
   );

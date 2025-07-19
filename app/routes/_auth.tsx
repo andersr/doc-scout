@@ -31,7 +31,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function MainLayoutRoutes() {
   const { user } = useLoaderData<typeof loader>();
-  const { actionsInput, noFooter, pageTitle } = useRouteData();
+  const { actionsInput, noFooter, pageTitle, whiteBackground } = useRouteData();
 
   const moreActions = useMoreMenu(actionsInput);
 
@@ -41,6 +41,7 @@ export default function MainLayoutRoutes() {
       moreActions={moreActions}
       pageTitle={pageTitle}
       user={user}
+      whiteBackground={whiteBackground}
     >
       <Outlet />
     </MainLayout>

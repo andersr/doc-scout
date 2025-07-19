@@ -18,6 +18,7 @@ import { deleteAction } from "./actions/deleteAction";
 export const handle: RouteData = {
   addBackButton: true,
   noFooter: true,
+  whiteBackground: true,
 };
 
 export async function loader({ params }: LoaderFunctionArgs) {

@@ -68,7 +68,7 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
       <div
         className={twMerge(
           "w-full md:mx-auto md:max-w-3xl",
-          "fixed inset-x-0 bottom-0 z-10 bg-white px-3 md:bottom-12",
+          "fixed inset-x-0 bottom-0 z-10 bg-white px-3 md:bottom-16",
         )}
       >
         <div className="py-4 md:pt-2 md:pb-3">
