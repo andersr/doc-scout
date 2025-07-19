@@ -6,6 +6,7 @@ import { requireSourceAndSourceChat } from "~/.server/models/sources/requireSour
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { handleActionIntent } from "~/.server/utils/handleActionIntent";
 import BotChat from "~/components/chat/BotChat";
+import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { MenuActionInput } from "~/types/menu";
 import type { ClientMessage } from "~/types/message";
@@ -43,10 +44,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
       },
       {
         button: {
+          action: appRoutes("/docs/:id", {
+            id: source.publicId,
+          }),
           confirmMessage: `Delete "${pageTitle}"?${messages.length > 0 ? " ****This will also delete any associated chat messages.****" : ""}`,
           danger: true,
           intent: KEYS.delete,
           label: "Delete",
+          method: "DELETE",
         },
       },
     ] satisfies MenuActionInput[],

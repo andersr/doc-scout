@@ -1,5 +1,6 @@
 import { deleteFromBucket } from "@services/cloudStore/deleteFromBucket";
 import { getVectorStore } from "@services/vectorStore/getVectorStore";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { redirectWithSuccess } from "remix-toast";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { requireRouteParam } from "~/.server/utils/requireRouteParam";
@@ -8,6 +9,7 @@ import { prisma } from "~/lib/prisma";
 import { appRoutes } from "~/shared/appRoutes";
 import { KEYS } from "~/shared/keys";
 import type { ActionHandlerFn } from "~/types/action";
+import { ServerError } from "~/types/server";
 import { SOURCE_INCLUDE } from "~/types/source";
 import type { VectorMetadataFilter } from "~/types/vectorDoc";
 
@@ -18,6 +20,13 @@ export const deleteAction: ActionHandlerFn = async ({ params, request }) => {
     key: KEYS.id,
     params,
   });
+
+  if (request.method !== "DELETE") {
+    throw new ServerError(
+      ReasonPhrases.METHOD_NOT_ALLOWED,
+      StatusCodes.METHOD_NOT_ALLOWED,
+    );
+  }
 
   const source = await prisma.source.delete({
     include: SOURCE_INCLUDE,

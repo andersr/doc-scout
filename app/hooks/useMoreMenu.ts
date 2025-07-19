@@ -24,7 +24,11 @@ export function useMoreMenu(actionsInput: MenuActionInput[] | undefined) {
             label: input[i].button!.label,
             onClick: () => {
               const submitVals = { intent: input[i].button!.intent };
-              const opts = { method: "POST" } satisfies FetcherSubmitOptions;
+
+              const opts = {
+                action: input[i].button!.action,
+                method: input[i].button!.method ?? "POST",
+              } satisfies FetcherSubmitOptions;
 
               if (!input[i].button?.confirmMessage) {
                 fetcher.submit(submitVals, opts);

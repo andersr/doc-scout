@@ -1,5 +1,6 @@
-import { Link, redirect, useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { maybeUser } from "~/.server/services/sessions/maybeUser";
+import { AddIcon } from "~/components/icons/AddIcon";
 import LandingPage from "~/components/LandingPage";
 import { MainLayout } from "~/components/layout/MainLayout";
 import { FloatingCTA } from "~/components/ui/buttons/FloatingCTA";
@@ -28,9 +29,9 @@ export async function loader({ request }: Route.LoaderArgs) {
       },
     });
 
-    if (sources.length === 0) {
-      return redirect(appRoutes("/docs/new"));
-    }
+    // if (sources.length === 0) {
+    //   return redirect(appRoutes("/docs/new"));
+    // }
     return {
       user: {
         ...user.clientUser,
@@ -74,7 +75,11 @@ export default function HomePage() {
           </ul>
         </div>
       )}
-      <FloatingCTA to={appRoutes("/docs/new")} label="Add Doc(s)" />
+      <FloatingCTA
+        icon={<AddIcon size={30} color="#fff" />}
+        to={appRoutes("/docs/new")}
+        label="Add Doc(s)"
+      />
     </MainLayout>
   ) : (
     <LandingPage />
