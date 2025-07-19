@@ -150,6 +150,9 @@ test.describe("Doc Chat - copy to clipboard", () => {
     await expect(
       page.locator("span").filter({ hasText: expectedReply }),
     ).toBeVisible();
+
+    const copyButton = page.getByRole("button", { name: "Copy to clipboard" });
+    await copyButton.scrollIntoViewIfNeeded();
     await page.getByRole("button", { name: "Copy to clipboard" }).click();
     const clipboardText = await page.evaluate(() =>
       navigator.clipboard.readText(),
