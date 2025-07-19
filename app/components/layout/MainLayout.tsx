@@ -71,7 +71,7 @@ export function MainLayout({
       <AppContainer>
         <header
           className={twMerge(
-            "md:bg-background fixed top-0 right-0 left-0 z-20 bg-white md:static",
+            "md:bg-background fixed top-0 right-0 left-0 z-30 bg-white md:static",
             isScrolling ? "drop-shadow md:drop-shadow-none" : "",
           )}
         >
