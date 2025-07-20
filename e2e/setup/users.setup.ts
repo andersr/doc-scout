@@ -3,8 +3,12 @@ import { TestUserNames } from "@e2e/types/testUsers";
 import { setAuthStoragePath } from "@e2e/utils/setAuthStoragePath";
 import { upsertTestUser } from "@e2e/utils/upsertTestUsers";
 import { test as setup } from "@playwright/test";
+import dotenv from "dotenv";
 import { getTestEmail } from "e2e/utils/getTestEmail";
-const port = process.env.PORT;
+
+dotenv.config({ path: "./.env.test" });
+
+const port = process.env.PORT || 8080;
 
 setup("test users setup", async ({ request }) => {
   if (!port) {

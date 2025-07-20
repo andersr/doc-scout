@@ -1,14 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
-const port = process.env.PORT;
+import dotenv from "dotenv";
 
-if (!port) {
-  console.warn("No port found");
-}
+dotenv.config({ path: "./.env.test" });
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
+const port = process.env.PORT || 8080;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -20,13 +15,8 @@ export default defineConfig({
   fullyParallel: true,
 
   /* Configure projects for major browsers */
-  //  teardown: "teardown",
   projects: [
     { name: "setup", testMatch: /.*\.setup\.ts/ },
-    // {
-    //   name: "teardown",
-    //   testMatch: /.*\.teardown\.ts/,
-    // },
     {
       dependencies: ["setup"],
       name: "Desktop Chrome",
@@ -85,7 +75,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run e2e:devserver",
+    command: `PORT=${port} npx react-router dev`,
     reuseExistingServer: false,
     url: `http://localhost:${port}`,
   },
