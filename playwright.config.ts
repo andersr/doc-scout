@@ -1,14 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
-const port = process.env.PORT;
+import dotenv from "dotenv";
+import { DEFAULT_PORT } from "./e2e/config/port";
 
-if (!port) {
-  console.warn("No port found");
-}
+dotenv.config({ path: "./.env.test" });
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
+const port = process.env.PORT || DEFAULT_PORT;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -16,17 +12,10 @@ if (!port) {
 export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Run tests in files in parallel */
   fullyParallel: true,
 
-  /* Configure projects for major browsers */
-  //  teardown: "teardown",
   projects: [
     { name: "setup", testMatch: /.*\.setup\.ts/ },
-    // {
-    //   name: "teardown",
-    //   testMatch: /.*\.teardown\.ts/,
-    // },
     {
       dependencies: ["setup"],
       name: "Desktop Chrome",
@@ -75,8 +64,6 @@ export default defineConfig({
   tsconfig: "./tsconfig.e2e.json",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
     baseURL: `http://localhost:${port}`,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -85,7 +72,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run e2e:devserver",
+    command: `PORT=${port} npx react-router dev`,
     reuseExistingServer: false,
     url: `http://localhost:${port}`,
   },
