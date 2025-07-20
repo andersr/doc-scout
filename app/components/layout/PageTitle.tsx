@@ -16,7 +16,7 @@ export function PageTitle({
       className={twMerge(
         "inline text-3xl text-stone-600 font-stretch-50% md:inline-block md:font-semibold md:font-stretch-50%",
         danger ? "text-danger" : "text-stone-600",
-        centered && "text-center",
+        centered && "w-full text-center",
         customStyles,
       )}
     >
