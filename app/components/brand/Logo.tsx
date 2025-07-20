@@ -41,7 +41,7 @@ function LogoParts({ customOpacity, withText }: LogoProps) {
   const [opacity, setOpacity] = useState(DEFAULT_OPACITY);
   return (
     <div
-      className="flex items-baseline"
+      className="flex items-baseline gap-2"
       onMouseEnter={() => setOpacity(HOVER_OPACITY)}
       onMouseLeave={() => setOpacity(DEFAULT_OPACITY)}
     >

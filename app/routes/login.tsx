@@ -84,7 +84,7 @@ export default function LoginRoute() {
       )}
       <div className="flex-1">
         <div className="mt-16 text-center">
-          <PageTitle centered customStyles="md:text-5xl">
+          <PageTitle centered customStyles="text-5xl">
             {LOGIN_TITLE}
           </PageTitle>
         </div>

@@ -3,6 +3,7 @@ import type { MenuActionInput } from "./menu";
 export interface RouteData {
   actionsInput?: MenuActionInput[];
   addBackButton?: boolean;
+  centeredPageTitle?: boolean;
   docUrl?: string;
   noFooter?: boolean;
   noSources?: boolean;

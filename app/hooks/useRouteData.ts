@@ -23,6 +23,7 @@ export function useRouteData(): LayoutRouteData {
   return {
     actionsInput: data?.actionsInput,
     addBackButton: handle.addBackButton ?? false,
+    centeredPageTitle: handle.centeredPageTitle ?? false,
     docUrl: data?.docUrl ? data.docUrl : "",
     isDocDetails,
     noFooter: handle.noFooter ?? false,
