@@ -84,7 +84,7 @@ jobs:
         run: npx prettier . --check
 
   unused:
-    name: 🔍 Find Unused (Knip)
+    name: 🗑️ Find Unused Imports, Deps,etc.
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -102,7 +102,7 @@ jobs:
       - name: 🔧 Type Gen
         run: npm run type:gen
 
-      - name: 🔍 Find Unused
+      - name: 🗑️ Find Unused Imports, Deps,etc.
         run: npm run knip
 
   test:
