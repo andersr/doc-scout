@@ -25,7 +25,6 @@
     "@react-router/fs-routes": "^7.5.3",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
-    "@upstash/vector": "^1.2.1",
     "@vercel/react-router": "^1.1.2",
     "adm-zip": "^0.5.16",
     "class-variance-authority": "^0.7.1",
