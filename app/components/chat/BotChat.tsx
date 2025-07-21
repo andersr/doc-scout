@@ -43,7 +43,7 @@ export default function BotChat({ messages }: { messages: ClientMessage[] }) {
     <>
       <ScrollContainer listBottomRef={listBottomRef}>
         {messages.length === 0 && !optimisticMessage && (
-          <div className="text-pompadour/80 flex size-full items-center justify-center text-xl font-semibold">
+          <div className="text-navy-blue flex size-full items-center justify-center text-xl font-semibold">
             Ask a question below to get started.
           </div>
         )}

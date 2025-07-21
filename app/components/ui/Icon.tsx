@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { APP_ICONS, DEFAULT_ICON_SIZE } from "~/config/icons";
 
-export interface IconProps {
+interface IconProps {
   customStyles?: string;
   fontSize?: string;
   /**

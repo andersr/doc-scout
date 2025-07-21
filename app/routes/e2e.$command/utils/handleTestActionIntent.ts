@@ -5,7 +5,7 @@ import type { ActionHandlerFn } from "~/types/action";
 import { ServerError } from "~/types/server";
 import { TEST_KEYS, TestKeys } from "../../../shared/testKeys";
 
-export type ActionHandlers = { [k in TestKeys]?: ActionHandlerFn };
+type ActionHandlers = { [k in TestKeys]?: ActionHandlerFn };
 
 export async function handleTestActionIntent({
   handlers,

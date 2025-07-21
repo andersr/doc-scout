@@ -1,7 +1,7 @@
 import { data } from "react-router";
 import { throwIfExistingSources } from "~/.server/models/sources/throwIfExistingSources";
 import { createS3SignedUrl } from "~/.server/services/cloudStore/createS3SignedUrl";
-import { generateS3Key } from "~/.server/services/cloudStore/generateS3Key/generateS3Key";
+import { generateS3Key } from "~/.server/services/cloudStore/generateS3Key";
 import { requireUser } from "~/.server/services/sessions/requireUser";
 import { generateId } from "~/.server/utils/generateId";
 import { serverError } from "~/.server/utils/serverError";
