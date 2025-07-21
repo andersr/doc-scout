@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import { getFromBucket } from "~/.server/services/cloudStore/getFromBucket";
 import { VERCEL_TMP_DIR } from "~/config/files";
 import { getFilenameFromPath } from "~/utils/getFilenameFromPath";
