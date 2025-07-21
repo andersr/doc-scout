@@ -1,0 +1,15 @@
+{
+  "ignore": ["./e2e/**"],
+  "ignoreDependencies": [
+    "@tailwindcss/typography",
+    "langchain",
+    "tailwindcss",
+    "tw-animate-css",
+    "vite-tsconfig-paths"
+  ],
+  "paths": {
+    "@app/*": ["./app/*"],
+    "@e2e/*": ["./e2e/*"],
+    "@services/*": ["./e2e/mocks/services/*"]
+  }
+}
