@@ -25,7 +25,7 @@
     "@react-router/fs-routes": "^7.5.3",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
-    "@upstash/vector": "^1.2.1",
+    "@upstash/vector": "^1.2.2",
     "@vercel/react-router": "^1.1.2",
     "adm-zip": "^0.5.16",
     "argon2": "^0.43.0",
