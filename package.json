@@ -102,7 +102,7 @@
   "private": true,
   "scripts": {
     "build": "react-router build",
-    "checks": "run-s format:fix lint:fix typecheck test:run",
+    "checks": "run-s format:fix lint:fix typecheck test:run knip",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "dev": "react-router dev",
@@ -113,6 +113,7 @@
     "e2e:ui": "PORT=8000 playwright test --ui",
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
+    "knip": "knip",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "lint:staged": "npx lint-staged",
@@ -123,8 +124,7 @@
     "start:dev": "PORT=4000 dotenv -e .env.test -- npm start",
     "test": "vitest",
     "test:run": "vitest run",
-    "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit",
-    "knip": "knip"
+    "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit"
   },
   "type": "module"
 }
