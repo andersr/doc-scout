@@ -2,7 +2,7 @@ import { z } from "zod";
 import { FILE_CONFIG as CONFIG } from "~/config/files";
 import { isValidUrl } from "~/utils/isValidUrl";
 
-export const urlSchema = z.string().refine((val) => isValidUrl(val), {
+const urlSchema = z.string().refine((val) => isValidUrl(val), {
   message: `Not a valid URL`,
 });
 

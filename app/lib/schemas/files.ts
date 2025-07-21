@@ -2,7 +2,7 @@ import { z } from "zod";
 import { FILE_CONFIG as CONFIG } from "~/config/files";
 import { formatBytes } from "~/utils/formatBytes";
 
-export const fileNameSchema = z
+const fileNameSchema = z
   .string()
   .min(5)
   .refine((name) => name.trim() !== "", {

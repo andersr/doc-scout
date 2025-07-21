@@ -6,7 +6,7 @@ import { isAppKey } from "./isAppKey";
 import { requireFormValue } from "./requireFormValue";
 import { serverError } from "./serverError";
 
-export type ActionHandlers = { [k in AppKeys]?: ActionHandlerFn };
+type ActionHandlers = { [k in AppKeys]?: ActionHandlerFn };
 
 export async function handleActionIntent({
   handlers,

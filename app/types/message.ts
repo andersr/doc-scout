@@ -1,11 +1,9 @@
 import type { Prisma } from "@prisma/client";
 
-export const MESSAGE_INCLUDE = {
-  author: true,
-} as const;
-
-export type MessageWithRelations = Prisma.MessageGetPayload<{
-  include: typeof MESSAGE_INCLUDE;
+type MessageWithRelations = Prisma.MessageGetPayload<{
+  include: {
+    author: true;
+  };
 }>;
 
 // need to convert MessageType.Bot to isBot boolean due to use of Prisma enums on the client causing Vite build failure

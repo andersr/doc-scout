@@ -4,7 +4,7 @@ import type { ActionData } from "~/types/actionData";
 
 // src: https://github.com/remix-run/remix/discussions/2749#discussioncomment-7276763
 
-export type FetcherWithComponentsReset<T> = FetcherWithComponents<T> & {
+type FetcherWithComponentsReset<T> = FetcherWithComponents<T> & {
   reset: () => void;
 };
 
