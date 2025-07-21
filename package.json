@@ -121,7 +121,7 @@
     "e2e:db:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "e2e:db:studio": "dotenv -e .env.test -- prisma studio",
     "e2e:test": "PORT=9000 dotenv -e .env.test -- run-s e2e:db:reset build pw:test",
-    "e2e:ui": "PORT=8000 dotenv -e .env.test -- playwright test --ui",
+    "e2e:ui": "PORT=8000 playwright test --ui",
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
     "lint": "eslint",
