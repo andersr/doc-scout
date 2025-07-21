@@ -8,7 +8,7 @@ import { getTestEmail } from "e2e/utils/getTestEmail";
 import { DEFAULT_PORT } from "@e2e/config/port";
 import dotenv from "dotenv";
 
-dotenv.config({ path: "./.env.test" });
+dotenv.config({ path: "./.env.test", quiet: true });
 
 const port = process.env.PORT || DEFAULT_PORT;
 

@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 import { DEFAULT_PORT } from "./e2e/config/port";
 
-dotenv.config({ path: "./.env.test" });
+dotenv.config({ path: "./.env.test", quiet: true });
 
 const port = process.env.PORT || DEFAULT_PORT;
 
