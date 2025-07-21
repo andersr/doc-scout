@@ -97,7 +97,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: 📥 Install deps
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: 🔍 Find Unused
         run: npm run knip
