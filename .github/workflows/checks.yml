@@ -99,6 +99,9 @@ jobs:
       - name: 📥 Install deps
         run: npm install --ignore-scripts
 
+      - name: 🔧 Type Gen
+        run: npm run type:gen
+
       - name: 🔍 Find Unused
         run: npm run knip
 

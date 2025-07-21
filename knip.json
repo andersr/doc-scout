@@ -1,5 +1,5 @@
 {
-  "ignore": ["./+types/**", "./e2e/**"],
+  "ignore": ["./e2e/**"],
   "ignoreDependencies": [
     "@tailwindcss/typography",
     "langchain",

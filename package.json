@@ -124,7 +124,8 @@
     "start:dev": "PORT=4000 dotenv -e .env.test -- npm start",
     "test": "vitest",
     "test:run": "vitest run",
-    "typecheck": "react-router typegen && safe-routes typegen && tsc --build --noEmit"
+    "type:gen": "react-router typegen && safe-routes typegen",
+    "typecheck": "npm run type:gen && tsc --build --noEmit"
   },
   "type": "module"
 }
