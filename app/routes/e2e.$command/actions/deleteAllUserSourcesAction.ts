@@ -1,5 +1,5 @@
+import { getStytchUserByEmail } from "@vendors/stytch/getStytchUserByEmail";
 import getFormData from "~/.server/utils/getFormData";
-import { getStytchUserByEmail } from "~/.server/vendors/stytch/getStytchUserByEmail";
 import { prisma } from "~/lib/prisma";
 import type { ActionHandlerFn } from "~/types/action";
 import { deleteAllUserSourcesSchema } from "../utils/e2eSchemas";

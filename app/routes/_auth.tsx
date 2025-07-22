@@ -1,7 +1,7 @@
 import { data, Outlet, useLoaderData } from "react-router";
 
+import { getStytchUserById } from "@vendors/stytch/getStytchUserById";
 import { requireUser } from "~/.server/services/sessions/requireUser";
-import { getStytchUserById } from "~/.server/vendors/stytch/getStytchUserById";
 import { MainLayout } from "~/components/layout/MainLayout";
 import { useMoreMenu } from "~/hooks/useMoreMenu";
 import { useRouteData } from "~/hooks/useRouteData";

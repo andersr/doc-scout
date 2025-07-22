@@ -5,6 +5,7 @@
       "@app/*": ["./app/*"],
       "@e2e/*": ["./e2e/*"],
       "@services/*": ["./e2e/mocks/services/*"],
+      "@vendors/*": ["./e2e/mocks/vendors/*"],
       "~/*": ["./app/*"]
     }
   },

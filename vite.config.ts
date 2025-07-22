@@ -24,6 +24,10 @@ export default defineConfig(({ mode }) => {
           __dirname,
           isE2eTestEnv ? "./e2e/mocks/services" : "./app/.server/services",
         ),
+        "@vendors": path.resolve(
+          __dirname,
+          isE2eTestEnv ? "./e2e/mocks/vendors" : "./app/.server/vendors",
+        ),
         "~": path.resolve(__dirname, "./app"),
       },
     },

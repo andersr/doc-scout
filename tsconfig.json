@@ -9,6 +9,7 @@
     "noEmit": true,
     "paths": {
       "@services/*": ["./app/.server/services/*"],
+      "@vendors/*": ["./app/.server/vendors/*"],
       "~/*": ["./app/*"]
     },
     "resolveJsonModule": true,
