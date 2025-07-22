@@ -18,8 +18,8 @@ import getFormData from "~/.server/utils/getFormData";
 import { isAllowedUser } from "~/.server/utils/isAllowedUser";
 import redirectWithDomainHost from "~/.server/utils/redirectWithDomainHost";
 
+import { stytchClient } from "@vendors/stytch/client";
 import { serverError } from "~/.server/utils/serverError";
-import { stytchClient } from "~/.server/vendors/stytch/client";
 import { Logo } from "~/components/brand/Logo";
 import { Footer } from "~/components/layout/Footer";
 import { PageTitle } from "~/components/layout/PageTitle";

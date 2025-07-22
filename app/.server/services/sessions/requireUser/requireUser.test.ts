@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { mockServerEnv } from "../../../../__mocks__/env";
 
 // Mock ENV module to prevent validation errors
 mockServerEnv();
@@ -34,7 +33,7 @@ vi.mock("~/types/user", () => ({
 }));
 
 // Mock stytch client
-vi.mock("~/.server/vendors/stytch/client", () => ({
+vi.mock("@vendors/stytch/client", () => ({
   stytchClient: {
     sessions: {
       authenticate: vi.fn(),
@@ -59,7 +58,8 @@ import { USER_INTERNAL_INCLUDE } from "~/types/user";
 
 import { getCookieValue } from "~/.server/services/sessions/getCookieValue";
 import { logout } from "~/.server/services/sessions/logout";
-import { stytchClient } from "~/.server/vendors/stytch/client";
+import { stytchClient } from "@vendors/stytch/client";
+import { mockServerEnv } from "~/__mocks__/env";
 import { KEYS } from "~/shared/keys";
 import { requireUser } from "./requireUser";
 
@@ -104,7 +104,7 @@ describe("requireUser", () => {
     vi.spyOn(console, "info").mockImplementation(() => {});
     vi.spyOn(console, "error").mockImplementation(() => {});
 
-    mockRequest = new Request("http://localhost/dashboard");
+    mockRequest = new Request("http://localhost/");
 
     mockStytchResponse = {
       status_code: 200,

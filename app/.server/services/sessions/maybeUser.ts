@@ -6,9 +6,9 @@ import {
   type UserInternal,
 } from "~/types/user";
 
+import { stytchClient } from "@vendors/stytch/client";
 import { StatusCodes } from "http-status-codes";
 import { serverError } from "~/.server/utils/serverError";
-import { stytchClient } from "~/.server/vendors/stytch/client";
 import { KEYS } from "~/shared/keys";
 import { ServerError } from "~/types/server";
 
@@ -48,6 +48,7 @@ export async function maybeUser({ request }: { request: Request }): Promise<{
       },
     });
 
+    // console.log("user: ", user);
     if (!user) {
       throw new ServerError("No user found", StatusCodes.BAD_REQUEST);
     }
