@@ -18,5 +18,23 @@ test.describe("Login", () => {
     ).toBeVisible();
   });
 
+  test("shows success message when submitting valid email", async ({
+    page,
+  }) => {
+    // Use an email that's in the ALLOWED_USERS list from .env.test
+    const validEmail = "allowed@user.com";
+
+    await page.goto(appRoutes("/login"));
+
+    const emailInput = page.getByRole("textbox", { name: "Email" });
+    await emailInput.fill(validEmail);
+
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    await expect(
+      page.getByText(`Please check the inbox for ${validEmail}`),
+    ).toBeVisible();
+  });
+
   test.fixme("allows for signing in with an email address", async () => {});
 });
