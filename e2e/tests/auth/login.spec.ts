@@ -22,7 +22,7 @@ test.describe("Login", () => {
     page,
   }) => {
     // Use an email that's in the ALLOWED_USERS list from .env.test
-    const validEmail = "test@test.com";
+    const validEmail = "allowed@user.com";
 
     await page.goto(appRoutes("/login"));
 
