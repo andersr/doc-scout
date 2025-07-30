@@ -70,7 +70,6 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-sort-keys-custom-order": "^2.2.1",
-    "foovo": "file:../../test_inventory_project/app-v1",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
