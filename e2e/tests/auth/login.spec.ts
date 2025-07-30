@@ -2,7 +2,7 @@ import { appRoutes } from "@app/shared/appRoutes";
 import { expect, test } from "@playwright/test";
 
 test.describe("Login", () => {
-  test.describe.configure({ retries: 2 });
+  // test.describe.configure({ retries: 2 });
   test.use({ storageState: { cookies: [], origins: [] } });
   test("redirects unauthorized users to request access page", async ({
     page,
@@ -15,6 +15,24 @@ test.describe("Login", () => {
     // assert
     await expect(
       page.getByRole("heading", { name: "Please Request Access" }),
+    ).toBeVisible();
+  });
+
+  test("shows success message when submitting valid email", async ({
+    page,
+  }) => {
+    // Use an email that's in the ALLOWED_USERS list from .env.test
+    const validEmail = "test@test.com";
+
+    await page.goto(appRoutes("/login"));
+
+    const emailInput = page.getByRole("textbox", { name: "Email" });
+    await emailInput.fill(validEmail);
+
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    await expect(
+      page.getByText(`Please check the inbox for ${validEmail}`),
     ).toBeVisible();
   });
 

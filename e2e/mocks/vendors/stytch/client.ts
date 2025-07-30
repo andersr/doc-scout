@@ -1,6 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export const stytchClient = {
+  magicLinks: {
+    email: {
+      loginOrCreate: ({
+        email,
+        login_magic_link_url,
+        signup_magic_link_url,
+      }: {
+        email: string;
+        login_magic_link_url: string;
+        signup_magic_link_url: string;
+      }) => {
+        return {
+          user_id: email,
+        };
+      },
+    },
+  },
   passwords: {
     authenticate: ({
       duration,
